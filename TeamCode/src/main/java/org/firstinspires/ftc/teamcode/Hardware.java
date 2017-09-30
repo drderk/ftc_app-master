@@ -59,9 +59,9 @@ public class Hardware
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
-    public DcMotor  collect = null;
-    public DcMotor  lift  = null;
-    public DcMotor  extend = null;
+    public DcMotor  collect     = null;
+    public DcMotor  lift        = null;
+    public DcMotor  extend      = null;
     public DcMotor  rotate  = null;
 
     public Servo    jewel = null;
