@@ -62,8 +62,8 @@ public class Hardware
     public DcMotor  collect = null;
     public DcMotor  lift  = null;
     public DcMotor  extend = null;
+    public DcMotor  rotate  = null;
 
-    public Servo    rotate  = null;
     public Servo    jewel = null;
     public Servo    grab = null;
 
@@ -88,19 +88,9 @@ public class Hardware
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize
+        // Define and Initialize Motors
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        collect    = hwMap.get(DcMotor.class, "collect");
-        lift       = hwMap.get(DcMotor.class, "lift");
-        extend     = hwMap.get(DcMotor.class, "extend");
-        rotate     = hwMap.get(Servo.class, "rotate");
-        jewel      = hwMap.get(Servo.class, "jewel");
-        grab       = hwMap.get(Servo.class, "grab");
-        colorSensor= hwMap.get(ColorSensor.class, "colorSensor");
-        breakBeam  = hwMap.get(SensorDIO.class, "breakBeam");
-
-
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -113,12 +103,14 @@ public class Hardware
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collect.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collect.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
