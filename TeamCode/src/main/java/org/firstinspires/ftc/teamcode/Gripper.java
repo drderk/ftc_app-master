@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 public class Gripper extends PinkNavigate{
-    public int Groped = 0;
-    public int Extend = 0;
+    int Groped = 0;//make boolean????
+    int Extend = 0;
 
-if( /*button to open grip*/== true)
+if( /*button to open grip*/)
     {
         Groped = 10;
     }
@@ -21,15 +21,13 @@ else if (/*button to close*/)
 
 
     switch (Groped)
-
     {
         case 10:
-            robot.collect.setPower(0.0);
+            robot.collect.setPosition(0.0);
             //grip is open
             break;
-    }
-    case 20:
-            robot.collect.setPower(1.0);
+         case 20:
+            robot.collect.setPosition(1.0);
         break;
 }
 

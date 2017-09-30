@@ -59,7 +59,7 @@ public class Hardware
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
-    public DcMotor  collect     = null;
+    public Servo  collect     = null;
     public DcMotor  lift        = null;
     public DcMotor  extend      = null;
 
@@ -89,7 +89,7 @@ public class Hardware
         // Define and Initialize Motors
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
-//        collect  = hwMap.get(DcMotor.class, "collect");
+//        collect  = hwMap.get(Servo.class, "collect");
 //        lift  = hwMap.get(DcMotor.class, "lift");
 //        extend  = hwMap.get(DcMotor.class, "extend");
 //        rotate  = hwMap.get(Servo.class, "rotate");

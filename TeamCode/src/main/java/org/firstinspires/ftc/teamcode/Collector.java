@@ -137,14 +137,14 @@ public class Collector extends LinearOpMode {
             currentAngle = (int)GetHeading();
             switch (stage) {
                 case 0 : //initialize
-                    robot.collect.setPower(0);
+                    robot.collect.setPosition(0);
                     robot.lift.setPower(0);
                     robot.rotate.setPosition(0);
                     stage = 1;
                     break;
 
                 case 1: //grab cube
-                    robot.collect.setPower(1);
+                    robot.collect.setPosition(1);
                     stage = 2;
                     break;
 
@@ -165,9 +165,9 @@ public class Collector extends LinearOpMode {
 
                 case 5: //if the "a" button is pressed on gamepad 2 open if currently closed and close if currently open
                     if (gamepad2.a)
-                        robot.collect.setPower(robot.collect.getPower() * -1);
+                        robot.collect.setPosition(robot.collect.getPosition() * -1);
                     else
-                        robot.collect.setPower(1);
+                        robot.collect.setPosition(1);
                     stage = 6;
                     break;
 
