@@ -70,9 +70,7 @@ public class Hardware
     public ColorSensor  colorSensor= null;
     public SensorDIO    breakBeam = null;
 
-    //public SensorBNO055IMU compass = null;
-    //Public Sensor members.
-    //public Sensor
+    public SensorBNO055IMU compass = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;

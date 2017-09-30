@@ -45,7 +45,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.PinkNavigate;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -79,6 +78,7 @@ public class AutoDrive extends LinearOpMode {
 
     //declare variables
     Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
+    PinkNavigate pinkNavigate = new PinkNavigate();
     private ElapsedTime     runtime = new ElapsedTime();
     BNO055IMU imu;
     int currentAngle;
@@ -107,20 +107,21 @@ public class AutoDrive extends LinearOpMode {
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        robot.init(hardwareMap);
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        robot.init(hardwareMap);
-
+        PinkNavigate.robot = robot;
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        PinkNavigate.robot = robot;
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the game to start (driver presses PLAY)
+        telemetry.addData("Status", "Waiting for start");    //
+        telemetry.update();
         waitForStart();
 
         //Motion Start
@@ -130,19 +131,19 @@ public class AutoDrive extends LinearOpMode {
             case 0 : //initialize
                 robot.leftDrive.setPower(0);
                 robot.rightDrive.setPower(0);
-                robot.collect.setPower(0);
-                robot.lift.setPower(0);
-                robot.jewel.setPosition(0);
-                robot.grab.setPosition(0);
-                robot.rotate.setPosition(0);
-                robot.extend.setPower(0);
+//                robot.collect.setPower(0);
+//                robot.lift.setPower(0);
+//                robot.jewel.setPosition(0);
+//                robot.grab.setPosition(0);
+//                robot.rotate.setPosition(0);
+//                robot.extend.setPower(0);
                 stage = 2;
                 break;
 
             case 1: //scan surroundings
                 picturePos = camera.vuMark;
                 telemetry.addData("Glyph pos", picturePos);
-                telemetry.addData("Jewel Color", jewelColor());
+                //telemetry.addData("Jewel Color", jewelColor());
                 stage = 2;
                 break;
 
@@ -180,11 +181,11 @@ public class AutoDrive extends LinearOpMode {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
-    public  String jewelColor() {
-        if (robot.colorSensor.red() > 3)
+    /*public  String jewelColor() {
+        if (robot.colorSensor.red() > 3) {
             return "Red";
+        }
         else{
             return "Blue";
-        }
+        }*/
     }
-}
