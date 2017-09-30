@@ -54,29 +54,28 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorDIO;
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  */
-public class Hardware
-{
+public class Hardware {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  collect = null;
-    public DcMotor  lift  = null;
-    public DcMotor  extend1 = null;
+    public DcMotor      leftDrive   = null;
+    public DcMotor      rightDrive  = null;
+    public DcMotor      collect     = null;
+    public DcMotor      lift        = null;
+    public DcMotor      extend1     = null;
 
-    public Servo    rotate  = null;
-    public Servo    jewel = null;
-    public Servo    grab = null;
+    public Servo        rotate      = null;
+    public Servo        jewel       = null;
+    public Servo        grab        = null;
 
-    public ColorSensor  colorSensor= null;
-    public SensorDIO    breakBeam = null;
+    public ColorSensor  colorSensor = null;
+    public SensorDIO    breakBeam   = null;
 
     //public SensorBNO055IMU compass = null;
     //Public Sensor members.
     //public Sensor
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap         hwMap       = null;
+    private ElapsedTime period      = new ElapsedTime();
 
     /* Constructor jk */
     public Hardware(){
