@@ -188,7 +188,6 @@ public class Collector extends LinearOpMode {
                             robot.rotate.setPosition(0);
                     }
                     break;
-
             }
         }
         telemetry.addData("Path", "Complete");
