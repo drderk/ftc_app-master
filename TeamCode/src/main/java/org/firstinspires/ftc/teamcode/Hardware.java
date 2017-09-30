@@ -61,7 +61,7 @@ public class Hardware
     public DcMotor  rightDrive  = null;
     public DcMotor  collect = null;
     public DcMotor  lift  = null;
-    public DcMotor  extend = null;
+    public DcMotor  extend1 = null;
 
     public Servo    rotate  = null;
     public Servo    jewel = null;
@@ -78,7 +78,7 @@ public class Hardware
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
-    /* Constructor */
+    /* Constructor jk */
     public Hardware(){
 
     }
@@ -93,7 +93,7 @@ public class Hardware
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         collect    = hwMap.get(DcMotor.class, "collect");
         lift       = hwMap.get(DcMotor.class, "lift");
-        extend     = hwMap.get(DcMotor.class, "extend");
+        extend1     = hwMap.get(DcMotor.class, "extend");
         rotate     = hwMap.get(Servo.class, "rotate");
         jewel      = hwMap.get(Servo.class, "jewel");
         grab       = hwMap.get(Servo.class, "grab");
@@ -113,13 +113,13 @@ public class Hardware
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collect.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        extend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extend1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collect.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
