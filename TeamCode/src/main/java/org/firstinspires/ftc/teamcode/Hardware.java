@@ -62,7 +62,7 @@ public class Hardware
     public DcMotor  collect     = null;
     public DcMotor  lift        = null;
     public DcMotor  extend      = null;
-    public DcMotor  rotate  = null;
+    public Servo    rotate  = null;
 
     public Servo    jewel = null;
     public Servo    grab = null;
@@ -103,14 +103,12 @@ public class Hardware
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collect.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collect.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
