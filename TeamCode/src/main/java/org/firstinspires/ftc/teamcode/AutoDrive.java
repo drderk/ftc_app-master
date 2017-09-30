@@ -134,7 +134,7 @@ public class AutoDrive extends LinearOpMode {
                 robot.lift.setPower(0);
                 robot.jewel.setPosition(0);
                 robot.grab.setPosition(0);
-                robot.rotate.setPower(0);
+                robot.rotate.setPosition(0);
                 robot.extend.setPower(0);
                 stage = 2;
                 break;
