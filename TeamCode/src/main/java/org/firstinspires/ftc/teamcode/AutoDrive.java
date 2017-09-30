@@ -132,10 +132,10 @@ public class AutoDrive extends LinearOpMode {
                 robot.rightDrive.setPower(0);
                 robot.collect.setPower(0);
                 robot.lift.setPower(0);
-                robot.grab.setPosition(0);
-                robot.extend.setPower(0);
                 robot.jewel.setPosition(0);
+                robot.grab.setPosition(0);
                 robot.rotate.setPosition(0);
+                robot.extend.setPower(0);
                 stage = 2;
                 break;
 
@@ -148,9 +148,9 @@ public class AutoDrive extends LinearOpMode {
 
             case 2:
                 if (PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1)) {
-                    stage = 3;
+                    stage = 1;
                 } else {
-                    stage = 2;
+                    stage = 0;
                 }
                 telemetry.addData("Stage", stage);
                 break;

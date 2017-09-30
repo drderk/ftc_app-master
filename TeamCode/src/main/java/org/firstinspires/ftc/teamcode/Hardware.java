@@ -89,6 +89,15 @@ public class Hardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+<<<<<<< HEAD
+        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
+        rightDrive = hwMap.get(DcMotor.class, "right_drive");
+        collect  = hwMap.get(DcMotor.class, "collect");
+        lift  = hwMap.get(DcMotor.class, "lift");
+        extend  = hwMap.get(DcMotor.class, "extend");
+        rotate  = hwMap.get(Servo.class, "rotate");
+        jewel  = hwMap.get(Servo.class, "jewel");
+        grab  = hwMap.get(Servo.class, "grab");
         leftDrive  = hwMap.get(DcMotor.class, "leftDrive");
         rightDrive = hwMap.get(DcMotor.class, "rightDrive");
         collect = hwMap.get(DcMotor.class, "collect");
@@ -100,6 +109,7 @@ public class Hardware
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         breakBeam = hwMap.get(SensorDIO.class, "breakBeam");
 
+>>>>>>> 2865faabd27867063fd87405b34db97eb18d0488
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
