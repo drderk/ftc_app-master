@@ -98,11 +98,11 @@ public class AutoDrive extends LinearOpMode {
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -125,46 +125,48 @@ public class AutoDrive extends LinearOpMode {
         waitForStart();
 
         //Motion Start
-        while (auto) {
-            currentAngle = (int)GetHeading();
-        switch (stage) {
-            case 0 : //initialize
-                robot.leftDrive.setPower(0);
-                robot.rightDrive.setPower(0);
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+                currentAngle = (int) GetHeading();
+                switch (stage) {
+                    case 0: //initialize
+                        robot.leftDrive.setPower(0);
+                        robot.rightDrive.setPower(0);
 //                robot.collect.setPower(0);
 //                robot.lift.setPower(0);
 //                robot.jewel.setPosition(0);
 //                robot.grab.setPosition(0);
 //                robot.rotate.setPosition(0);
 //                robot.extend.setPower(0);
-                stage = 2;
-                break;
+                        stage = 2;
+                        break;
 
-            case 1: //scan surroundings
-                picturePos = camera.vuMark;
-                telemetry.addData("Glyph pos", picturePos);
-                //telemetry.addData("Jewel Color", jewelColor());
-                stage = 2;
-                break;
+                    case 1: //scan surroundings
+                        picturePos = camera.vuMark;
+                        telemetry.addData("Glyph pos", picturePos);
+                        //telemetry.addData("Jewel Color", jewelColor());
+                        stage = 2;
+                        break;
 
-            case 2:
-                if (PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1)) {
-                    stage = 1;
-                } else {
-                    stage = 0;
+                    case 2:
+                        if (PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1)) {
+                            stage = 1;
+                        } else {
+                            stage = 0;
+                        }
+                        telemetry.addData("Stage", stage);
+                        break;
+
+                    case 3:
+                        PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1);
+                        auto = false;
+                        break;
+
                 }
-                telemetry.addData("Stage", stage);
-                break;
-
-            case 3:
-                PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1);
-                auto = false;
-                break;
-
+            }
+            telemetry.addData("Path", "Complete");
+            telemetry.update();
         }
-        }
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
     }
 
     /*
