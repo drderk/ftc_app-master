@@ -148,22 +148,22 @@ public class Collector extends LinearOpMode {
                     stage = 2;
                     break;
 
-                case 2:
+                case 2: //lift tower
                     robot.lift.setPower(1);
                     stage = 3;
                     break;
 
-                case 3:
+                case 3: //rotate tower 180 degrees
                     robot.rotate.setPosition(0.5);
                     stage = 4;
                     break;
 
-                case 4:
+                case 4: //lower tower
                     robot.lift.setPower(-1);
                     stage = 5;
                     break;
 
-                case 5:
+                case 5: //if the "a" button is pressed on gamepad 2 open if currently closed and close if currently open
                     if (gamepad2.a)
                         robot.collect.setPower(robot.collect.getPower() * -1);
                     else
@@ -171,7 +171,7 @@ public class Collector extends LinearOpMode {
                     stage = 6;
                     break;
 
-                case 6:
+                case 6: //if the "b" button is pressed on gamepad 2 raise tower if currently lowered and lower if currently raised
                     if (gamepad2.b)
                         robot.lift.setPower(robot.lift.getPower() * -1);
                     else
@@ -179,7 +179,7 @@ public class Collector extends LinearOpMode {
                     stage = 7;
                     break;
 
-                case 7:
+                case 7: //if the "x" button is pressed on gamepad 2 reverse current orientation of the tower
                     if (gamepad2.x)
                     {
                         if (robot.rotate.getPosition() < 0.5)
