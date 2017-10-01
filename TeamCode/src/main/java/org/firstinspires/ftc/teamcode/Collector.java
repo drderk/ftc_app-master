@@ -116,7 +116,6 @@ public class Collector extends LinearOpMode {
 
                 case 4: //lower tower
                     robot.lift.setPower(-1);
-                    stage = 5;
                     break;
             }
                     if (gamepad2.a) {

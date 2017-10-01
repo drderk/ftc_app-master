@@ -54,10 +54,13 @@ import org.firstinspires.ftc.teamcode.Hardware;
 
 @TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
 public class TankDrive extends OpMode{
-
+    Collector collector = new Collector();
     /* Declare OpMode members. */
     Hardware robot       = new Hardware(); // use the class created to define a Pushbot's hardware
-
+    double liftPos = 0;
+    double collectPos = 0;
+    boolean manCollect = true;
+    double rotatePos = 0;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -100,6 +103,56 @@ public class TankDrive extends OpMode{
 
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
+
+        //Collection
+        if (gamepad2.left_bumper) { //collect
+            collectPos = -1;
+            manCollect = true;
+        }
+        else if (gamepad2.right_bumper){ //eject
+            collectPos = 1;
+            manCollect = true;
+        }
+        else if (gamepad2.y){ //automatic collect
+            collector.runOpMode();
+            manCollect = false;
+        }
+        else { // collector rest
+            collectPos = 0;
+            manCollect = true;
+        }
+
+        //Manual Lift
+        if (gamepad2.dpad_down) { //lift down
+            liftPos = -1;
+            manCollect = true;
+        }
+        else if (gamepad2.dpad_up){ //lift up
+            liftPos = 1;
+            manCollect = true;
+        }
+        else { //lift rest
+            liftPos = 0;
+            manCollect = true;
+        }
+
+        //Rotation
+        if (gamepad2.x)
+        {
+            manCollect = true;
+            if (robot.rotate.getPosition() < 0.5) {
+                rotatePos = 0.5;
+            }
+            else {
+                rotatePos = 0;
+            }
+        }
+        //Sets outputs
+        if (manCollect) {
+            robot.collect.setPosition(collectPos);
+            robot.lift.setPower(liftPos);
+            robot.rotate.setPosition(rotatePos);
+        }
 
         //Sends telemetry to the phone
         telemetry.addData("left",  "%.2f", left);
