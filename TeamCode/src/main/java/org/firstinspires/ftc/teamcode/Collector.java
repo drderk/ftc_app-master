@@ -116,34 +116,12 @@ public class Collector extends LinearOpMode {
 
                 case 4: //lower tower
                     robot.lift.setPower(-1);
+                    stage = 5;
                     break;
             }
-                    if (gamepad2.a) {
-                        robot.collect.setPosition(robot.collect.getPosition() * -1);
-                    }
-                    else {
-                        robot.collect.setPosition(1);
-                    }
-
-                    if (gamepad2.b) {
-                        robot.lift.setPower(robot.lift.getPower() * -1);
-                    }
-                    else {
-                        robot.lift.setPower(1);
-                    }
-
-                    if (gamepad2.x)
-                    {
-                        if (robot.rotate.getPosition() < 0.5) {
-                            robot.rotate.setPosition(0.5);
-                        }
-                        else {
-                            robot.rotate.setPosition(0);
-                        }
-                    }
-            }
+        }
         }
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-    }
+}

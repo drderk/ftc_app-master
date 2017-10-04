@@ -45,7 +45,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -84,6 +83,17 @@ public class AutoDrive extends LinearOpMode {
     int currentAngle;
     int stage = 0;
     boolean auto = true;
+    boolean topBal;
+    
+    //motor and servo setting values
+    double collectPos = 0;
+    double liftPos = 0;
+    double jewelPos = 0;
+    double grabPos = 0;
+    double rotatePos = 0;
+    double extendPos= 0;
+    double targetPos = 0;
+    double targetAngle = 0;
 
     VuMarks camera = new VuMarks();
     RelicRecoveryVuMark picturePos;
@@ -130,39 +140,161 @@ public class AutoDrive extends LinearOpMode {
                 currentAngle = (int) GetHeading();
                 switch (stage) {
                     case 0: //initialize
-                        robot.leftDrive.setPower(0);
-                        robot.rightDrive.setPower(0);
-//                robot.collect.setPower(0);
-//                robot.lift.setPower(0);
-//                robot.jewel.setPosition(0);
-//                robot.grab.setPosition(0);
-//                robot.rotate.setPosition(0);
-//                robot.extend.setPower(0);
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
                         stage = 2;
+                        targetPos = 0;
+                        targetAngle = 0;
                         break;
 
                     case 1: //scan surroundings
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 0;
+                        targetAngle = 0;
+                        
                         picturePos = camera.vuMark;
                         telemetry.addData("Glyph pos", picturePos);
                         //telemetry.addData("Jewel Color", jewelColor());
+                        sleep(1000);
                         stage = 2;
                         break;
 
-                    case 2:
-                        if (PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1)) {
-                            stage = 1;
-                        } else {
-                            stage = 0;
-                        }
+                    case 2: //lower the jewel arm
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 1;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 0;
+                        targetAngle = 0;
+                        
+                    	sleep(1000);
                         telemetry.addData("Stage", stage);
+                        stage = 3;
                         break;
 
-                    case 3:
-                        PinkNavigate.driveToPos(45, 0, currentAngle, 0, 0, 1);
+                    case 3: //lift up jewel mechanism and drive forward
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 45;
+                        targetAngle = 0;
+                        
+                        //drive completely off ramp
+                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                        	stage = 4;
+                        }
+                        else {
+                        	stage = 3;
+                        }
+                        break;
+                        
+                    case 4: //turn
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 45;
+                        targetAngle = 90;
+                        
+                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                        	stage = 100;
+                        }
+                        else {
+                        	stage = 4;
+                        }
+                        break;
+                        
+                    case 5: //drive to center
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 90;
+                        targetAngle = 90;
+                        
+                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                        	stage = 6;
+                        }
+                        else {
+                        	stage = 4;
+                        }
+                        break;
+                    case 6: //drive to center
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 90;
+                        targetAngle = 90;
+                        
+                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                        	stage = 7;
+                        }
+                        else {
+                        	stage = 4;
+                        }
+                        break;
+                    case 7: //drive to center
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 90;
+                        targetAngle = 90;
+                        
+                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                        	stage = 7;
+                        }
+                        else {
+                        	stage = 4;
+                        }
+                        break;
+                        
+                    case 100: //end
+                    	collectPos = 0;
+                        liftPos = 0;
+                        jewelPos = 0;
+                        grabPos = 0;
+                        rotatePos = 0;
+                        extendPos= 0;
+                        targetPos = 0;
+                        targetAngle = 0;
+                        PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 0);
                         auto = false;
                         break;
 
                 }
+                
+                //set all values
+                robot.collect.setPosition(collectPos);
+                robot.lift.setPower(liftPos);
+                robot.jewel.setPosition(jewelPos);
+                robot.grab.setPosition(grabPos);
+                robot.rotate.setPosition(rotatePos);
+                robot.extend.setPower(extendPos);
+                
             }
             telemetry.addData("Path", "Complete");
             telemetry.update();
