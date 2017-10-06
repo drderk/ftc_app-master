@@ -119,23 +119,23 @@ public class TankDrive extends OpMode{
         //lift buttons
         if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1) { //manual control
             liftPow = -gamepad2.left_stick_y;
-            liftHold = robot.lift.getCurrentPosition();
+            //liftHold = robot.lift.getCurrentPosition();
         }
         else if (gamepad2.dpad_up){ //lift up position
-        	liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+        	//liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
         	liftHold = liftPow;
         } 
         else if (gamepad2.dpad_down){ //lift down position
-        	liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+        	//liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
         	liftHold = liftPow;
 
         }
         else { //Holds position
-        	liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+        	//liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
         }
         
         //rotate buttons
-        if (gamepad2.x)
+       /* if (gamepad2.x)
         {
             if (robot.rotate.getPosition() < 0.5) {
                 rotatePos = 1;
@@ -143,14 +143,14 @@ public class TankDrive extends OpMode{
             else {
                 rotatePos = 0;
             }
-        }
+        }*/
 
         //sets powers and positions
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
-        robot.collect.setPosition(collectPos);
+        /*robot.collect.setPosition(collectPos);
         robot.lift.setPower(liftPow);
-        robot.rotate.setPosition(rotatePos);
+        robot.rotate.setPosition(rotatePos);*/
         
         //Sends telemetry to the phone
         telemetry.addData("left",  "%.2f", left);

@@ -146,7 +146,7 @@ public class AutoDrive extends LinearOpMode {
                         grabPos = 0;
                         rotatePos = 0;
                         extendPos= 0;
-                        stage = 2;
+                        stage = 3;
                         targetPos = 0;
                         targetAngle = 0;
                         break;
@@ -195,7 +195,7 @@ public class AutoDrive extends LinearOpMode {
                         
                         //drive completely off ramp
                         if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
-                        	stage = 4;
+                        	stage = 100;
                         }
                         else {
                         	stage = 3;
@@ -288,12 +288,12 @@ public class AutoDrive extends LinearOpMode {
                 }
                 
                 //set all values
-                robot.collect.setPosition(collectPos);
+               /* robot.collect.setPosition(collectPos);
                 robot.lift.setPower(liftPos);
                 robot.jewel.setPosition(jewelPos);
                 robot.grab.setPosition(grabPos);
                 robot.rotate.setPosition(rotatePos);
-                robot.extend.setPower(extendPos);
+                robot.extend.setPower(extendPos);*/
                 
             }
             telemetry.addData("Path", "Complete");

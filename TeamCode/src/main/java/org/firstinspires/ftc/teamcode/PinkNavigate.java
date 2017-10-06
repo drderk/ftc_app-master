@@ -9,7 +9,7 @@ public class PinkNavigate
     static Hardware robot = new Hardware();
 
 
-    static final double COUNTS_PER_INCH = 1000;  // Base travel
+    static final double COUNTS_PER_INCH = 49.5;  // Base travel
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
 
