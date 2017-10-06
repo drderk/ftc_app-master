@@ -129,7 +129,7 @@ public class AutoDrive extends LinearOpMode {
 
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to start (driver presses PLAY).
         telemetry.addData("Status", "Waiting for start");    //
         telemetry.update();
         waitForStart();
