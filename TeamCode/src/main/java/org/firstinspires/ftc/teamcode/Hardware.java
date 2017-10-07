@@ -59,22 +59,26 @@ public class Hardware
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
-    public DcMotor  collect     = null;
     public DcMotor  lift        = null;
     public DcMotor  extend      = null;
     public DcMotor  liftRelic   = null;
 
+<<<<<<< HEAD
     public Servo    rotate      = null;
     public Servo    jewel       = null;
     public Servo    grab        = null;
     public Servo    rotaterelic = null;
+=======
+    public Servo  collect     = null;
+    public Servo    rotate  = null;
+    public Servo    jewel = null;
+    public Servo    grab = null;
+>>>>>>> fbd6d65c6d4014ab5117db4a5109ed91eabb5965
 
     public ColorSensor  colorSensor= null;
     public SensorDIO    breakBeam = null;
 
-    //public SensorBNO055IMU compass = null;
-    //Public Sensor members.
-    //public Sensor
+    public SensorBNO055IMU compass = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -91,6 +95,7 @@ public class Hardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+<<<<<<< HEAD
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
 //        collect  = hwMap.get(DcMotor.class, "collect");
@@ -104,6 +109,19 @@ public class Hardware
 //        breakBeam = hwMap.get(SensorDIO.class, "breakBeam");
         //liftRelic = hwMap.get (DcMotor.class, "liftRelic");
 
+=======
+        leftDrive  = hwMap.get(DcMotor.class, "left_drive"); //Motor 0
+        rightDrive = hwMap.get(DcMotor.class, "right_drive");// Motor 1
+        /*collect  = hwMap.get(Servo.class, "collect");
+        lift  = hwMap.get(DcMotor.class, "lift");
+        extend  = hwMap.get(DcMotor.class, "extend");
+        rotate  = hwMap.get(Servo.class, "rotate");
+        jewel  = hwMap.get(Servo.class, "jewel");
+        grab  = hwMap.get(Servo.class, "grab");
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        breakBeam = hwMap.get(SensorDIO.class, "breakBeam");
+*/
+>>>>>>> fbd6d65c6d4014ab5117db4a5109ed91eabb5965
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 

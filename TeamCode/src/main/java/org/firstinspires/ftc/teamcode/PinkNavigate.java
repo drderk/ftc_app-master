@@ -3,16 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.Hardware;
-/**
- * Created by Andy on 11/13/2015.
- */
 
 public class PinkNavigate
 {
     static Hardware robot = new Hardware();
 
 
-    static final double COUNTS_PER_INCH = 1000;  // Base travel
+    static final double COUNTS_PER_INCH = 49.5;  // Base travel
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
 
@@ -96,9 +93,4 @@ public class PinkNavigate
         return ((robot.leftDrive.getCurrentPosition() + robot.rightDrive.getCurrentPosition())/2.0);
     }
 
-    /**
-     * Created by Andy on 11/12/2015.
-     *
-     * Both motors and continuous servos are covered.
-     */
 }

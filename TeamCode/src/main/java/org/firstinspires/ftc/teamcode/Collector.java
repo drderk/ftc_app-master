@@ -82,69 +82,25 @@ public class Collector extends LinearOpMode {
     //declare variables
     Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-    BNO055IMU imu;
-    int currentAngle;
     int stage = 0;
-    boolean auto = true;
-
-    VuMarks camera = new VuMarks();
-    RelicRecoveryVuMark picturePos;
 
     @Override
     public void runOpMode() {
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
         robot.init(hardwareMap);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
-        PinkNavigate.robot = robot;
-        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //Motion Start
-        /*
-        Starts at bottom and open
-        Button (a) opens/closes
-        Button (b) lowers to starting position
-        Button (x) raises height (1 cube)
-        Button (y) rotates 180 degrees
-         */
-        while (auto) {
-            currentAngle = (int)GetHeading();
+        if(opModeIsActive()){
+        while (opModeIsActive()) {
             switch (stage) {
-                case 0 : //initialize
-                    robot.collect.setPower(0);
+                case 0: //initialize
+                    robot.collect.setPosition(0);
                     robot.lift.setPower(0);
                     robot.rotate.setPosition(0);
                     stage = 1;
                     break;
 
                 case 1: //grab cube
-                    robot.collect.setPower(1);
+                    robot.collect.setPosition(1);
                     stage = 2;
                     break;
 
@@ -162,50 +118,10 @@ public class Collector extends LinearOpMode {
                     robot.lift.setPower(-1);
                     stage = 5;
                     break;
-
-                case 5: //if the "a" button is pressed on gamepad 2 open if currently closed and close if currently open
-                    if (gamepad2.a)
-                        robot.collect.setPower(robot.collect.getPower() * -1);
-                    else
-                        robot.collect.setPower(1);
-                    stage = 6;
-                    break;
-
-                case 6: //if the "b" button is pressed on gamepad 2 raise tower if currently lowered and lower if currently raised
-                    if (gamepad2.b)
-                        robot.lift.setPower(robot.lift.getPower() * -1);
-                    else
-                        robot.lift.setPower(1);
-                    stage = 7;
-                    break;
-
-                case 7: //if the "x" button is pressed on gamepad 2 reverse current orientation of the tower
-                    if (gamepad2.x)
-                    {
-                        if (robot.rotate.getPosition() < 0.5)
-                            robot.rotate.setPosition(0.5);
-                        else
-                            robot.rotate.setPosition(0);
-                    }
-                    break;
             }
+        }
         }
         telemetry.addData("Path", "Complete");
         telemetry.update();
-    }
-
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-   */
-
-    public double GetHeading(){
-        Orientation angles;
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 }
