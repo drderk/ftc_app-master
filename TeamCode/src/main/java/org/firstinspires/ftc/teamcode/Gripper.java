@@ -2,41 +2,27 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.PinkNavigate;
 
-/**
- * Created by Hanna on 10/7/2017.
- */
+/**Created by Hanna on 10/7/2017.**/
 
 @TeleOp(name="Gripper", group="Pushbot")
 public class Gripper extends LinearOpMode {
 
     //declare variables
     Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
-    BNO055IMU imu;
-    int currentAngle;
-    int stage = 0;
-    boolean auto = true;
 
-    VuMarks camera = new VuMarks();
-    RelicRecoveryVuMark picturePos;
+    BNO055IMU   imu;
+    int         currentAngle;
+    int         stage = 0;
+    boolean     auto = true;
+
 
     @Override
     public void runOpMode() {
@@ -64,7 +50,7 @@ public class Gripper extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         PinkNavigate.robot = robot;
@@ -73,14 +59,6 @@ public class Gripper extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //Motion Start
-        /*
-        Starts at bottom and open
-        Button (a) opens/closes
-        Button (b) lowers to starting position
-        Button (x) raises height (1 cube)
-        Button (y) rotates 180 degrees
-         */
         while (auto) {
             currentAngle = (int)GetHeading();
             switch (stage) {
@@ -129,7 +107,7 @@ public class Gripper extends LinearOpMode {
     }
 
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
