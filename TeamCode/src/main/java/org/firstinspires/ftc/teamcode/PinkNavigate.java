@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.Hardware;
 
 public class PinkNavigate
 {
-    Hardware robot = new Hardware();
+    Hardware robot = Hardware.getInstance();
     static final double COUNTS_PER_INCH = 49.5;  // Base travel
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
