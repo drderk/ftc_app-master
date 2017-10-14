@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.Hardware;
@@ -42,6 +44,7 @@ public class PinkNavigate
         leftMotorCmd *= maxPower;
         rightMotorCmd *= maxPower;
 
+        // If navigated to position
         if((Math.abs(linearError)<POSITION_THRESHOLD)&&(Math.abs(angleErrorDegrees)<ANGLE_THRESHOLD))
         {
              return true;

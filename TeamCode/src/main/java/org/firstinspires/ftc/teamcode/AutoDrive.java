@@ -36,9 +36,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -77,12 +79,15 @@ public class AutoDrive extends LinearOpMode {
 
     //declare variables
     Hardware         robot   =  Hardware.getInstance();   // Use a Pushbot's hardware
-    PinkNavigate pinkNavigate = new PinkNavigate();
+    //PinkNavigate pinkNavigate = new PinkNavigate();
     private ElapsedTime     runtime = new ElapsedTime();
     BNO055IMU imu;
     int currentAngle;
     int stage = 0;
-    
+    static final double COUNTS_PER_INCH = 49.5;  // Base travel
+    static final double POSITION_THRESHOLD = 10.0;   // Counts
+    static final double ANGLE_THRESHOLD = 5.0;     // Degrees
+    double leftMotorCmd, rightMotorCmd;
     //motor and servo setting values
     double collectPos = 0;
     double liftPos = 0;
@@ -135,7 +140,7 @@ public class AutoDrive extends LinearOpMode {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 telemetry.addData("Opmode:", "active");
-                telemetry.update();
+                //telemetry.update();
                 currentAngle = (int) GetHeading();
                     switch (stage) {
                         case 0: //initialize
@@ -195,10 +200,11 @@ public class AutoDrive extends LinearOpMode {
 
                             telemetry.addData("Stage", stage);
                             //drive completely off ramp
-                            telemetry.addData("LeftMotor", robot.leftDrive.getPower());
-                            telemetry.addData("RightMotor", robot.rightDrive.getPower());
+                           // telemetry.addData("LeftMotor", robot.leftDrive.getPower());
+                           // telemetry.addData("RightMotor", robot.rightDrive.getPower());
+                            boolean a = driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1);
 
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                            if (a) {
                                 stage = 100;
                             } else {
                                 stage = 30;
@@ -217,7 +223,7 @@ public class AutoDrive extends LinearOpMode {
 
                             telemetry.addData("Stage", stage);
 
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                            if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 100;
                             } else {
                                 stage = 40;
@@ -235,7 +241,7 @@ public class AutoDrive extends LinearOpMode {
                             targetAngle = 90;
 
                             telemetry.addData("Stage", stage);
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                            if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 60;
                             } else {
                                 stage = 40;
@@ -252,7 +258,7 @@ public class AutoDrive extends LinearOpMode {
                             targetAngle = 90;
                             telemetry.addData("Stage", stage);
 
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                            if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 70;
                             } else {
                                 stage = 40;
@@ -269,7 +275,7 @@ public class AutoDrive extends LinearOpMode {
                             targetAngle = 90;
                             telemetry.addData("Stage", stage);
 
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                            if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 70;
                             } else {
                                 stage = 40;
@@ -283,14 +289,13 @@ public class AutoDrive extends LinearOpMode {
                             grabPos = 0;
                             rotatePos = 0;
                             extendPos = 0;
-                            pinkNavigate.stopBase();
-                            telemetry.addData("Stage", stage);
+                            driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1);                            telemetry.addData("Stage", stage);
                             break;
                     }
 
                     //set all values
-                robot.leftDrive.setPower(pinkNavigate.getLeftCMD());
-                robot.rightDrive.setPower(pinkNavigate.getRightCMD());
+                robot.leftDrive.setPower(leftMotorCmd);
+                robot.rightDrive.setPower(rightMotorCmd);
                /* robot.collect.setPosition(collectPos);
                 robot.lift.setPower(liftPos);
                 robot.jewel.setPosition(jewelPos);
@@ -319,6 +324,55 @@ public class AutoDrive extends LinearOpMode {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
+    public boolean driveToPos(double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
+                              double linearVelocity, double angularVelocity, double maxPower)
+    {
+        double motorCmd = 0;
+        double targetPosCounts = targetPos * COUNTS_PER_INCH;
+        telemetry.addData("TargetPositionCounts", targetPosCounts);
+        double leftWheelPos = leftEnc;
+        telemetry.addData("LeftWheelPos", leftWheelPos);
+        double rightWheelPos = rightEnc;
+        telemetry.addData("RightWheelPos", rightWheelPos);
+        double angleErrorDegrees = targetAngle - currentAngle;
+        telemetry.addData("AngleErrorDegrees", angleErrorDegrees);
+        double currentPosCounts = (leftWheelPos + rightWheelPos)/2.0;
+        telemetry.addData("CurrentPosCounts", currentPosCounts);
+        double angleOffset;
+        double linearError = targetPosCounts - currentPosCounts;
+        telemetry.addData("LinearError", linearError);
+        double angularError = targetAngle - currentAngle;
+        telemetry.addData("AngularError", angularError);
+
+        // Determine the baseline motor speed command
+        motorCmd = Range.clip(motorCmd, -0.5, 0.5);
+
+        // Determine and add the angle offset
+        angleOffset = PinkPD.getMotorCmd(0.02, 0.02, angularError, angularVelocity);
+        telemetry.addData("AngleOffset", angleOffset);
+        leftMotorCmd = motorCmd + angleOffset;
+        rightMotorCmd = motorCmd - angleOffset;
+        leftMotorCmd = Range.clip(leftMotorCmd, -1.0, 1.0);
+        rightMotorCmd = Range.clip(rightMotorCmd, -1.0, 1.0);
+
+        // Scale the motor commands back to account for the MC windup problem
+        // (if the motor cant keep up with the command, error builds up)
+        leftMotorCmd *= maxPower;
+        rightMotorCmd *= maxPower;
+        telemetry.addData("MaxPower", maxPower);
+        telemetry.addData("RightMotorCommand", rightMotorCmd);
+        telemetry.addData("LeftMotorCommand", leftMotorCmd);
+        robot.rightDrive.setPower(rightMotorCmd);
+        robot.leftDrive.setPower(leftMotorCmd);
+
+        if((Math.abs(linearError)<POSITION_THRESHOLD)&&(Math.abs(angleErrorDegrees)<ANGLE_THRESHOLD))
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
     /*public  String jewelColor() {
         if (robot.colorSensor.red() > 3) {
             return "Red";
@@ -326,4 +380,4 @@ public class AutoDrive extends LinearOpMode {
         else{
             return "Blue";
         }*/
-    }
+}
