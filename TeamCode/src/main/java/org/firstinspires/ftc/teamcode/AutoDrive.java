@@ -82,8 +82,6 @@ public class AutoDrive extends LinearOpMode {
     BNO055IMU imu;
     int currentAngle;
     int stage = 0;
-    boolean auto = true;
-    boolean topBal;
     
     //motor and servo setting values
     double collectPos = 0;
@@ -122,7 +120,6 @@ public class AutoDrive extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        PinkNavigate.robot = robot;
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
@@ -140,7 +137,6 @@ public class AutoDrive extends LinearOpMode {
                 telemetry.addData("Opmode:", "active");
                 telemetry.update();
                 currentAngle = (int) GetHeading();
-                while (auto) {
                     switch (stage) {
                         case 0: //initialize
                             collectPos = 0;
@@ -201,8 +197,7 @@ public class AutoDrive extends LinearOpMode {
                             //drive completely off ramp
                             telemetry.addData("LeftMotor", robot.leftDrive.getPower());
                             telemetry.addData("RightMotor", robot.rightDrive.getPower());
-                            PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1);
-                            if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 100;
                             } else {
                                 stage = 30;
@@ -221,7 +216,7 @@ public class AutoDrive extends LinearOpMode {
 
                             telemetry.addData("Stage", stage);
 
-                            if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 100;
                             } else {
                                 stage = 40;
@@ -239,7 +234,7 @@ public class AutoDrive extends LinearOpMode {
                             targetAngle = 90;
 
                             telemetry.addData("Stage", stage);
-                            if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 60;
                             } else {
                                 stage = 40;
@@ -256,7 +251,7 @@ public class AutoDrive extends LinearOpMode {
                             targetAngle = 90;
                             telemetry.addData("Stage", stage);
 
-                            if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 70;
                             } else {
                                 stage = 40;
@@ -273,7 +268,7 @@ public class AutoDrive extends LinearOpMode {
                             targetAngle = 90;
                             telemetry.addData("Stage", stage);
 
-                            if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 1)) {
+                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 70;
                             } else {
                                 stage = 40;
@@ -287,13 +282,14 @@ public class AutoDrive extends LinearOpMode {
                             grabPos = 0;
                             rotatePos = 0;
                             extendPos = 0;
-                            PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, 0, 0, 0);
-                            auto = false;
+                            pinkNavigate.stopBase();
+                            telemetry.addData("Stage", stage);
                             break;
-
                     }
 
                     //set all values
+                robot.leftDrive.setPower(pinkNavigate.getLeftCMD());
+                robot.rightDrive.setPower(pinkNavigate.getRightCMD());
                /* robot.collect.setPosition(collectPos);
                 robot.lift.setPower(liftPos);
                 robot.jewel.setPosition(jewelPos);
@@ -307,7 +303,6 @@ public class AutoDrive extends LinearOpMode {
 
             }
         }
-    }
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.

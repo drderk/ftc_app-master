@@ -6,23 +6,21 @@ import org.firstinspires.ftc.teamcode.Hardware;
 
 public class PinkNavigate
 {
-    static Hardware robot = new Hardware();
-
-
+    Hardware robot = new Hardware();
     static final double COUNTS_PER_INCH = 49.5;  // Base travel
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
+    double leftMotorCmd, rightMotorCmd;
 
     // Tank drive two wheels to target positions in inches.
     // Returns true when both arrive at the target.
-    public static boolean driveToPos(double targetPos, double targetAngle, int currentAngle,
+    public boolean driveToPos(double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
     double linearVelocity, double angularVelocity, double maxPower)
     {
         double motorCmd = 0;
         double targetPosCounts = targetPos * COUNTS_PER_INCH;
-        double leftMotorCmd, rightMotorCmd;
-        double leftWheelPos = robot.rightDrive.getCurrentPosition();
-        double rightWheelPos = robot.leftDrive.getCurrentPosition();
+        double leftWheelPos = leftEnc;
+        double rightWheelPos = rightEnc;
         double angleErrorDegrees = targetAngle - currentAngle;
         double currentPosCounts = (leftWheelPos + rightWheelPos)/2.0;
         double angleOffset;
@@ -44,9 +42,6 @@ public class PinkNavigate
         leftMotorCmd *= maxPower;
         rightMotorCmd *= maxPower;
 
-        robot.leftDrive.setPower(leftMotorCmd);
-        robot.rightDrive.setPower(rightMotorCmd);
-
         if((Math.abs(linearError)<POSITION_THRESHOLD)&&(Math.abs(angleErrorDegrees)<ANGLE_THRESHOLD))
         {
              return true;
@@ -56,19 +51,19 @@ public class PinkNavigate
         }
     }
 
-    public static void stopBase()
+    public void stopBase()
     {
         robot.leftDrive.setPower(0);
         robot.rightDrive.setPower(0);
     }
 
-    public static void runUsingEncoders()
+    public void runUsingEncoders()
     {
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public static void runWithoutEncoders()
+    public void runWithoutEncoders()
     {
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -76,7 +71,7 @@ public class PinkNavigate
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public static boolean resetBasePosition()
+    public boolean resetBasePosition()
     {
         boolean resetStatus = false;
 
@@ -89,8 +84,14 @@ public class PinkNavigate
         return resetStatus;
     }
 
-    public static double getBasePosition()
+    public double getBasePosition()
     {
         return ((robot.leftDrive.getCurrentPosition() + robot.rightDrive.getCurrentPosition())/2.0);
+    }
+    public double getRightCMD(){
+        return rightMotorCmd;
+    }
+    public double getLeftCMD(){
+        return leftMotorCmd;
     }
 }
