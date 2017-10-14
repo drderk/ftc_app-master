@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.PinkNavigate;
 public class Gripper extends LinearOpMode {
 
     //declare variables
-    Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
+    Hardware         robot   = Hardware.getInstance();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
     BNO055IMU imu;
     int currentAngle;

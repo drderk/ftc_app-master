@@ -56,7 +56,7 @@ import org.firstinspires.ftc.teamcode.Hardware;
 public class TankDrive extends OpMode{
 
     /* Declare OpMode members. */
-    Hardware robot       = new Hardware(); // use the class created to define a Pushbot's hardware
+    Hardware robot       =Hardware.getInstance(); // use the class created to define a Pushbot's hardware
     
     double left;
     double right;

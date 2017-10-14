@@ -8,7 +8,7 @@ public class Collector extends LinearOpMode {
 
     //Declare Variables Used in Collector
     int         stage   = 0;
-    Hardware    robot   = new Hardware();
+    Hardware    robot   = Hardware.getInstance();
     double      liftPow = 0;
     double      rotatePos = 0;
     double      collectPos1 = 0;
