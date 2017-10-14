@@ -46,12 +46,13 @@ public class PinkNavigate
 
         robot.leftDrive.setPower(leftMotorCmd);
         robot.rightDrive.setPower(rightMotorCmd);
+
         if((Math.abs(linearError)<POSITION_THRESHOLD)&&(Math.abs(angleErrorDegrees)<ANGLE_THRESHOLD))
         {
-             return false;
+             return true;
         } else
         {
-            return true;
+            return false;
         }
     }
 
@@ -92,5 +93,4 @@ public class PinkNavigate
     {
         return ((robot.leftDrive.getCurrentPosition() + robot.rightDrive.getCurrentPosition())/2.0);
     }
-
 }

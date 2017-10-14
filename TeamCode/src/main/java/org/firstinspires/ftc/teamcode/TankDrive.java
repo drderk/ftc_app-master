@@ -60,7 +60,8 @@ public class TankDrive extends OpMode{
     
     double left;
     double right;
-    double collectPos = 0;
+    double collectPos1 = 0;
+    double collectPos2 = 0;
     double liftPow = 0;
     double rotatePos = 0;
     double liftCPI = 0; //Counts per inch
@@ -70,6 +71,8 @@ public class TankDrive extends OpMode{
     double liftDown = 0 * liftCPI;
     double liftHold = 0;
 
+    //Collector Opmode
+    Collector collector = new Collector();
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -109,11 +112,20 @@ public class TankDrive extends OpMode{
         right = -gamepad1.right_stick_y;
         
         //collect buttons
-        if (gamepad2.left_bumper) {
-            collectPos = -1;
+        if (gamepad2.left_bumper)
+            {
+                if (robot.rotate.getPosition() < 0.5) {
+                    collectPos1 = -1;
+                }
+                else {
+                    collectPos2 = -1;
+                }
         }
-        else { //collect neutral
-        	collectPos = 0;
+        else if (gamepad2.x) {
+            collector.runOpMode();
+        } else { //collect neutral
+        	collectPos1 = 0;
+            collectPos2 = 0;
         }
 
         //lift buttons
@@ -148,7 +160,8 @@ public class TankDrive extends OpMode{
         //sets powers and positions
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
-        /*robot.collect.setPosition(collectPos);
+        /*robot.collect.setPosition(collectPos1);
+        robot.collect.setPosition(collectPos2);
         robot.lift.setPower(liftPow);
         robot.rotate.setPosition(rotatePos);*/
         
