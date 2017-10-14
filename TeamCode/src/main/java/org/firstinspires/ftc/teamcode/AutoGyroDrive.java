@@ -84,7 +84,7 @@ import java.util.Locale;
 public class AutoGyroDrive extends LinearOpMode {
 
     /* Declare OpMode members. */
-    Hardware         robot   = Hardware.getInstance();   // Use a Pushbot's hardware
+    Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
     BNO055IMU               imu;
     //ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
 

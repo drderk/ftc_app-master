@@ -76,7 +76,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 public class AutoDrive extends LinearOpMode {
 
     //declare variables
-    Hardware         robot   =  Hardware.getInstance();   // Use a Pushbot's hardware
+    Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
     PinkNavigate pinkNavigate = new PinkNavigate();
     private ElapsedTime     runtime = new ElapsedTime();
     BNO055IMU imu;
@@ -197,8 +197,7 @@ public class AutoDrive extends LinearOpMode {
                             //drive completely off ramp
                             telemetry.addData("LeftMotor", robot.leftDrive.getPower());
                             telemetry.addData("RightMotor", robot.rightDrive.getPower());
-
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
                                 stage = 100;
                             } else {
                                 stage = 30;
