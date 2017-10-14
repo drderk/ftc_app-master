@@ -54,9 +54,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorDIO;
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  */
-public final class Hardware
+public class Hardware
 {
-    private static Hardware instance = null;
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
@@ -80,19 +79,8 @@ public final class Hardware
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    private Hardware()
-    {
+    public Hardware(){
 
-    }
-
-    // Returns the single instance of this class.
-    public static Hardware getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new Hardware();
-        }
-        return instance;
     }
 
     /* Initialize standard Hardware interfaces */
