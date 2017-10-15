@@ -78,13 +78,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 public class AutoDrive extends LinearOpMode {
 
     //declare variables
-<<<<<<< HEAD
-    Hardware         robot   =  Hardware.getInstance();   // Use a Pushbot's hardware
-    //PinkNavigate pinkNavigate = new PinkNavigate();
-=======
-    Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
-    PinkNavigate pinkNavigate = new PinkNavigate();
->>>>>>> 6aa893e69fa3a35d282489ec69529caa3f9713d1
+    public Hardware         robot   =  new Hardware();   // Use a Pushbot's hardware
+    public PinkNavigate     PinkNavigate = new PinkNavigate();
     private ElapsedTime     runtime = new ElapsedTime();
     BNO055IMU imu;
     int currentAngle;
@@ -136,6 +131,9 @@ public class AutoDrive extends LinearOpMode {
 
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Wait for the game to start (driver presses PLAY).
         telemetry.addData("Status", "Waiting for start");    //
         telemetry.update();
@@ -205,21 +203,11 @@ public class AutoDrive extends LinearOpMode {
 
                             telemetry.addData("Stage", stage);
                             //drive completely off ramp
-<<<<<<< HEAD
-                           // telemetry.addData("LeftMotor", robot.leftDrive.getPower());
-                           // telemetry.addData("RightMotor", robot.rightDrive.getPower());
-                            boolean a = driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1);
-
-                            if (a) {
-=======
-                            telemetry.addData("LeftMotor", robot.leftDrive.getPower());
-                            telemetry.addData("RightMotor", robot.rightDrive.getPower());
-                            if (pinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
->>>>>>> 6aa893e69fa3a35d282489ec69529caa3f9713d1
-                                stage = 100;
-                            } else {
-                                stage = 30;
-                            }
+                                if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                                    stage = 100;
+                                } else {
+                                    stage = 30;
+                                }
                             break;
 
                         case 40: //turn
@@ -300,13 +288,15 @@ public class AutoDrive extends LinearOpMode {
                             grabPos = 0;
                             rotatePos = 0;
                             extendPos = 0;
-                            driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1);                            telemetry.addData("Stage", stage);
+                            PinkNavigate.stopBase();
+                            telemetry.addData("Stage", "Complete");
+
                             break;
                     }
 
                     //set all values
-                robot.leftDrive.setPower(leftMotorCmd);
-                robot.rightDrive.setPower(rightMotorCmd);
+                robot.leftDrive.setPower(PinkNavigate.leftMotorCmd);
+                robot.rightDrive.setPower(PinkNavigate.getLeftCMD());
                /* robot.collect.setPosition(collectPos);
                 robot.lift.setPower(liftPos);
                 robot.jewel.setPosition(jewelPos);
@@ -315,7 +305,6 @@ public class AutoDrive extends LinearOpMode {
                 robot.extend.setPower(extendPos);*/
                     telemetry.update();
                 }
-                telemetry.addData("Stage", "Complete");
                 telemetry.update();
 
             }
@@ -338,7 +327,6 @@ public class AutoDrive extends LinearOpMode {
     public boolean driveToPos(double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
                               double linearVelocity, double angularVelocity, double maxPower)
     {
-        double motorCmd = 0;
         double targetPosCounts = targetPos * COUNTS_PER_INCH;
         telemetry.addData("TargetPositionCounts", targetPosCounts);
         double leftWheelPos = leftEnc;
@@ -354,6 +342,7 @@ public class AutoDrive extends LinearOpMode {
         telemetry.addData("LinearError", linearError);
         double angularError = targetAngle - currentAngle;
         telemetry.addData("AngularError", angularError);
+        double motorCmd = PinkPD.getMotorCmd(0.05, 0.001, linearError, linearVelocity);
 
         // Determine the baseline motor speed command
         motorCmd = Range.clip(motorCmd, -0.5, 0.5);
@@ -373,8 +362,6 @@ public class AutoDrive extends LinearOpMode {
         telemetry.addData("MaxPower", maxPower);
         telemetry.addData("RightMotorCommand", rightMotorCmd);
         telemetry.addData("LeftMotorCommand", leftMotorCmd);
-        robot.rightDrive.setPower(rightMotorCmd);
-        robot.leftDrive.setPower(leftMotorCmd);
 
         if((Math.abs(linearError)<POSITION_THRESHOLD)&&(Math.abs(angleErrorDegrees)<ANGLE_THRESHOLD))
         {

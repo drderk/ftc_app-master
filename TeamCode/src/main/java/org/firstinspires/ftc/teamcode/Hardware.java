@@ -1,45 +1,28 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import android.hardware.Sensor;
+
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorBNO055IMU;
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorDIO;
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorHTColor;
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRColor;
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRIrSeeker;
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMROpticalDistance;
 
 /**
  * This is NOT an opmode.
@@ -53,15 +36,20 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorDIO;
  *
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
+ * Motor channel:  Manipulator drive motor:  "left_arm"
+ * Servo channel:  Servo to open left claw:  "left_hand"
+ * Servo channel:  Servo to open right claw: "right_hand"
  */
 public class Hardware
 {
-    /* Public OpMode members. */
+    //Motors
+
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor  lift        = null;
     public DcMotor  extend      = null;
     public DcMotor  liftRelic   = null;
+
     public Servo    rotate      = null;
     public Servo    jewel       = null;
     public Servo    grab        = null;
@@ -69,9 +57,11 @@ public class Hardware
     public Servo    collect1     = null;
     public Servo    collect2     = null;
 
-    public ColorSensor  colorSensor= null;
-    public SensorDIO    breakBeam = null;
 
+
+    public ColorSensor  colorSensor= null;
+
+    public SensorDIO breakBeam = null;
     public SensorBNO055IMU compass = null;
 
     /* local OpMode members. */
@@ -88,40 +78,41 @@ public class Hardware
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive"); //Motor 0
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");// Motor 1
-        /*collect1  = hwMap.get(Servo.class, "collect1");
-        collect2  = hwMap.get(Servo.class, "collect2");
-        lift  = hwMap.get(DcMotor.class, "lift");
-        extend  = hwMap.get(DcMotor.class, "extend");
-        rotate  = hwMap.get(Servo.class, "rotate");
-        jewel  = hwMap.get(Servo.class, "jewel");
-        grab  = hwMap.get(Servo.class, "grab");
-        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
-        breakBeam = hwMap.get(SensorDIO.class, "breakBeam"); */
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        //  Motors
+        leftDrive   = hwMap.get(DcMotor.class,"left_drive");
+        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
+
+        // *** Motor Configuration
+        leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        collect.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        extend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        collect.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
     }
- }
+
+    /***
+     *
+     * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
+     * periodic tick.  This is used to compensate for varying processing times for each cycle.
+     * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
+     *
+     * @param periodMs  Length of wait cycle in mSec.
+     * @throws InterruptedException
+     */
+    public void waitForTick(long periodMs) throws InterruptedException {
+
+        long  remaining = periodMs - (long)period.milliseconds();
+
+        // sleep for the remaining portion of the regular cycle period.
+        if (remaining > 0)
+            Thread.sleep(remaining);
+
+        // Reset the cycle clock for the next pass.
+        period.reset();
+    }
+}
 

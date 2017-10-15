@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 */
 public class PinkPD {
 
-    private PinkPD() {
+    public PinkPD() {
     }
 
     // Use a PD to determine a motor command, which has a range of -1 to 1 (-1=rev; 0=stop; 1=fwd)
