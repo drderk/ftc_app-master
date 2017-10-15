@@ -11,8 +11,8 @@ public class PinkNavigate
     Hardware robot;
 
     static final double COUNTS_PER_INCH = 49.5;  // Base travel
-    static final double POSITION_THRESHOLD = 10.0;   // Counts
-    static final double ANGLE_THRESHOLD = 5.0;     // Degrees
+    static final double POSITION_THRESHOLD = 30.0;   // Counts
+    static final double ANGLE_THRESHOLD = 10.0;     // Degrees
     double leftMotorCmd, rightMotorCmd;
     // Tank drive two wheels to target positions in inches.
     // Returns true when both arrive at the target.
@@ -30,7 +30,7 @@ public class PinkNavigate
         double motorCmd = PinkPD.getMotorCmd(0.1,0.001,linearError,linearVelocity);
 
         // Determine the baseline motor speed command
-        motorCmd = Range.clip(motorCmd, -0.8, 0.8);
+        motorCmd = Range.clip(motorCmd, -0.6, 0.6);
 
         // Determine and add the angle offset
         angleOffset = PinkPD.getMotorCmd(0.02, 0.02, angularError, angularVelocity);
