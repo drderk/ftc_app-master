@@ -40,24 +40,25 @@ import org.firstinspires.ftc.teamcode.Hardware;
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
- *
+ * <p>
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
- *
+ * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-public class TankDrive extends OpMode{
+@TeleOp (name = "Pushbot: Teleop Tank", group = "Pushbot")
+public class TankDrive extends OpMode
+{
 
     /* Declare OpMode members. */
-    Hardware robot       = new Hardware(); // use the class created to define a Pushbot's hardware
-    
+    Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
+
     double left;
     double right;
     double collectPos1 = 0;
@@ -65,7 +66,7 @@ public class TankDrive extends OpMode{
     double liftPow = 0;
     double rotatePos = 0;
     double liftCPI = 0; //Counts per inch
-    
+
     //positions
     double liftUp = 12 * liftCPI;
     double liftDown = 0 * liftCPI;
@@ -73,11 +74,13 @@ public class TankDrive extends OpMode{
 
     //Collector Opmode
     Collector collector = new Collector();
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void init() {
+    public void init ()
+    {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -91,61 +94,67 @@ public class TankDrive extends OpMode{
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop() {
+    public void init_loop ()
+    {
     }
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
+    public void start ()
+    {
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop ()
+    {
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
-        
+
         //collect buttons
         if (gamepad2.left_bumper)
+        {
+            if (robot.rotate.getPosition() < 0.5)
             {
-                if (robot.rotate.getPosition() < 0.5) {
-                    collectPos1 = -1;
-                }
-                else {
-                    collectPos2 = -1;
-                }
-        }
-        else if (gamepad2.x) {
+                collectPos1 = -1;
+            } else
+            {
+                collectPos2 = -1;
+            }
+        } else if (gamepad2.x)
+        {
             collector.runOpMode();
-        } else { //collect neutral
-        	collectPos1 = 0;
+        } else
+        { //collect neutral
+            collectPos1 = 0;
             collectPos2 = 0;
         }
 
         //lift buttons
-        if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1) { //manual control
+        if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1)
+        { //manual control
             liftPow = -gamepad2.left_stick_y;
             //liftHold = robot.lift.getCurrentPosition();
-        }
-        else if (gamepad2.dpad_up){ //lift up position
-        	//liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
-        	liftHold = liftPow;
-        } 
-        else if (gamepad2.dpad_down){ //lift down position
-        	//liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
-        	liftHold = liftPow;
+        } else if (gamepad2.dpad_up)
+        { //lift up position
+            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+            liftHold = liftPow;
+        } else if (gamepad2.dpad_down)
+        { //lift down position
+            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+            liftHold = liftPow;
 
+        } else
+        { //Holds position
+            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
         }
-        else { //Holds position
-        	//liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
-        }
-        
+
         //rotate buttons
        /* if (gamepad2.x)
         {
@@ -164,19 +173,20 @@ public class TankDrive extends OpMode{
         robot.collect.setPosition(collectPos2);
         robot.lift.setPower(liftPow);
         robot.rotate.setPosition(rotatePos);*/
-        
+
         //Sends telemetry to the phone
-        telemetry.addData("left",  "%.2f", left);
+        telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("Left Encoder", "%d", robot.leftDrive.getCurrentPosition());
         telemetry.addData("Right Encoder", "%d", robot.rightDrive.getCurrentPosition());
-        }
+    }
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void stop ()
+    {
     }
 
 }

@@ -4,14 +4,17 @@ import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Pureawesomeness on 11/8/2016.
-*/
-public class PinkPD {
+ */
+public class PinkPD
+{
 
-    public PinkPD() {
+    public PinkPD ()
+    {
     }
 
     // Use a PD to determine a motor command, which has a range of -1 to 1 (-1=rev; 0=stop; 1=fwd)
-    public static double getMotorCmd(double Kp, double Kd, double error, double currentVel) {
+    public static double getMotorCmd (double Kp, double Kd, double error, double currentVel)
+    {
 
         double motorCmd;
 
@@ -22,7 +25,8 @@ public class PinkPD {
     }
 
     // Use a PD to determine a continuous servo command, which has a range of 0 to 1 (0=rev; .5=stop; 1=fwd)
-    public static double getServoCmd(double Kp, double Kd, double error, double currentVel) {
+    public static double getServoCmd (double Kp, double Kd, double error, double currentVel)
+    {
 
         double servoCmd;
 

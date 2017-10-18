@@ -48,31 +48,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
- *
+ * <p>
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
- *
+ * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoTestDrive")
+@Autonomous (name = "AutoTestDrive")
 @Disabled
-public class AutoTestDrive extends OpMode{
+public class AutoTestDrive extends OpMode
+{
 
-    /* Declare OpMode members. */
-    Hardware robot       = new Hardware(); // use the class created to define a Pushbot's hardware
-    private ElapsedTime runtime = new ElapsedTime();
-    BNO055IMU imu;
-    int currentAngle;
-    int stage = 0;
     static final double COUNTS_PER_INCH = 49.5;  // Base travel
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
+    /* Declare OpMode members. */
+    Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
+    BNO055IMU imu;
+    int currentAngle;
+    int stage = 0;
     double leftMotorCmd, rightMotorCmd;
     //motor and servo setting values
     double collectPos = 0;
@@ -80,15 +80,16 @@ public class AutoTestDrive extends OpMode{
     double jewelPos = 0;
     double grabPos = 0;
     double rotatePos = 0;
-    double extendPos= 0;
+    double extendPos = 0;
     double targetPos = 0;
     double targetAngle = 0;
-
     VuMarks camera = new VuMarks();
     RelicRecoveryVuMark picturePos;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void init() {
+    public void init ()
+    {
          /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -131,25 +132,29 @@ public class AutoTestDrive extends OpMode{
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop() {
+    public void init_loop ()
+    {
     }
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
+    public void start ()
+    {
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop ()
+    {
         telemetry.addData("Opmode", "active");
         //telemetry.update();
         currentAngle = (int) GetHeading();
-        switch (stage) {
+        switch (stage)
+        {
             case 0: //initialize
                 collectPos = 0;
                 liftPos = 0;
@@ -209,11 +214,13 @@ public class AutoTestDrive extends OpMode{
                 // telemetry.addData("RightMotor", robot.rightDrive.getPower());
                 telemetry.addData("LeftMotor", robot.leftDrive.getPower());
                 telemetry.addData("RightMotor", robot.rightDrive.getPower());
-                    if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
-                        stage = 100;
-                    } else {
-                        stage = 30;
-                    }
+                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                {
+                    stage = 100;
+                } else
+                {
+                    stage = 30;
+                }
                 break;
 
             case 40: //turn
@@ -228,9 +235,11 @@ public class AutoTestDrive extends OpMode{
 
                 telemetry.addData("Stage", stage);
 
-                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                {
                     stage = 100;
-                } else {
+                } else
+                {
                     stage = 40;
                 }
                 break;
@@ -246,9 +255,11 @@ public class AutoTestDrive extends OpMode{
                 targetAngle = 90;
 
                 telemetry.addData("Stage", stage);
-                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                {
                     stage = 60;
-                } else {
+                } else
+                {
                     stage = 40;
                 }
                 break;
@@ -263,9 +274,11 @@ public class AutoTestDrive extends OpMode{
                 targetAngle = 90;
                 telemetry.addData("Stage", stage);
 
-                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                {
                     stage = 70;
-                } else {
+                } else
+                {
                     stage = 40;
                 }
                 break;
@@ -280,9 +293,11 @@ public class AutoTestDrive extends OpMode{
                 targetAngle = 90;
                 telemetry.addData("Stage", stage);
 
-                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1)) {
+                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                {
                     stage = 70;
-                } else {
+                } else
+                {
                     stage = 40;
                 }
                 break;
@@ -294,7 +309,8 @@ public class AutoTestDrive extends OpMode{
                 grabPos = 0;
                 rotatePos = 0;
                 extendPos = 0;
-                driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(),0,0, 1);                            telemetry.addData("Stage", stage);
+                driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1);
+                telemetry.addData("Stage", stage);
                 break;
         }
 
@@ -307,13 +323,16 @@ public class AutoTestDrive extends OpMode{
                 robot.extend.setPower(extendPos);*/
         telemetry.update();
     }
-    public double GetHeading(){
+
+    public double GetHeading ()
+    {
         Orientation angles;
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
-    public boolean driveToPos(double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
-                              double linearVelocity, double angularVelocity, double maxPower)
+
+    public boolean driveToPos (double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
+                               double linearVelocity, double angularVelocity, double maxPower)
     {
         double targetPosCounts = targetPos * COUNTS_PER_INCH;
         telemetry.addData("TargetPositionCounts", targetPosCounts);
@@ -323,7 +342,7 @@ public class AutoTestDrive extends OpMode{
         telemetry.addData("RightWheelPos", rightWheelPos);
         double angleErrorDegrees = targetAngle - currentAngle;
         telemetry.addData("AngleErrorDegrees", angleErrorDegrees);
-        double currentPosCounts = (leftWheelPos + rightWheelPos)/2.0;
+        double currentPosCounts = (leftWheelPos + rightWheelPos) / 2.0;
         telemetry.addData("CurrentPosCounts", currentPosCounts);
         double angleOffset;
         double linearError = targetPosCounts - currentPosCounts;
@@ -353,7 +372,7 @@ public class AutoTestDrive extends OpMode{
         telemetry.addData("RightMotorCommand", rightMotorCmd);
         telemetry.addData("LeftMotorCommand", leftMotorCmd);
 
-        if((Math.abs(linearError)<POSITION_THRESHOLD)&&(Math.abs(angleErrorDegrees)<ANGLE_THRESHOLD))
+        if ((Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD))
         {
             return true;
         } else
@@ -366,7 +385,8 @@ public class AutoTestDrive extends OpMode{
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void stop ()
+    {
     }
 
 }

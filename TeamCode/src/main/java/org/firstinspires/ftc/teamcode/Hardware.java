@@ -26,14 +26,14 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorMROpticalDis
 
 /**
  * This is NOT an opmode.
- *
+ * <p>
  * This class can be used to define all the specific hardware for a single robot.
  * In this case that robot is a Pushbot.
  * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
+ * <p>
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- *
+ * <p>
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  * Motor channel:  Manipulator drive motor:  "left_arm"
@@ -44,43 +44,44 @@ public class Hardware
 {
     //Motors
 
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  lift        = null;
-    public DcMotor  extend      = null;
-    public DcMotor  liftRelic   = null;
+    public DcMotor leftDrive = null;
+    public DcMotor rightDrive = null;
+    public DcMotor lift = null;
+    public DcMotor extend = null;
+    public DcMotor liftRelic = null;
 
-    public Servo    rotate      = null;
-    public Servo    jewel       = null;
-    public Servo    grab        = null;
-    public Servo    rotaterelic = null;
-    public Servo    collect1     = null;
-    public Servo    collect2     = null;
+    public Servo rotate = null;
+    public Servo jewel = null;
+    public Servo grab = null;
+    public Servo rotaterelic = null;
+    public Servo collect1 = null;
+    public Servo collect2 = null;
 
 
-
-    public ColorSensor  colorSensor= null;
+    public ColorSensor colorSensor = null;
 
     public SensorDIO breakBeam = null;
     public SensorBNO055IMU compass = null;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public Hardware(){
+    public Hardware ()
+    {
 
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init (HardwareMap ahwMap)
+    {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
         //  Motors
-        leftDrive   = hwMap.get(DcMotor.class,"left_drive");
-        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
+        leftDrive = hwMap.get(DcMotor.class, "left_drive");
+        rightDrive = hwMap.get(DcMotor.class, "right_drive");
 
         // *** Motor Configuration
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -103,9 +104,10 @@ public class Hardware
      * @param periodMs  Length of wait cycle in mSec.
      * @throws InterruptedException
      */
-    public void waitForTick(long periodMs) throws InterruptedException {
+    public void waitForTick (long periodMs) throws InterruptedException
+    {
 
-        long  remaining = periodMs - (long)period.milliseconds();
+        long remaining = periodMs - (long) period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
         if (remaining > 0)

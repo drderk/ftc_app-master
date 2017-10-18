@@ -24,22 +24,23 @@ import org.firstinspires.ftc.teamcode.PinkNavigate;
  * Created by Hanna on 10/7/2017.
  */
 
-@TeleOp(name="Gripper", group="Pushbot")
-public class Gripper extends LinearOpMode {
+@TeleOp (name = "Gripper", group = "Pushbot")
+public class Gripper extends LinearOpMode
+{
 
     //declare variables
-    Hardware         robot   = new Hardware();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    Hardware robot = new Hardware();   // Use a Pushbot's hardware
     BNO055IMU imu;
     int currentAngle;
     int stage = 0;
     boolean auto = true;
-
     VuMarks camera = new VuMarks();
     RelicRecoveryVuMark picturePos;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode ()
+    {
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -48,11 +49,11 @@ public class Gripper extends LinearOpMode {
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -80,10 +81,12 @@ public class Gripper extends LinearOpMode {
         Button (x) raises height (1 cube)
         Button (y) rotates 180 degrees
          */
-        while (auto) {
-            currentAngle = (int)GetHeading();
-            switch (stage) {
-                case 0 : //Rotate the arm to be perpendicular to the floor
+        while (auto)
+        {
+            currentAngle = (int) GetHeading();
+            switch (stage)
+            {
+                case 0: //Rotate the arm to be perpendicular to the floor
                     robot.rotaterelic.setPosition(0.25);
                     stage = 1;
                     break;
@@ -135,9 +138,10 @@ public class Gripper extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
    */
-    public double GetHeading(){
+    public double GetHeading ()
+    {
         Orientation angles;
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
