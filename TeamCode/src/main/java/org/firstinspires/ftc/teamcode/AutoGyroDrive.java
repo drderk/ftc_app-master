@@ -346,7 +346,8 @@ public class AutoGyroDrive extends LinearOpMode
             leftSpeed = 0.0;
             rightSpeed = 0.0;
             onTarget = true;
-        } else
+        }
+        else
         {
             steer = getSteer(error, PCoeff);
             rightSpeed = speed * steer;

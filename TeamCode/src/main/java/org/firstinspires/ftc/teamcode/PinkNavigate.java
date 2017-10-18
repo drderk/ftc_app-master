@@ -49,7 +49,8 @@ public class PinkNavigate
         if ((Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD))
         {
             return true;
-        } else
+        }
+        else
         {
             return false;
         }

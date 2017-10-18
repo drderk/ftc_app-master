@@ -42,7 +42,8 @@ public class Collector extends LinearOpMode
                         if (robot.collect1.getPosition() < 0.5)
                         {
                             collectPos2 = 1;
-                        } else
+                        }
+                        else
                         {
                             collectPos1 = 1;
                         }
@@ -55,7 +56,8 @@ public class Collector extends LinearOpMode
                         if (robot.collect1.getPosition() < 0.5)
                         {
                             collectPos2 = 1;
-                        } else
+                        }
+                        else
                         {
                             collectPos1 = 1;
                         }
@@ -68,14 +70,16 @@ public class Collector extends LinearOpMode
                         if (robot.collect1.getPosition() < 0.5)
                         {
                             collectPos2 = 1;
-                        } else
+                        }
+                        else
                         {
                             collectPos1 = 1;
                         }
                         if (robot.rotate.getPosition() < 0.5)
                         {
                             rotatePos = .5;
-                        } else
+                        }
+                        else
                         {
                             rotatePos = 0;
                         }
@@ -87,7 +91,8 @@ public class Collector extends LinearOpMode
                         if (robot.collect1.getPosition() < 0.5)
                         {
                             collectPos2 = 1;
-                        } else
+                        }
+                        else
                         {
                             collectPos1 = 1;
                         }

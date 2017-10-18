@@ -175,7 +175,8 @@ public class VuMarks extends LinearOpMode
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
                 }
-            } else
+            }
+            else
             {
                 telemetry.addData("VuMark", "not visible");
             }

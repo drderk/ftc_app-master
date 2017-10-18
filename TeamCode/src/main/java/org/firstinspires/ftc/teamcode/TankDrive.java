@@ -123,14 +123,17 @@ public class TankDrive extends OpMode
             if (robot.rotate.getPosition() < 0.5)
             {
                 collectPos1 = -1;
-            } else
+            }
+            else
             {
                 collectPos2 = -1;
             }
-        } else if (gamepad2.x)
+        }
+        else if (gamepad2.x)
         {
             collector.runOpMode();
-        } else
+        }
+        else
         { //collect neutral
             collectPos1 = 0;
             collectPos2 = 0;
@@ -141,16 +144,19 @@ public class TankDrive extends OpMode
         { //manual control
             liftPow = -gamepad2.left_stick_y;
             //liftHold = robot.lift.getCurrentPosition();
-        } else if (gamepad2.dpad_up)
+        }
+        else if (gamepad2.dpad_up)
         { //lift up position
             //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
             liftHold = liftPow;
-        } else if (gamepad2.dpad_down)
+        }
+        else if (gamepad2.dpad_down)
         { //lift down position
             //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
             liftHold = liftPow;
 
-        } else
+        }
+        else
         { //Holds position
             //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
         }

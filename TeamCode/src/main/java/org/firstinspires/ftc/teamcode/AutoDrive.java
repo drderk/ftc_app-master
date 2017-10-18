@@ -212,7 +212,8 @@ public class AutoDrive extends LinearOpMode
                         if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
                         {
                             stage = 40;
-                        } else
+                        }
+                        else
                         {
                             stage = 30;
                         }
@@ -233,7 +234,8 @@ public class AutoDrive extends LinearOpMode
                         if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
                         {
                             stage = 100;
-                        } else
+                        }
+                        else
                         {
                             stage = 40;
                         }
@@ -253,7 +255,8 @@ public class AutoDrive extends LinearOpMode
                         if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
                         {
                             stage = 60;
-                        } else
+                        }
+                        else
                         {
                             stage = 40;
                         }
@@ -272,7 +275,8 @@ public class AutoDrive extends LinearOpMode
                         if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
                         {
                             stage = 70;
-                        } else
+                        }
+                        else
                         {
                             stage = 40;
                         }
@@ -291,7 +295,8 @@ public class AutoDrive extends LinearOpMode
                         if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
                         {
                             stage = 70;
-                        } else
+                        }
+                        else
                         {
                             stage = 40;
                         }
