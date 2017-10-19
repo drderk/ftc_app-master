@@ -40,13 +40,20 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -76,12 +83,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  */
 
 @Autonomous (name = "Auto Drive", group = "Pushbot")
-public class AutoDrive extends LinearOpMode
-{
+public class AutoDrive extends LinearOpMode {
 
-    static final double COUNTS_PER_INCH = 49.5;  // Base travel
-    static final double POSITION_THRESHOLD = 10.0;   // Counts
-    static final double ANGLE_THRESHOLD = 5.0;     // Degrees
     //declare variables
     public Hardware robot = new Hardware();   // Use a Pushbot's hardware
     public PinkNavigate PinkNavigate = new PinkNavigate();
@@ -98,13 +101,16 @@ public class AutoDrive extends LinearOpMode
     double extendPos = 0;
     double targetPos = 0;
     double targetAngle = 0;
-    VuMarks camera = new VuMarks();
-    RelicRecoveryVuMark picturePos;
+    //RelicRecoveryVuMark picturePos;
     private ElapsedTime runtime = new ElapsedTime();
+    VuforiaTrackable relicTemplate;
+
+    OpenGLMatrix lastLocation = null;
+    RelicRecoveryVuMark vuMark = null;
+    VuforiaLocalizer vuforia;
 
     @Override
-    public void runOpMode ()
-    {
+    public void runOpMode() {
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -127,6 +133,22 @@ public class AutoDrive extends LinearOpMode
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameter = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameter.vuforiaLicenseKey = "AaId2D7/////AAAAGeEOwvh4YkCKim1fP/VA8hpZk/olkYH12xynqz4wP+p4EjzCP4otFEoCxD0cztAeqHF3sVP3DJkAIOKqVX8UM6YbWpaaZPA3fK1YUfNg1Eh7A47eCRH0zO4hSJZ6fJEnw/NtT+dyv162iRX46R3xsyfB4CZdrHH2Yuxxoa9iWfaLfMdT7p7AWxUjHyujL28oC9xNcv2hJ0QDVbq3om6OzNEbAfkVbUf2q+z/VoWoH6036CL5fzB/ddo2E3Lgiv3PMoGtQyoWDtAuV6s53CAs/GuSGdv/WmltQtuxcu4w6QrdZIF2SCQ3idYKEPUuv16ranl1/Ayz5OgnYQf4HLRYLgnCRFKXEd7WZPVaLIwM9bJq"; //"ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        parameter.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameter);
+
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * in this data set: all three of the VuMarks in the game were created from this one template,
+         * but differ in their instance id information.
+         * @see VuMarkInstanceId
+         */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+
         // Send telemetry message to signify robot waiting
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
@@ -134,24 +156,22 @@ public class AutoDrive extends LinearOpMode
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Wait for the game to start (driver presses PLAY).
         telemetry.addData("heading", GetHeading());
         telemetry.addData("Status", "Waiting for start");
         telemetry.update();
         waitForStart();
-
+        relicTrackables.activate();
         //Motion Start
-        if (opModeIsActive())
-        {
-            while (opModeIsActive())
-            {
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
                 telemetry.addData("Opmode:", "active");
                 //telemetry.update();
                 currentAngle = (int) GetHeading();
-                switch (stage)
-                {
+                switch (stage) {
                     case 0: //initialize
                         collectPos = 0;
                         liftPos = 0;
@@ -162,7 +182,7 @@ public class AutoDrive extends LinearOpMode
                         targetPos = 0;
                         targetAngle = 0;
 
-                        stage = 30;
+                        stage = 10;
                         break;
 
                     case 10: //scan surroundings
@@ -174,9 +194,14 @@ public class AutoDrive extends LinearOpMode
                         extendPos = 0;
                         targetPos = 0;
                         targetAngle = 0;
-
-                        picturePos = camera.vuMark;
-                        telemetry.addData("Glyph pos", picturePos);
+                        RelicRecoveryVuMark p = getPose();
+                        if (p != null){
+                            // change behavior based on pose
+                            telemetry.addData("Vumarks", p);
+                        }
+                        else {
+                            telemetry.addData("Vumarks", "No picture!");
+                        }
                         //telemetry.addData("Jewel Color", jewelColor());
                         sleep(1000);
                         stage = 20;
@@ -209,12 +234,9 @@ public class AutoDrive extends LinearOpMode
 
                         telemetry.addData("Stage", stage);
                         //drive completely off ramp
-                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
-                        {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
                             stage = 40;
-                        }
-                        else
-                        {
+                        } else {
                             stage = 30;
                         }
                         break;
@@ -231,12 +253,9 @@ public class AutoDrive extends LinearOpMode
 
                         telemetry.addData("Stage", stage);
 
-                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
-                        {
-                            stage = 100;
-                        }
-                        else
-                        {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                            stage = 50;
+                        } else {
                             stage = 40;
                         }
                         break;
@@ -252,13 +271,10 @@ public class AutoDrive extends LinearOpMode
                         targetAngle = 90;
 
                         telemetry.addData("Stage", stage);
-                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
-                        {
-                            stage = 60;
-                        }
-                        else
-                        {
-                            stage = 40;
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                            stage = 100;
+                        } else {
+                            stage = 50;
                         }
                         break;
                     case 60: //drive to center
@@ -272,13 +288,10 @@ public class AutoDrive extends LinearOpMode
                         targetAngle = 90;
                         telemetry.addData("Stage", stage);
 
-                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
-                        {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
                             stage = 70;
-                        }
-                        else
-                        {
-                            stage = 40;
+                        } else {
+                            stage = 60;
                         }
                         break;
                     case 70: //drive to center
@@ -292,13 +305,10 @@ public class AutoDrive extends LinearOpMode
                         targetAngle = 90;
                         telemetry.addData("Stage", stage);
 
-                        if (PinkNavigate.driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
-                        {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                            stage = 100;
+                        } else {
                             stage = 70;
-                        }
-                        else
-                        {
-                            stage = 40;
                         }
                         break;
 
@@ -344,13 +354,52 @@ public class AutoDrive extends LinearOpMode
      *  3) Driver stops the opmode running.
    */
 
-    public double GetHeading ()
-    {
+    public double GetHeading() {
         Orientation angles;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
+    public RelicRecoveryVuMark getPose() {
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+            telemetry.addData("VuMark", "%s visible", vuMark);
+
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+            telemetry.addData("Pose", format(pose));
+
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
+            if (pose != null) {
+                VectorF trans = pose.getTranslation();
+                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                double tX = trans.get(0);
+                double tY = trans.get(1);
+                double tZ = trans.get(2);
+
+                // Extract the rotational components of the target relative to the robot
+                double rX = rot.firstAngle;
+                double rY = rot.secondAngle;
+                double rZ = rot.thirdAngle;
+            }
+            return vuMark;
+        }
+        return null;
+    }
+
+    String format (OpenGLMatrix transformationMatrix)
+    {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
 }
     /*public String jewelColor() {
         if (robot.colorSensor.red() > 3) {

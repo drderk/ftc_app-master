@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.Hardware;
 
 public class PinkNavigate
 {
-    static final double COUNTS_PER_INCH = 49.5;  // Base travel
-    static final double POSITION_THRESHOLD = 30.0;   // Counts
+    static final double COUNTS_PER_INCH = 43.83; // Counts
+    static final double POSITION_THRESHOLD = 30.0;   // Base travel
     static final double ANGLE_THRESHOLD = 10.0;     // Degrees
     Hardware robot;
     double leftMotorCmd, rightMotorCmd;
@@ -34,9 +34,9 @@ public class PinkNavigate
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);
 
         // Determine and add the angle offset
-        angleOffset = PinkPD.getMotorCmd(0.02, 0.02, angularError, angularVelocity);
-        leftMotorCmd = motorCmd + angleOffset;
-        rightMotorCmd = motorCmd - angleOffset;
+        angleOffset = PinkPD.getMotorCmd(0.01, 0.001, angularError, angularVelocity);
+        leftMotorCmd = motorCmd - angleOffset;
+        rightMotorCmd = motorCmd + angleOffset;
         leftMotorCmd = Range.clip(leftMotorCmd, -1.0, 1.0);
         rightMotorCmd = Range.clip(rightMotorCmd, -1.0, 1.0);
 
