@@ -80,20 +80,32 @@ public class Hardware
         hwMap = ahwMap;
 
         //  Motors
-        leftDrive = hwMap.get(DcMotor.class, "left_drive");
+        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
+        lift       = hwMap.get(DcMotor.class, "lift");
+
+        //Servos
+        collect1 = hwMap.get(Servo.class, "collect1");
+        collect2 = hwMap.get(Servo.class, "collect2");
+        rotate   = hwMap.get(Servo.class, "rotate");
 
         // *** Motor Configuration
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        //lift.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
+        lift.setPower(0);
     }
 
     /***

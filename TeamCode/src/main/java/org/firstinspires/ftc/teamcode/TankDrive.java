@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -117,8 +118,40 @@ public class TankDrive extends OpMode
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
+        if(gamepad1.a){
+            collectPos1 = -1;
+        } else if (gamepad1.b){
+            collectPos1 = 1;
+        } else if (gamepad1.start) {
+            collectPos1 = 0;
+        }
+
+        if(gamepad1.y){
+            collectPos2 = -1;
+        } else if (gamepad1.x){
+            collectPos2 = 1;
+        } else if (gamepad1.right_bumper){
+            collectPos2 = 0;
+        }
+
+        if (gamepad1.dpad_left){
+            rotatePos = -1;
+        } else if (gamepad1.dpad_right){
+            rotatePos = 1;
+        } else if (gamepad1.dpad_down){
+            rotatePos = 0;
+        }
+
+        if (gamepad1.dpad_up){
+            liftPow = 0.5;
+        } else if (gamepad1.dpad_down) {
+            liftPow = -0.5;
+        } else {
+            liftPow = 0;
+        }
+
         //collect buttons
-        if (gamepad2.left_bumper)
+        /*if (gamepad2.left_bumper)
         {
             if (robot.rotate.getPosition() < 0.5)
             {
@@ -147,19 +180,19 @@ public class TankDrive extends OpMode
         }
         else if (gamepad2.dpad_up)
         { //lift up position
-            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()*//*insert encoder error*//*, 0 *//*insert velocity error*//*);
             liftHold = liftPow;
         }
         else if (gamepad2.dpad_down)
         { //lift down position
-            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
+            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()*//*insert encoder error*//*, 0 *//*insert velocity error*//*);
             liftHold = liftPow;
 
         }
         else
         { //Holds position
-            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()/*insert encoder error*/, 0 /*insert velocity error*/);
-        }
+            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()*//*insert encoder error*//*, 0 *//*insert velocity error*//*);
+        }*/
 
         //rotate buttons
        /* if (gamepad2.x)
@@ -175,16 +208,19 @@ public class TankDrive extends OpMode
         //sets powers and positions
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
-        /*robot.collect.setPosition(collectPos1);
-        robot.collect.setPosition(collectPos2);
+        robot.collect1.setPosition(collectPos1);
+        robot.collect2.setPosition(collectPos2);
         robot.lift.setPower(liftPow);
-        robot.rotate.setPosition(rotatePos);*/
+        robot.rotate.setPosition(rotatePos);
 
         //Sends telemetry to the phone
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("liftPow", "%.2f", robot.lift.getPower());
+
         telemetry.addData("Left Encoder", "%d", robot.leftDrive.getCurrentPosition());
         telemetry.addData("Right Encoder", "%d", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Lift Encoder", "%d", robot.lift.getCurrentPosition());
     }
 
     /*
