@@ -83,7 +83,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous (name = "Auto Drive", group = "Pushbot")
-public class AutoDrive extends LinearOpMode {
+public class AutoDrive extends LinearOpMode
+{
 
     //declare variables
     public Hardware robot = new Hardware();   // Use a Pushbot's hardware
@@ -110,7 +111,8 @@ public class AutoDrive extends LinearOpMode {
     VuforiaLocalizer vuforia;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode ()
+    {
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -148,6 +150,7 @@ public class AutoDrive extends LinearOpMode {
          */
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         // Send telemetry message to signify robot waiting
         telemetry.addData("Status", "Resetting Encoders");
@@ -166,12 +169,15 @@ public class AutoDrive extends LinearOpMode {
         waitForStart();
         relicTrackables.activate();
         //Motion Start
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+        if (opModeIsActive())
+        {
+            while (opModeIsActive())
+            {
                 telemetry.addData("Opmode:", "active");
                 //telemetry.update();
                 currentAngle = (int) GetHeading();
-                switch (stage) {
+                switch (stage)
+                {
                     case 0: //initialize
                         collectPos = 0;
                         liftPos = 0;
@@ -194,17 +200,20 @@ public class AutoDrive extends LinearOpMode {
                         extendPos = 0;
                         targetPos = 0;
                         targetAngle = 0;
-                        RelicRecoveryVuMark p = getPose();
-                        if (p != null){
+                        RelicRecoveryVuMark image = getImage();
+                        // If the camera is seeing a known image
+                        if (image != RelicRecoveryVuMark.UNKNOWN)
+                        {
                             // change behavior based on pose
-                            telemetry.addData("Vumarks", p);
+                            telemetry.addData("Vumarks", image);
+                            stage = 30;
                         }
-                        else {
+                        else
+                        {
                             telemetry.addData("Vumarks", "No picture!");
+                            stage = 10;
                         }
                         //telemetry.addData("Jewel Color", jewelColor());
-                        sleep(1000);
-                        stage = 20;
                         break;
 
                     case 20: //lower the jewel arm
@@ -234,9 +243,12 @@ public class AutoDrive extends LinearOpMode {
 
                         telemetry.addData("Stage", stage);
                         //drive completely off ramp
-                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                        {
                             stage = 40;
-                        } else {
+                        }
+                        else
+                        {
                             stage = 30;
                         }
                         break;
@@ -253,9 +265,12 @@ public class AutoDrive extends LinearOpMode {
 
                         telemetry.addData("Stage", stage);
 
-                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                        {
                             stage = 50;
-                        } else {
+                        }
+                        else
+                        {
                             stage = 40;
                         }
                         break;
@@ -271,9 +286,12 @@ public class AutoDrive extends LinearOpMode {
                         targetAngle = 90;
 
                         telemetry.addData("Stage", stage);
-                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                        {
                             stage = 100;
-                        } else {
+                        }
+                        else
+                        {
                             stage = 50;
                         }
                         break;
@@ -288,9 +306,12 @@ public class AutoDrive extends LinearOpMode {
                         targetAngle = 90;
                         telemetry.addData("Stage", stage);
 
-                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                        {
                             stage = 70;
-                        } else {
+                        }
+                        else
+                        {
                             stage = 60;
                         }
                         break;
@@ -305,9 +326,12 @@ public class AutoDrive extends LinearOpMode {
                         targetAngle = 90;
                         telemetry.addData("Stage", stage);
 
-                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1)) {
+                        if (PinkNavigate.driveToPos(targetPos, -targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
+                        {
                             stage = 100;
-                        } else {
+                        }
+                        else
+                        {
                             stage = 70;
                         }
                         break;
@@ -354,15 +378,18 @@ public class AutoDrive extends LinearOpMode {
      *  3) Driver stops the opmode running.
    */
 
-    public double GetHeading() {
+    public double GetHeading ()
+    {
         Orientation angles;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
-    public RelicRecoveryVuMark getPose() {
+    public RelicRecoveryVuMark getImage ()
+    {
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN)
+        {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
@@ -377,7 +404,8 @@ public class AutoDrive extends LinearOpMode {
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
-            if (pose != null) {
+            if (pose != null)
+            {
                 VectorF trans = pose.getTranslation();
                 Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
