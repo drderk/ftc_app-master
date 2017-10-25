@@ -213,6 +213,7 @@ public class AutoDrive extends LinearOpMode
                             telemetry.addData("Vumarks", "No picture!");
                             stage = 10;
                         }
+                        sleep(1000);
                         //telemetry.addData("Jewel Color", jewelColor());
                         break;
 

@@ -119,17 +119,17 @@ public class TankDrive extends OpMode
         right = -gamepad1.right_stick_y;
 
         if(gamepad1.a){
-            collectPos1 = -1;
+            collectPos1 = -0.5;
         } else if (gamepad1.b){
-            collectPos1 = 1;
+            collectPos1 = 0.5;
         } else if (gamepad1.start) {
             collectPos1 = 0;
         }
 
         if(gamepad1.y){
-            collectPos2 = -1;
+            collectPos2 = -0.5;
         } else if (gamepad1.x){
-            collectPos2 = 1;
+            collectPos2 = 0.5;
         } else if (gamepad1.right_bumper){
             collectPos2 = 0;
         }
