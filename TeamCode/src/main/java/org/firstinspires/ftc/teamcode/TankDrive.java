@@ -54,8 +54,7 @@ import org.firstinspires.ftc.teamcode.Hardware;
 */
 
 @TeleOp (name = "Pushbot: Teleop Tank", group = "Pushbot")
-public class TankDrive extends OpMode
-{
+public class TankDrive extends OpMode {
 
     /* Declare OpMode members. */
     Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
@@ -67,10 +66,11 @@ public class TankDrive extends OpMode
     double armPos = 0;
     double collectorRotatePos = 0;
     double liftCPI = 0; //Counts per inch
+    double armPow = 0;
 
     static final double FINGER_CLOSE_POS = -1;
     static final double FINGER_OPEN_POS = 1;
-    static final double FINGER_SCORE_POS = 0.5;
+    static final double FINGER_SCORE_POS = 0;
     static final double ARM_COLLECT_POS = 23;
     static final double ARM_LOW_SCORE_POS = 30;
     static final double ARM_HIGH_SCORE_POS = 280;
@@ -91,8 +91,7 @@ public class TankDrive extends OpMode
      * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void init ()
-    {
+    public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -106,23 +105,21 @@ public class TankDrive extends OpMode
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop () {
+    public void init_loop() {
     }
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start ()
-    {
+    public void start() {
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop ()
-    {
+    public void loop() {
         collectorFinger1Pos = FINGER_CLOSE_POS;
         collectorFinger2Pos = FINGER_CLOSE_POS;
 
@@ -130,55 +127,57 @@ public class TankDrive extends OpMode
         left = -gamepad1.left_stick_y * 0.5;
         right = -gamepad1.right_stick_y * 0.5;
 
-        if (gamepad1.b) {
+        if (gamepad1.right_bumper) {
+            if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
+                collectorFinger2Pos = FINGER_OPEN_POS;
+            else if (collectorRotatePos == COLLECTOR_INVERTED_POS) {
+                collectorFinger1Pos = FINGER_OPEN_POS;
+            }
+            armPos = ARM_COLLECT_POS;
+        }
+
+        if (gamepad2.a) {
             collectorFinger1Pos = FINGER_SCORE_POS;
             collectorFinger2Pos = FINGER_SCORE_POS;
         }
 
-        if (gamepad1.right_bumper) {
-                collectorRotatePos = COLLECTOR_UPRIGHT_POS;
-            }
-        else if (gamepad1.left_bumper) {
-                collectorRotatePos = COLLECTOR_INVERTED_POS;
+        if (gamepad2.x) {
+            armPos = ARM_LOW_SCORE_POS;
         }
 
-        if (gamepad1.dpad_up){
+        if (gamepad2.y) {
+            armPos = ARM_HIGH_SCORE_POS;
+        }
+
+        if (gamepad2.right_bumper) {
+            collectorRotatePos = COLLECTOR_UPRIGHT_POS;
+        }
+        if (gamepad2.left_bumper) {
+            collectorRotatePos = COLLECTOR_INVERTED_POS;
+        }
+
+        if (gamepad1.dpad_up) {
             armPos = 0.75;
             liftHold = robot.lift.getCurrentPosition();
-        }
-        else if (gamepad1.dpad_down){
+        } else if (gamepad1.dpad_down) {
             armPos = 0.001;
             liftHold = robot.lift.getCurrentPosition();
         }
-        else if (gamepad1.y) {
-            armPos = ARM_HIGH_SCORE_POS;
-            liftHold = ARM_HIGH_SCORE_POS;
-        }
-        else if(gamepad1.a){
-        armPos = ARM_COLLECT_POS;
-        liftHold = ARM_COLLECT_POS;
-        if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
-            collectorFinger2Pos = FINGER_OPEN_POS;
-        else {
-            collectorFinger1Pos = FINGER_OPEN_POS;
-        }
-    }
-        else {
-            armPos = liftPD.getMotorCmd(liftHold, robot.lift.getCurrentPosition(), 0.7);
-        }
-
+        liftHold = armPos;
         //sets powers and positions
+        armPow = Range.clip(liftPD.getMotorCmd(liftHold, robot.lift.getCurrentPosition(), 0.7), 0.001, 0.7);
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
         robot.collect1.setPosition(collectorFinger1Pos);
         robot.collect2.setPosition(collectorFinger2Pos);
-        robot.lift.setPower(armPos);
+        robot.lift.setPower(armPow);
         robot.rotate.setPosition(collectorRotatePos);
 
         //Sends telemetry to the phone
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("liftPow", "%.2f", robot.lift.getPower());
+        telemetry.addData("armPos", armPos);
 
         telemetry.addData("Left Encoder", "%d", robot.leftDrive.getCurrentPosition());
         telemetry.addData("Right Encoder", "%d", robot.rightDrive.getCurrentPosition());
