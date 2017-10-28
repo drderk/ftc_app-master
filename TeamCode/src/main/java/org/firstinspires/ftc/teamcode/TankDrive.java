@@ -38,20 +38,20 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.Hardware;
 
-/**
- * This file provides basic Telop driving for a Pushbot robot.
+/*
+ * This file provides basic Teleop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
  * <p>
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It raises and lowers the claw using the Gamepad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+*/
 
 @TeleOp (name = "Pushbot: Teleop Tank", group = "Pushbot")
 public class TankDrive extends OpMode
@@ -62,11 +62,22 @@ public class TankDrive extends OpMode
 
     double left;
     double right;
-    double collectPos1 = 0;
-    double collectPos2 = 0;
-    double liftPow = 0;
-    double rotatePos = 0;
+    double collectorFinger1Pos = 0; //closed
+    double collectorFinger2Pos = 0; //closed
+    double armPos = 0;
+    double collectorRotatePos = 0;
     double liftCPI = 0; //Counts per inch
+
+    static final double FINGER_CLOSE_POS = -1;
+    static final double FINGER_OPEN_POS = 1;
+    static final double FINGER_SCORE_POS = 0.5;
+    static final double ARM_COLLECT_POS = 10;
+    static final double ARM_LOW_SCORE_POS = 20;
+    static final double ARM_HIGH_SCORE_POS = 280;
+    static final double ARM_MAX_POS = 300;
+    static final double ARM_MIN_POS = 10;
+    static final double COLLECTOR_UPRIGHT_POS = -1;
+    static final double COLLECTOR_INVERTED_POS = 1;
 
     //positions
     double liftUp = 12 * liftCPI;
@@ -95,8 +106,7 @@ public class TankDrive extends OpMode
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop ()
-    {
+    public void init_loop () {
     }
 
     /*
@@ -113,41 +123,38 @@ public class TankDrive extends OpMode
     @Override
     public void loop ()
     {
+        collectorFinger1Pos = FINGER_CLOSE_POS;
+        collectorFinger2Pos = FINGER_CLOSE_POS;
+        armPos = ARM_LOW_SCORE_POS;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
         if(gamepad1.a){
-            collectPos1 = -1;
-        } else if (gamepad1.b){
-            collectPos1 = 1;
-        } else if (gamepad1.start) {
-            collectPos1 = 0;
+            armPos = ARM_COLLECT_POS;
+
+            if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
+                collectorFinger2Pos = FINGER_OPEN_POS;
+            else {
+                collectorFinger1Pos = FINGER_OPEN_POS;
+            }
         }
 
-        if(gamepad1.y){
-            collectPos2 = -1;
-        } else if (gamepad1.x){
-            collectPos2 = 1;
-        } else if (gamepad1.right_bumper){
-            collectPos2 = 0;
+        if (gamepad1.y) {
+            armPos = ARM_HIGH_SCORE_POS;
         }
 
-        if (gamepad1.dpad_left){
-            rotatePos = -1;
-        } else if (gamepad1.dpad_right){
-            rotatePos = 1;
-        } else if (gamepad1.dpad_down){
-            rotatePos = 0;
+        if (gamepad1.b) {
+            collectorFinger1Pos = FINGER_SCORE_POS;
+            collectorFinger2Pos = FINGER_SCORE_POS;
         }
 
-        if (gamepad1.dpad_up){
-            liftPow = 0.5;
-        } else if (gamepad1.dpad_down) {
-            liftPow = -0.5;
-        } else {
-            liftPow = 0;
+        if (gamepad1.right_bumper) {
+                collectorRotatePos = COLLECTOR_UPRIGHT_POS;
+            }
+        else if (gamepad1.left_bumper) {
+                collectorRotatePos = COLLECTOR_INVERTED_POS;
         }
 
         //collect buttons
@@ -208,10 +215,10 @@ public class TankDrive extends OpMode
         //sets powers and positions
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
-        robot.collect1.setPosition(collectPos1);
-        robot.collect2.setPosition(collectPos2);
-        robot.lift.setPower(liftPow);
-        robot.rotate.setPosition(rotatePos);
+        robot.collect1.setPosition(collectorFinger1Pos);
+        robot.collect2.setPosition(collectorFinger2Pos);
+        robot.lift.setPower(armPos);
+        robot.rotate.setPosition(collectorRotatePos);
 
         //Sends telemetry to the phone
         telemetry.addData("left", "%.2f", left);
