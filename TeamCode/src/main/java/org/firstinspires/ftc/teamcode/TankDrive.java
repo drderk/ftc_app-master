@@ -71,10 +71,10 @@ public class TankDrive extends OpMode
     static final double FINGER_CLOSE_POS = -1;
     static final double FINGER_OPEN_POS = 1;
     static final double FINGER_SCORE_POS = 0.5;
-    static final double ARM_COLLECT_POS = 10;
-    static final double ARM_LOW_SCORE_POS = 20;
+    static final double ARM_COLLECT_POS = 23;
+    static final double ARM_LOW_SCORE_POS = 30;
     static final double ARM_HIGH_SCORE_POS = 280;
-    static final double ARM_MAX_POS = 300;
+    static final double ARM_MAX_POS = 280;
     static final double ARM_MIN_POS = 10;
     static final double COLLECTOR_UPRIGHT_POS = -1;
     static final double COLLECTOR_INVERTED_POS = 1;
@@ -125,25 +125,10 @@ public class TankDrive extends OpMode
     {
         collectorFinger1Pos = FINGER_CLOSE_POS;
         collectorFinger2Pos = FINGER_CLOSE_POS;
-        armPos = ARM_LOW_SCORE_POS;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-
-        if(gamepad1.a){
-            armPos = ARM_COLLECT_POS;
-
-            if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
-                collectorFinger2Pos = FINGER_OPEN_POS;
-            else {
-                collectorFinger1Pos = FINGER_OPEN_POS;
-            }
-        }
-
-        if (gamepad1.y) {
-            armPos = ARM_HIGH_SCORE_POS;
-        }
+        left = -gamepad1.left_stick_y * 0.5;
+        right = -gamepad1.right_stick_y * 0.5;
 
         if (gamepad1.b) {
             collectorFinger1Pos = FINGER_SCORE_POS;
@@ -157,60 +142,30 @@ public class TankDrive extends OpMode
                 collectorRotatePos = COLLECTOR_INVERTED_POS;
         }
 
-        //collect buttons
-        /*if (gamepad2.left_bumper)
-        {
-            if (robot.rotate.getPosition() < 0.5)
-            {
-                collectPos1 = -1;
-            }
-            else
-            {
-                collectPos2 = -1;
-            }
+        if (gamepad1.dpad_up){
+            armPos = 0.75;
+            liftHold = robot.lift.getCurrentPosition();
         }
-        else if (gamepad2.x)
-        {
-            collector.runOpMode();
+        else if (gamepad1.dpad_down){
+            armPos = 0.001;
+            liftHold = robot.lift.getCurrentPosition();
         }
-        else
-        { //collect neutral
-            collectPos1 = 0;
-            collectPos2 = 0;
+        else if (gamepad1.y) {
+            armPos = ARM_HIGH_SCORE_POS;
+            liftHold = ARM_HIGH_SCORE_POS;
         }
-
-        //lift buttons
-        if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1)
-        { //manual control
-            liftPow = -gamepad2.left_stick_y;
-            //liftHold = robot.lift.getCurrentPosition();
+        else if(gamepad1.a){
+        armPos = ARM_COLLECT_POS;
+        liftHold = ARM_COLLECT_POS;
+        if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
+            collectorFinger2Pos = FINGER_OPEN_POS;
+        else {
+            collectorFinger1Pos = FINGER_OPEN_POS;
         }
-        else if (gamepad2.dpad_up)
-        { //lift up position
-            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftUp - robot.lift.getCurrentPosition()*//*insert encoder error*//*, 0 *//*insert velocity error*//*);
-            liftHold = liftPow;
+    }
+        else {
+            armPos = liftPD.getMotorCmd(liftHold, robot.lift.getCurrentPosition(), 0.7);
         }
-        else if (gamepad2.dpad_down)
-        { //lift down position
-            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftDown - robot.lift.getCurrentPosition()*//*insert encoder error*//*, 0 *//*insert velocity error*//*);
-            liftHold = liftPow;
-
-        }
-        else
-        { //Holds position
-            //liftPow = PinkPD.getMotorCmd(0.1, 0.001, liftHold - robot.lift.getCurrentPosition()*//*insert encoder error*//*, 0 *//*insert velocity error*//*);
-        }*/
-
-        //rotate buttons
-       /* if (gamepad2.x)
-        {
-            if (robot.rotate.getPosition() < 0.5) {
-                rotatePos = 1;
-            }
-            else {
-                rotatePos = 0;
-            }
-        }*/
 
         //sets powers and positions
         robot.leftDrive.setPower(left);

@@ -92,6 +92,7 @@ public class Hardware
         // *** Motor Configuration
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        lift.setDirection(DcMotor.Direction.REVERSE);
         //lift.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

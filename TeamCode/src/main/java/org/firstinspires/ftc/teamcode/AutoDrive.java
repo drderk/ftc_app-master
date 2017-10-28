@@ -102,6 +102,7 @@ public class AutoDrive extends LinearOpMode
     double extendPos = 0;
     double targetPos = 0;
     double targetAngle = 0;
+    RelicRecoveryVuMark image = null;
     //RelicRecoveryVuMark picturePos;
     private ElapsedTime runtime = new ElapsedTime();
     VuforiaTrackable relicTemplate;
@@ -200,9 +201,9 @@ public class AutoDrive extends LinearOpMode
                         extendPos = 0;
                         targetPos = 0;
                         targetAngle = 0;
-                        RelicRecoveryVuMark image = getImage();
+                        image = getImage();
                         // If the camera is seeing a known image
-                        if (image != RelicRecoveryVuMark.UNKNOWN || image == null)
+                        if (image != RelicRecoveryVuMark.UNKNOWN)
                         {
                             // change behavior based on pose
                             telemetry.addData("Vumarks", image);
@@ -239,8 +240,17 @@ public class AutoDrive extends LinearOpMode
                         grabPos = 0;
                         rotatePos = 0;
                         extendPos = 0;
-                        targetPos = 45;
                         targetAngle = 0;
+
+                        if(image == RelicRecoveryVuMark.CENTER){
+                            targetPos = 25;
+                        } else if (image == RelicRecoveryVuMark.LEFT){
+                            targetPos = 20;
+                        } else if (image == RelicRecoveryVuMark.RIGHT){
+                            targetPos = 30;
+                        } else {
+                            targetPos = 0;
+                        }
 
                         telemetry.addData("Stage", stage);
                         //drive completely off ramp
@@ -422,7 +432,7 @@ public class AutoDrive extends LinearOpMode
             }
             return vuMark;
         }
-        return null;
+        return vuMark;
     }
 
     private String format (OpenGLMatrix transformationMatrix)
