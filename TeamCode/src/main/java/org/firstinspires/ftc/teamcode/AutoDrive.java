@@ -202,7 +202,7 @@ public class AutoDrive extends LinearOpMode
                         targetAngle = 0;
                         RelicRecoveryVuMark image = getImage();
                         // If the camera is seeing a known image
-                        if (image != RelicRecoveryVuMark.UNKNOWN)
+                        if (image != RelicRecoveryVuMark.UNKNOWN || image == null)
                         {
                             // change behavior based on pose
                             telemetry.addData("Vumarks", image);
@@ -424,7 +424,7 @@ public class AutoDrive extends LinearOpMode
         return null;
     }
 
-    String format (OpenGLMatrix transformationMatrix)
+    private String format (OpenGLMatrix transformationMatrix)
     {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
