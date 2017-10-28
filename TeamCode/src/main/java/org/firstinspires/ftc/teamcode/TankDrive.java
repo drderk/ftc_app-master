@@ -59,15 +59,6 @@ public class TankDrive extends OpMode {
     /* Declare OpMode members. */
     Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
 
-    double left;
-    double right;
-    double collectorFinger1Pos = 0; //closed
-    double collectorFinger2Pos = 0; //closed
-    double armPos = 0;
-    double collectorRotatePos = 0;
-    double liftCPI = 0; //Counts per inch
-    double armPow = 0;
-
     static final double FINGER_CLOSE_POS = -1;
     static final double FINGER_OPEN_POS = 1;
     static final double FINGER_SCORE_POS = 0;
@@ -78,6 +69,15 @@ public class TankDrive extends OpMode {
     static final double ARM_MIN_POS = 10;
     static final double COLLECTOR_UPRIGHT_POS = -1;
     static final double COLLECTOR_INVERTED_POS = 1;
+
+    double left;
+    double right;
+    double collectorFinger1Pos = 0; //closed
+    double collectorFinger2Pos = 0; //closed
+    double armPos = 0;
+    double collectorRotatePos = COLLECTOR_UPRIGHT_POS;
+    double liftCPI = 0; //Counts per inch
+    double armPow = 0;
 
     //positions
     double liftUp = 12 * liftCPI;
@@ -127,6 +127,7 @@ public class TankDrive extends OpMode {
         left = -gamepad1.left_stick_y * 0.5;
         right = -gamepad1.right_stick_y * 0.5;
 
+//        collecting
         if (gamepad1.right_bumper) {
             if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
                 collectorFinger2Pos = FINGER_OPEN_POS;
@@ -136,19 +137,23 @@ public class TankDrive extends OpMode {
             armPos = ARM_COLLECT_POS;
         }
 
+//        scoring finger position
         if (gamepad2.a) {
             collectorFinger1Pos = FINGER_SCORE_POS;
             collectorFinger2Pos = FINGER_SCORE_POS;
         }
 
+//        travel position
         if (gamepad2.x) {
             armPos = ARM_LOW_SCORE_POS;
         }
 
+//        scoring arm position
         if (gamepad2.y) {
             armPos = ARM_HIGH_SCORE_POS;
         }
 
+//        rotation positions
         if (gamepad2.right_bumper) {
             collectorRotatePos = COLLECTOR_UPRIGHT_POS;
         }
@@ -156,14 +161,16 @@ public class TankDrive extends OpMode {
             collectorRotatePos = COLLECTOR_INVERTED_POS;
         }
 
+//        manual arm movement
         if (gamepad1.dpad_up) {
-            armPos = 0.75;
+            armPos = armPos + 10;
             liftHold = robot.lift.getCurrentPosition();
         } else if (gamepad1.dpad_down) {
-            armPos = 0.001;
+            armPos = armPos - 10;
             liftHold = robot.lift.getCurrentPosition();
         }
         liftHold = armPos;
+
         //sets powers and positions
         armPow = Range.clip(liftPD.getMotorCmd(liftHold, robot.lift.getCurrentPosition(), 0.7), 0.001, 0.7);
         robot.leftDrive.setPower(left);
