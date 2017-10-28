@@ -171,7 +171,7 @@ public class TankDrive extends OpMode {
         }
         liftHold = armPos;
 
-        //sets powers and positions
+//        sets powers and positions
         armPow = Range.clip(liftPD.getMotorCmd(liftHold, robot.lift.getCurrentPosition(), 0.7), 0.001, 0.7);
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
@@ -180,7 +180,7 @@ public class TankDrive extends OpMode {
         robot.lift.setPower(armPow);
         robot.rotate.setPosition(collectorRotatePos);
 
-        //Sends telemetry to the phone
+//        Sends telemetry to the phone
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("liftPow", "%.2f", robot.lift.getPower());
