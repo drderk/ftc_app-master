@@ -111,7 +111,7 @@ public class Hardware
     }
 
     /***
-     *
+     * 8=====D
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.

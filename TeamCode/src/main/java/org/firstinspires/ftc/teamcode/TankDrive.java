@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -61,28 +62,25 @@ public class TankDrive extends OpMode {
 
     static final double FINGER_CLOSE_POS = -1;
     static final double FINGER_OPEN_POS = 1;
-    static final double FINGER_SCORE_POS = 0;
-    static final double ARM_COLLECT_POS = 23;
+    static final double FINGER_SCORE_POS = 0.5;
+    static final double ARM_COLLECT_POS = 0;
     static final double ARM_LOW_SCORE_POS = 30;
     static final double ARM_HIGH_SCORE_POS = 280;
     static final double ARM_MAX_POS = 280;
-    static final double ARM_MIN_POS = 10;
+    static final double ARM_MIN_POS = 0;
     static final double COLLECTOR_UPRIGHT_POS = -1;
     static final double COLLECTOR_INVERTED_POS = 1;
-
-    double left;
-    double right;
-    double collectorFinger1Pos = 0; //closed
-    double collectorFinger2Pos = 0; //closed
-    double armPos = 0;
+    static boolean collectorRotateButtonWasntAlreadyPressed;
+    static double previousArmPos = 0;
+    double armSpeed = 0; // Max = 22
+    double leftJoystick, rightJoystick;
+    double leftWheelsMotorCmd, rightWheelsMotorCmd, armMotorCmd;
+    double collectorFinger1Pos = FINGER_CLOSE_POS;
+    double collectorFinger2Pos = FINGER_CLOSE_POS;
     double collectorRotatePos = COLLECTOR_UPRIGHT_POS;
-    double liftCPI = 0; //Counts per inch
-    double armPow = 0;
-
-    //positions
-    double liftUp = 12 * liftCPI;
-    double liftDown = 0 * liftCPI;
-    double liftHold = 0;
+    double targetArmPos = 0;
+    double currentArmPos = 0;
+    double armPwr = 0;
 
     //Collector Opmode
     Collector collector = new Collector();
@@ -120,75 +118,92 @@ public class TankDrive extends OpMode {
      */
     @Override
     public void loop() {
+        // Do up-front calculations for control loops
+        currentArmPos = robot.lift.getCurrentPosition();
+        armSpeed =  currentArmPos - previousArmPos;
+
+        // Close the fingers if no other commands are given
         collectorFinger1Pos = FINGER_CLOSE_POS;
         collectorFinger2Pos = FINGER_CLOSE_POS;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y * 0.5;
-        right = -gamepad1.right_stick_y * 0.5;
+        // Run wheels in tank mode (The joystick is negative when pushed forward, so negate it)
+        leftJoystick = -gamepad1.left_stick_y;
+        rightJoystick = -gamepad1.right_stick_y;
 
-//        collecting
+        // Scoring finger position
+        if (gamepad2.a) {
+            collectorFinger1Pos = FINGER_SCORE_POS;     // Slightly open to release glyph
+            collectorFinger2Pos = FINGER_SCORE_POS;     // Slightly open to release glyph
+        }
+
+        // Open bottom fingers and lower the tower when collecting
         if (gamepad1.right_bumper) {
             if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
                 collectorFinger2Pos = FINGER_OPEN_POS;
             else if (collectorRotatePos == COLLECTOR_INVERTED_POS) {
                 collectorFinger1Pos = FINGER_OPEN_POS;
             }
-            armPos = ARM_COLLECT_POS;
+            targetArmPos = ARM_COLLECT_POS;
         }
 
-//        scoring finger position
-        if (gamepad2.a) {
-            collectorFinger1Pos = FINGER_SCORE_POS;
-            collectorFinger2Pos = FINGER_SCORE_POS;
-        }
-
-//        travel position
+        // Raise the collector slightly to keep it off the floor
+        // or high to score
         if (gamepad2.x) {
-            armPos = ARM_LOW_SCORE_POS;
+            targetArmPos = ARM_LOW_SCORE_POS;
+        }
+        else if (gamepad2.y) {
+            targetArmPos = ARM_HIGH_SCORE_POS;
         }
 
-//        scoring arm position
-        if (gamepad2.y) {
-            armPos = ARM_HIGH_SCORE_POS;
-        }
-
-//        rotation positions
-        if (gamepad2.right_bumper) {
-            collectorRotatePos = COLLECTOR_UPRIGHT_POS;
-        }
-        if (gamepad2.left_bumper) {
-            collectorRotatePos = COLLECTOR_INVERTED_POS;
-        }
-
-//        manual arm movement
+        // Manual arm movement
         if (gamepad1.dpad_up) {
-            armPos = armPos + 10;
-            liftHold = robot.lift.getCurrentPosition();
+            targetArmPos = targetArmPos + 1;
         } else if (gamepad1.dpad_down) {
-            armPos = armPos - 10;
-            liftHold = robot.lift.getCurrentPosition();
+            targetArmPos = targetArmPos - 1;
         }
-        liftHold = armPos;
 
-//        sets powers and positions
-        armPow = Range.clip(liftPD.getMotorCmd(liftHold, robot.lift.getCurrentPosition(), 0.7), 0.001, 0.7);
-        robot.leftDrive.setPower(left);
-        robot.rightDrive.setPower(right);
+        // Toggle the collector rotate position
+        if ((gamepad2.right_bumper)&&(collectorRotateButtonWasntAlreadyPressed)) {
+            collectorRotateButtonWasntAlreadyPressed = false;
+            if (collectorRotatePos == COLLECTOR_UPRIGHT_POS) {
+                collectorRotatePos = COLLECTOR_INVERTED_POS;
+            }
+            else {
+                collectorRotatePos = COLLECTOR_UPRIGHT_POS;
+            }
+        }
+        if (gamepad2.right_bumper == false){
+            collectorRotateButtonWasntAlreadyPressed = true;
+        }
+
+        // Limit position and power
+        targetArmPos = Range.clip(targetArmPos, ARM_MIN_POS, ARM_MAX_POS);
+        armMotorCmd = PinkPD.getMotorCmd(0.1, 0.01, targetArmPos - currentArmPos, armSpeed);
+        armMotorCmd = Range.clip(armMotorCmd, 0.001, 0.7);
+        leftWheelsMotorCmd = leftJoystick * 0.5;
+        rightWheelsMotorCmd = rightJoystick * 0.5;
+
+
+        // Set powers and positions
+        robot.leftDrive.setPower(leftWheelsMotorCmd);
+        robot.rightDrive.setPower(rightWheelsMotorCmd);
+        robot.lift.setPower(armMotorCmd);
         robot.collect1.setPosition(collectorFinger1Pos);
         robot.collect2.setPosition(collectorFinger2Pos);
-        robot.lift.setPower(armPow);
         robot.rotate.setPosition(collectorRotatePos);
 
-//        Sends telemetry to the phone
-        telemetry.addData("left", "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
-        telemetry.addData("liftPow", "%.2f", robot.lift.getPower());
-        telemetry.addData("armPos", armPos);
+        // Send telemetry to display on the phone
+        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
+        telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
+        telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
 
-        telemetry.addData("Left Encoder", "%d", robot.leftDrive.getCurrentPosition());
-        telemetry.addData("Right Encoder", "%d", robot.rightDrive.getCurrentPosition());
-        telemetry.addData("Lift Encoder", "%d", robot.lift.getCurrentPosition());
+        telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
+        telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Arm Pos        ", robot.lift.getCurrentPosition());
+        telemetry.addData("Arm Speed      ", armSpeed);
+        telemetry.addData("collectorFinger1Pos      ", collectorFinger1Pos);
+        telemetry.addData("collectorFinger2Pos      ", collectorFinger2Pos);
+        previousArmPos = currentArmPos;
     }
 
     /*
