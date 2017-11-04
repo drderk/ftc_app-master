@@ -62,29 +62,49 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 @Autonomous (name = "AutoTestDrive")
 @Disabled
-public class AutoTestDrive extends OpMode
+public class Auto extends OpMode
 {
 
     static final double COUNTS_PER_INCH = 49.5;  // Base travel
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
+
+    static final double FLICKER_ARM_STOW_POSITION = -1;
+    static final double FLICKER_ARM_DEPLOY_POSITION = 1;
+
+    static final double FLICKER_FINGER_STOW_POSITION = -1;
+    static final double FLICKER_FINGER_NEUTRAL_POSITION = 0;
+    static final double FLICKER_FINGER_FRONT_POSITION = 0.2;
+    static final double FLICKER_FINGER_BACK_POSITION = -0.2;
+
+    static final double COLLECTOR_ARM_COLLECT_POS = 0;
+    static final double COLLECTOR_ARM_LOW_SCORE_POS = 40;
+    static final double COLLECTOR_ARM_HIGH_SCORE_POS = 250;
+
+    static final double COLLECTOR_FINGER_GRAB_POSITION = -1;
+    static final double COLLECTOR_FINGER_COLLECT_POSITION = 1;
+    static final double COLLECTOR_FINGER_SCORE_POSITION = -0.4;
+    static final double COLLECTOR_ROTATE_UPRIGHT_POSITION = -1;
+    static final double COLLECTOR_ROTATE_INVERTED_POSITION = 1;
+
     /* Declare OpMode members. */
     Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
     BNO055IMU imu;
-    int currentAngle;
+    int currentBaseAngle;
     int stage = 0;
-    double leftMotorCmd, rightMotorCmd;
-    //motor and servo setting values
-    double collectPos = 0;
-    double liftPos = 0;
-    double jewelPos = 0;
-    double grabPos = 0;
-    double rotatePos = 0;
-    double extendPos = 0;
-    double targetPos = 0;
-    double targetAngle = 0;
+    double leftWheelMotorCmd, rightWheelMotorCmd, armMotorCmd;
+    double collectorArmTargetPos;
+    double flickerArmTargetPos, flickerFingerTargetPos;
+    double collectorFinger1TargetPos, collectorFinger2TargetPos, collectorRotateTargetPos;
+    double targetBasePos, targetBaseAngle;
+    boolean blueAlliance;        // Selected alliance color
+    boolean cornerStartingPos;   // Corner or middle starting position
+    double markedTime;
+    boolean ourJewelIsTheFrontOne;
+
     VuMarks camera = new VuMarks();
     RelicRecoveryVuMark picturePos;
+
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -119,10 +139,16 @@ public class AutoTestDrive extends OpMode
 
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+// INSERT ALLIANCE COLOR SELECTION AND STARTING POSITION HERE
+        blueAlliance = true;
+        cornerStartingPos = true;
+
         // Wait for the game to start (driver presses PLAY).
         telemetry.addData("Status", "Waiting for start");    //
         telemetry.update();
@@ -152,76 +178,77 @@ public class AutoTestDrive extends OpMode
     {
         telemetry.addData("Opmode", "active");
         //telemetry.update();
-        currentAngle = (int) GetHeading();
+        currentBaseAngle = (int) GetHeading();  // Degrees
         switch (stage)
         {
-            case 0: //initialize
-                collectPos = 0;
-                liftPos = 0;
-                jewelPos = 0;
-                grabPos = 0;
-                rotatePos = 0;
-                extendPos = 0;
-                targetPos = 0;
-                targetAngle = 0;
+            case 0: // Initialize
+                flickerArmTargetPos = FLICKER_ARM_STOW_POSITION;
+                flickerFingerTargetPos = FLICKER_FINGER_STOW_POSITION;
+                collectorFinger1TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorFinger2TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorRotateTargetPos = COLLECTOR_ROTATE_UPRIGHT_POSITION;
+                collectorArmTargetPos = COLLECTOR_ARM_COLLECT_POS;
+                targetBasePos = 0;
+                targetBaseAngle = 0;
 
                 stage = 30;
                 break;
 
-            case 10: //scan surroundings
-                collectPos = 0;
-                liftPos = 0;
-                jewelPos = 0;
-                grabPos = 0;
-                rotatePos = 0;
-                extendPos = 0;
-                targetPos = 0;
-                targetAngle = 0;
+            case 10: // Scan surroundings
+                flickerArmTargetPos = FLICKER_ARM_STOW_POSITION;
+                flickerFingerTargetPos = FLICKER_FINGER_STOW_POSITION;
+                collectorFinger1TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorFinger2TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorRotateTargetPos = COLLECTOR_ROTATE_UPRIGHT_POSITION;
+                collectorArmTargetPos = COLLECTOR_ARM_COLLECT_POS;
+                targetBasePos = 0;
+                targetBaseAngle = 0;
 
                 picturePos = camera.vuMark;
+// ADD LOGIC TO SCAN THE COLOR SENSOR
+                ourJewelIsTheFrontOne = true;
                 telemetry.addData("Glyph pos", picturePos);
                 //telemetry.addData("Jewel Color", jewelColor());
+
+                markedTime = runtime.milliseconds();
+
                 stage = 20;
                 break;
 
             case 20: //lower the jewel arm
-                collectPos = 0;
-                liftPos = 0;
-                jewelPos = 1;
-                grabPos = 0;
-                rotatePos = 0;
-                extendPos = 0;
-                targetPos = 0;
-                targetAngle = 0;
+                flickerArmTargetPos = FLICKER_ARM_DEPLOY_POSITION;
+                flickerFingerTargetPos = FLICKER_FINGER_NEUTRAL_POSITION;
+                collectorFinger1TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorFinger2TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorRotateTargetPos = COLLECTOR_ROTATE_UPRIGHT_POSITION;
+                collectorArmTargetPos = COLLECTOR_ARM_COLLECT_POS;
+                targetBasePos = 0;
+                targetBaseAngle = 0;
 
                 telemetry.addData("Stage", stage);
-                stage = 30;
+// ADD SOME TIME DELAY HERE TO ALLOW THE ARM TO DEPLOY ` 0.5 seconds
+                if ((runtime.milliseconds() - markedTime) > 500){
+                    markedTime = runtime.milliseconds();
+                    stage = 30;
+                }
                 break;
 
-            case 30: //lift up jewel mechanism and drive forward
-                collectPos = 0;
-                liftPos = 0;
-                jewelPos = 0;
-                grabPos = 0;
-                rotatePos = 0;
-                extendPos = 0;
-                targetPos = 45;
-                targetAngle = 0;
+            case 30: // Flick the jewel
+                flickerArmTargetPos = FLICKER_ARM_DEPLOY_POSITION;
+                if (ourJewelIsTheFrontOne){
+                    flickerFingerTargetPos = FLICKER_FINGER_FRONT_POSITION;
+                } else{
+                    flickerFingerTargetPos = FLICKER_FINGER_BACK_POSITION;
+                }
+                collectorFinger1TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorFinger2TargetPos = COLLECTOR_FINGER_GRAB_POSITION;
+                collectorRotateTargetPos = COLLECTOR_ROTATE_UPRIGHT_POSITION;
+                collectorArmTargetPos = COLLECTOR_ARM_COLLECT_POS;
+                targetBasePos = 0;
+                targetBaseAngle = 0;
 
                 telemetry.addData("Stage", stage);
                 //drive completely off ramp
-                // telemetry.addData("LeftMotor", robot.leftDrive.getPower());
-                // telemetry.addData("RightMotor", robot.rightDrive.getPower());
-                telemetry.addData("LeftMotor", robot.leftDrive.getPower());
-                telemetry.addData("RightMotor", robot.rightDrive.getPower());
-                if (driveToPos(targetPos, targetAngle, currentAngle, robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition(), 0, 0, 1))
-                {
-                    stage = 100;
-                }
-                else
-                {
-                    stage = 30;
-                }
                 break;
 
             case 40: //turn

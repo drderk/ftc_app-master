@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -54,32 +55,32 @@ import org.firstinspires.ftc.teamcode.Hardware;
 */
 
 @TeleOp (name = "Pushbot: Teleop Tank", group = "Pushbot")
-public class TankDriveAndyCode extends OpMode {
+public class Teleop extends OpMode {
 
     /* Declare OpMode members. */
     Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
 
-    static final double FINGER_CLOSE_POS = -1;
+/*    static final double FINGER_CLOSE_POS = -1;
     static final double FINGER_OPEN_POS = 1;
-    static final double FINGER_SCORE_POS = 0;
-    static final double ARM_COLLECT_POS = 23;
+    static final double FINGER_SCORE_POS = 0.5;
+    static final double ARM_COLLECT_POS = 0;
     static final double ARM_LOW_SCORE_POS = 30;
     static final double ARM_HIGH_SCORE_POS = 280;
     static final double ARM_MAX_POS = 280;
-    static final double ARM_MIN_POS = 10;
+    static final double ARM_MIN_POS = 0;
     static final double COLLECTOR_UPRIGHT_POS = -1;
     static final double COLLECTOR_INVERTED_POS = 1;
+    */
     static boolean collectorRotateButtonWasntAlreadyPressed;
     static double previousArmPos = 0;
-    double armSpeed = 0;
+    double armSpeed = 0; // Max = 22
     double leftJoystick, rightJoystick;
     double leftWheelsMotorCmd, rightWheelsMotorCmd, armMotorCmd;
-    double collectorFinger1Pos = FINGER_CLOSE_POS;
-    double collectorFinger2Pos = FINGER_CLOSE_POS;
-    double collectorRotatePos = COLLECTOR_UPRIGHT_POS;
+    double collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
+    double collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
+    double collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION;
     double targetArmPos = 0;
     double currentArmPos = 0;
-    double armPwr = 0;
 
     //Collector Opmode
     Collector collector = new Collector();
@@ -122,8 +123,8 @@ public class TankDriveAndyCode extends OpMode {
         armSpeed =  currentArmPos - previousArmPos;
 
         // Close the fingers if no other commands are given
-        collectorFinger1Pos = FINGER_CLOSE_POS;
-        collectorFinger2Pos = FINGER_CLOSE_POS;
+        collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
+        collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
 
         // Run wheels in tank mode (The joystick is negative when pushed forward, so negate it)
         leftJoystick = -gamepad1.left_stick_y;
@@ -131,47 +132,49 @@ public class TankDriveAndyCode extends OpMode {
 
         // Scoring finger position
         if (gamepad2.a) {
-            collectorFinger1Pos = FINGER_SCORE_POS;     // Slightly open to release glyph
-            collectorFinger2Pos = FINGER_SCORE_POS;     // Slightly open to release glyph
+            collectorFinger1Pos = Presets.COLLECTOR_FINGER_SCORE_POSITION;     // Slightly open to release glyph
+            collectorFinger2Pos = Presets.COLLECTOR_FINGER_SCORE_POSITION;     // Slightly open to release glyph
         }
 
         // Open bottom fingers and lower the tower when collecting
         if (gamepad1.right_bumper) {
-            if (collectorRotatePos == COLLECTOR_UPRIGHT_POS)
-                collectorFinger2Pos = FINGER_OPEN_POS;
-            else if (collectorRotatePos == COLLECTOR_INVERTED_POS) {
-                collectorFinger1Pos = FINGER_OPEN_POS;
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION)
+                collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POSITION;
+            else if (collectorRotatePos == Presets.COLLECTOR_ROTATE_INVERTED_POSITION) {
+                collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POSITION;
             }
-            targetArmPos = ARM_COLLECT_POS;
+            targetArmPos = Presets.COLLECTOR_ARM_COLLECT_POS;
         }
 
         // Raise the collector slightly to keep it off the floor
         // or high to score
         if (gamepad2.x) {
-            targetArmPos = ARM_LOW_SCORE_POS;
+            targetArmPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
         }
         else if (gamepad2.y) {
-            targetArmPos = ARM_HIGH_SCORE_POS;
+            targetArmPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
         }
 
         // Manual arm movement
         if (gamepad1.dpad_up) {
-            targetArmPos = targetArmPos + 10;
+            targetArmPos = targetArmPos + 1;
         } else if (gamepad1.dpad_down) {
-            targetArmPos = targetArmPos - 10;
+            targetArmPos = targetArmPos - 1;
         }
 
         // Toggle the collector rotate position
         if ((gamepad2.right_bumper)&&(collectorRotateButtonWasntAlreadyPressed)) {
-            if (collectorRotatePos == COLLECTOR_UPRIGHT_POS) {
-                collectorRotatePos = COLLECTOR_INVERTED_POS;
+            collectorRotateButtonWasntAlreadyPressed = false;
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION) {
+                collectorRotatePos = Presets.COLLECTOR_ROTATE_INVERTED_POSITION;
             }
             else {
-                collectorRotatePos = COLLECTOR_UPRIGHT_POS;
+                collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION;
             }
         }
-        collectorRotateButtonWasntAlreadyPressed = gamepad2.right_bumper;
-
+        if (gamepad2.right_bumper == false){
+            collectorRotateButtonWasntAlreadyPressed = true;
+        }
 
         // Limit position and power
         targetArmPos = Range.clip(targetArmPos, ARM_MIN_POS, ARM_MAX_POS);
@@ -194,10 +197,13 @@ public class TankDriveAndyCode extends OpMode {
         telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
         telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
 
-        telemetry.addData("Left Wheel Pos ", "%d", robot.leftDrive.getCurrentPosition());
-        telemetry.addData("Right Wheel Pos", "%d", robot.rightDrive.getCurrentPosition());
-        telemetry.addData("Arm Pos        ", "%d", robot.lift.getCurrentPosition());
-        telemetry.addData("Arm Speed      ", "%d", armSpeed);
+        telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
+        telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Arm Pos        ", robot.lift.getCurrentPosition());
+        telemetry.addData("Arm Speed      ", armSpeed);
+        telemetry.addData("collectorFinger1Pos      ", collectorFinger1Pos);
+        telemetry.addData("collectorFinger2Pos      ", collectorFinger2Pos);
+        previousArmPos = currentArmPos;
     }
 
     /*
