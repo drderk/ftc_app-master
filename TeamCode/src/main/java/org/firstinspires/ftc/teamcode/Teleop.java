@@ -54,36 +54,30 @@ import org.firstinspires.ftc.teamcode.Hardware;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
 */
 
-@TeleOp (name = "Pushbot: Teleop Tank", group = "Pushbot")
+@TeleOp (name = "Teleop", group = "Pushbot")
 public class Teleop extends OpMode {
 
     /* Declare OpMode members. */
     Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
 
-/*    static final double FINGER_CLOSE_POS = -1;
-    static final double FINGER_OPEN_POS = 1;
-    static final double FINGER_SCORE_POS = 0.5;
-    static final double ARM_COLLECT_POS = 0;
-    static final double ARM_LOW_SCORE_POS = 30;
-    static final double ARM_HIGH_SCORE_POS = 280;
-    static final double ARM_MAX_POS = 280;
-    static final double ARM_MIN_POS = 0;
-    static final double COLLECTOR_UPRIGHT_POS = -1;
-    static final double COLLECTOR_INVERTED_POS = 1;
-    */
-    static boolean collectorRotateButtonWasntAlreadyPressed;
-    static double previousArmPos = 0;
-    double armSpeed = 0; // Max = 22
+    boolean collectorRotateButtonWasntAlreadyPressed;
+    double previousArmPos = 0;
+    double previousCraneRotatePos = 0;
+    double armSpeed = 0; // Max
+    double craneRotateSpeed = 0;
     double leftJoystick, rightJoystick;
     double leftWheelsMotorCmd, rightWheelsMotorCmd, armMotorCmd;
-    double collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
-    double collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
-    double collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION;
+    double craneRotateMotorCmd, craneExtendMotorCmd;
+    double collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
+    double collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
+    double collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
     double targetArmPos = 0;
     double currentArmPos = 0;
+    double targetCraneRotatePos = 0;
+    double currentCraneRotatePos = 0;
+    double targetCraneExtendPos = 0;
+    double currentCraneExtendPos = 0;
 
-    //Collector Opmode
-    Collector collector = new Collector();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -119,12 +113,17 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         // Do up-front calculations for control loops
-        currentArmPos = robot.lift.getCurrentPosition();
+        currentArmPos = robot.armRotate.getCurrentPosition();
         armSpeed =  currentArmPos - previousArmPos;
+        previousArmPos = currentArmPos;
+
+        currentCraneRotatePos = robot.craneRotate.getCurrentPosition();
+        craneRotateSpeed = currentCraneRotatePos - previousCraneRotatePos;
+        previousCraneRotatePos = currentCraneRotatePos;
 
         // Close the fingers if no other commands are given
-        collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
-        collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POSITION;
+        collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
+        collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
 
         // Run wheels in tank mode (The joystick is negative when pushed forward, so negate it)
         leftJoystick = -gamepad1.left_stick_y;
@@ -132,16 +131,16 @@ public class Teleop extends OpMode {
 
         // Scoring finger position
         if (gamepad2.a) {
-            collectorFinger1Pos = Presets.COLLECTOR_FINGER_SCORE_POSITION;     // Slightly open to release glyph
-            collectorFinger2Pos = Presets.COLLECTOR_FINGER_SCORE_POSITION;     // Slightly open to release glyph
+            collectorFinger1Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
+            collectorFinger2Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
         }
 
         // Open bottom fingers and lower the tower when collecting
         if (gamepad1.right_bumper) {
-            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION)
-                collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POSITION;
-            else if (collectorRotatePos == Presets.COLLECTOR_ROTATE_INVERTED_POSITION) {
-                collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POSITION;
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
+                collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
+            else if (collectorRotatePos == Presets.COLLECTOR_ROTATE_INVERTED_POS) {
+                collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
             }
             targetArmPos = Presets.COLLECTOR_ARM_COLLECT_POS;
         }
@@ -156,54 +155,87 @@ public class Teleop extends OpMode {
         }
 
         // Manual arm movement
-        if (gamepad1.dpad_up) {
-            targetArmPos = targetArmPos + 1;
-        } else if (gamepad1.dpad_down) {
-            targetArmPos = targetArmPos - 1;
+        if (gamepad2.dpad_up) {
+            targetArmPos = targetArmPos + 5;
+        } else if (gamepad2.dpad_down) {
+            targetArmPos = targetArmPos - 5;
         }
 
         // Toggle the collector rotate position
         if ((gamepad2.right_bumper)&&(collectorRotateButtonWasntAlreadyPressed)) {
             collectorRotateButtonWasntAlreadyPressed = false;
-            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION) {
-                collectorRotatePos = Presets.COLLECTOR_ROTATE_INVERTED_POSITION;
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS) {
+                collectorRotatePos = Presets.COLLECTOR_ROTATE_INVERTED_POS;
             }
             else {
-                collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POSITION;
+                collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
             }
         }
         if (gamepad2.right_bumper == false){
             collectorRotateButtonWasntAlreadyPressed = true;
         }
 
+        if(gamepad1.dpad_up){
+            targetCraneRotatePos = targetCraneRotatePos + 4;
+        } else if (gamepad1.dpad_down) {
+            targetCraneRotatePos = targetCraneRotatePos - 2;
+        }
+
         // Limit position and power
-        targetArmPos = Range.clip(targetArmPos, ARM_MIN_POS, ARM_MAX_POS);
-        armMotorCmd = PinkPD.getMotorCmd(0.1, 0.01, targetArmPos - currentArmPos, armSpeed);
-        armMotorCmd = Range.clip(armMotorCmd, 0.001, 0.7);
-        leftWheelsMotorCmd = leftJoystick * 0.5;
-        rightWheelsMotorCmd = rightJoystick * 0.5;
+        targetArmPos = Range.clip(targetArmPos, Presets.COLLECTOR_ARM_MIN_POS, Presets.COLLECTOR_ARM_MAX_POS);
+        if (targetArmPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS){
+            armMotorCmd = PinkPD.getMotorCmd(0.01, 0.01, targetArmPos - currentArmPos, armSpeed);
+        } else {
+            armMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, targetArmPos - currentArmPos, armSpeed);
+        }
+        armMotorCmd = Range.clip(armMotorCmd, -0.1, 0.8);
+        targetCraneRotatePos = Range.clip(targetCraneRotatePos, Presets.CRANE_ROTATE_MIN_POS, Presets.CRANE_ROTATE_MAX_POS);
+        targetCraneExtendPos = Range.clip(targetCraneExtendPos, Presets.CRANE_EXTEND_MIN_POS, Presets.CRANE_EXTEND_MAX_POS);
+        craneRotateMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, targetCraneRotatePos - currentCraneRotatePos, craneRotateSpeed);
+//        craneRotateMotorCmd = Range.clip(craneRotateMotorCmd, -0.4, 0.4);
+        leftWheelsMotorCmd = leftJoystick * 1.0;
+        rightWheelsMotorCmd = rightJoystick * 1.0;
 
 
         // Set powers and positions
         robot.leftDrive.setPower(leftWheelsMotorCmd);
         robot.rightDrive.setPower(rightWheelsMotorCmd);
-        robot.lift.setPower(armMotorCmd);
-        robot.collect1.setPosition(collectorFinger1Pos);
-        robot.collect2.setPosition(collectorFinger2Pos);
-        robot.rotate.setPosition(collectorRotatePos);
+        robot.armRotate.setPower(armMotorCmd);
+        robot.collectorFinger1.setPosition(collectorFinger1Pos);
+        robot.collectorFinger2.setPosition(collectorFinger2Pos);
+        robot.collectorRotate.setPosition(collectorRotatePos);
+        robot.craneRotate.setPower(craneRotateMotorCmd);
+        robot.craneWrist.setPosition(Presets.CRANE_WRIST_STOW_POS);
+        robot.craneClaw.setPosition(Presets.CRANE_CLAW_CLOSE_POS);
 
+/*        if(gamepad1.dpad_up){
+            robot.craneRotate.setPower(0.4);
+        } else if (gamepad1.dpad_down){
+            robot.craneRotate.setPower(-0.4);
+        } else if (gamepad1.dpad_right){
+            robot.craneExtend.setPower(0.4);
+        }else if (gamepad1.dpad_left){
+            robot.craneExtend.setPower(-0.4);
+        } else {
+            robot.craneRotate.setPower(0);
+            robot.craneExtend.setPower(0);
+        }
+*/
         // Send telemetry to display on the phone
-        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
-        telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
-        telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
+//        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
+//        telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
+//        telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
 
         telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
         telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
-        telemetry.addData("Arm Pos        ", robot.lift.getCurrentPosition());
+        telemetry.addData("Arm Pos        ", robot.armRotate.getCurrentPosition());
         telemetry.addData("Arm Speed      ", armSpeed);
-        telemetry.addData("collectorFinger1Pos      ", collectorFinger1Pos);
-        telemetry.addData("collectorFinger2Pos      ", collectorFinger2Pos);
-        previousArmPos = currentArmPos;
+        telemetry.addData("Crane Pos      ", robot.craneRotate.getCurrentPosition());
+//        telemetry.addData("Red Color      ", robot.colorSensor.red());
+//        telemetry.addData("Red Color      ", robot.colorSensor.blue());
+
+//        telemetry.addData("collectorFinger1Pos      ", collectorFinger1Pos);
+//        telemetry.addData("collectorFinger2Pos      ", collectorFinger2Pos);
     }
 
     /*

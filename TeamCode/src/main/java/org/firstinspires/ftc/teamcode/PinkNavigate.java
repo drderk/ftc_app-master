@@ -9,32 +9,30 @@ import org.firstinspires.ftc.teamcode.Hardware;
 
 public class PinkNavigate
 {
-    static final double COUNTS_PER_INCH = 43.83; // Counts
+    static final double COUNTS_PER_INCH = 49.8; // Counts
     static final double POSITION_THRESHOLD = 30.0;   // Base travel
     static final double ANGLE_THRESHOLD = 10.0;     // Degrees
     Hardware robot;
-    double leftMotorCmd, rightMotorCmd;
+    static double leftMotorCmd, rightMotorCmd;
 
     // Tank drive two wheels to target positions in inches.
     // Returns true when both arrive at the target.
-    public boolean driveToPos (double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
-                               double linearVelocity, double angularVelocity, double maxPower)
+    public static boolean driveToPos (double targetPosInches, double targetAngleDeg, double currentBasePosCounts, int currentAngleDeg,
+                               double linearSpeedCounts, double maxPower)
     {
-        double targetPosCounts = targetPos * COUNTS_PER_INCH;
-        double leftWheelPos = leftEnc;
-        double rightWheelPos = rightEnc;
-        double angleErrorDegrees = targetAngle - currentAngle;
-        double currentPosCounts = (leftWheelPos + rightWheelPos) / 2.0;
+        double angleErrorDegrees = targetAngleDeg - currentAngleDeg;
+        double currentPosInches = (currentBasePosCounts / COUNTS_PER_INCH);
+        double linearSpeedInches = linearSpeedCounts / COUNTS_PER_INCH;
         double angleOffset;
-        double linearError = targetPosCounts - currentPosCounts;
-        double angularError = targetAngle - currentAngle;
-        double motorCmd = PinkPD.getMotorCmd(0.1, 0.001, linearError, linearVelocity);
+        double linearError = targetPosInches - currentPosInches;
+        double angularError = targetAngleDeg - currentAngleDeg;
+        double motorCmd = PinkPD.getMotorCmd(0.1, 0.001, linearError, linearSpeedCounts);
 
         // Determine the baseline motor speed command
-        motorCmd = Range.clip(motorCmd, -0.6, 0.6);
+        motorCmd = Range.clip(motorCmd, -0.5, 0.5);
 
         // Determine and add the angle offset
-        angleOffset = PinkPD.getMotorCmd(0.01, 0.001, angularError, angularVelocity);
+        angleOffset = PinkPD.getMotorCmd(0.01, 0.001, angularError, 0);
         leftMotorCmd = motorCmd - angleOffset;
         rightMotorCmd = motorCmd + angleOffset;
         leftMotorCmd = Range.clip(leftMotorCmd, -1.0, 1.0);

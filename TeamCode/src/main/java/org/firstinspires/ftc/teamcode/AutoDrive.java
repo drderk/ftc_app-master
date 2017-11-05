@@ -159,11 +159,11 @@ public class AutoDrive extends LinearOpMode
 
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY).
         telemetry.addData("heading", GetHeading());
@@ -235,7 +235,7 @@ public class AutoDrive extends LinearOpMode
                         stage = 30;
                         break;
 
-                    case 30: //lift up jewel mechanism and drive forward
+/*                    case 30: //lift up jewel mechanism and drive forward
                         collectPos = 0;
                         liftPos = 0;
                         jewelPos = 0;
@@ -359,6 +359,7 @@ public class AutoDrive extends LinearOpMode
                         PinkNavigate.stopBase();
                         telemetry.addData("Stage", "Complete");
                         break;
+*/
                 }
 
                 //set all values

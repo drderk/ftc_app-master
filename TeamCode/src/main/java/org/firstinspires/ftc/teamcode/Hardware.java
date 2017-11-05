@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorHTColor;
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRColor;
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRIrSeeker;
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorMROpticalDistance;
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 
 /**
  * This is NOT an opmode.
@@ -44,20 +45,20 @@ public class Hardware
 {
     //Motors
 
+    public DcMotor craneExtend = null;
+    public DcMotor craneRotate = null;
+    public DcMotor armRotate = null;
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
-    public DcMotor lift = null;
-    public DcMotor extend = null;
-    public DcMotor liftRelic = null;
 
-    public Servo rotate = null;
-    public Servo jewel = null;
-    public Servo grab = null;
-    public Servo rotaterelic = null;
-    public Servo collect1 = null;
-    public Servo collect2 = null;
+    public Servo collectorRotate = null;
+    public Servo collectorFinger1 = null;
+    public Servo collectorFinger2 = null;
+    public Servo craneWrist = null;
+    public Servo craneClaw = null;
 
 
+//    public Rev colorSensor = null;
     public ColorSensor colorSensor = null;
 
     public SensorDIO breakBeam = null;
@@ -80,34 +81,42 @@ public class Hardware
         hwMap = ahwMap;
 
         //  Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        lift       = hwMap.get(DcMotor.class, "lift");
+        leftDrive   = hwMap.get(DcMotor.class, "leftDrive");
+        rightDrive  = hwMap.get(DcMotor.class, "rightDrive");
+        craneExtend = hwMap.get(DcMotor.class, "craneExtend");
+        craneRotate = hwMap.get(DcMotor.class, "craneRotate");
+        armRotate   = hwMap.get(DcMotor.class, "armRotate");
+
+        // Sensors
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
         //Servos
-        collect1 = hwMap.get(Servo.class, "collect1");
-        collect2 = hwMap.get(Servo.class, "collect2");
-        rotate   = hwMap.get(Servo.class, "rotate");
+        collectorFinger1 = hwMap.get(Servo.class, "collectorFinger1");
+        collectorFinger2 = hwMap.get(Servo.class, "collectorFinger2");
+        collectorRotate = hwMap.get(Servo.class, "collectorRotate");
+        craneWrist = hwMap.get(Servo.class, "craneWrist");
+        craneClaw = hwMap.get(Servo.class, "craneClaw");
 
         // *** Motor Configuration
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        //lift.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        craneExtend.setDirection(DcMotor.Direction.REVERSE);
+        craneRotate.setDirection(DcMotor.Direction.FORWARD);
+        armRotate.setDirection(DcMotor.Direction.REVERSE);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // lift encoder: [0, 384]
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        lift.setPower(0);
+        armRotate.setPower(0);
     }
 
     /***
