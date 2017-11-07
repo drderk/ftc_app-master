@@ -56,7 +56,8 @@ public class Hardware
     public Servo collectorFinger2 = null;
     public Servo craneWrist = null;
     public Servo craneClaw = null;
-
+    public Servo flickerArm = null;
+    public Servo flickerFinger = null;
 
 //    public Rev colorSensor = null;
     public ColorSensor colorSensor = null;
@@ -96,22 +97,33 @@ public class Hardware
         collectorRotate = hwMap.get(Servo.class, "collectorRotate");
         craneWrist = hwMap.get(Servo.class, "craneWrist");
         craneClaw = hwMap.get(Servo.class, "craneClaw");
+        flickerArm = hwMap.get(Servo.class, "flickerArm");
+        flickerFinger = hwMap.get(Servo.class, "flickerFinger");
 
         // *** Motor Configuration
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        craneExtend.setDirection(DcMotor.Direction.REVERSE);
-        craneRotate.setDirection(DcMotor.Direction.FORWARD);
-        armRotate.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        craneExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        craneRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // lift encoder: [0, 384]
+        craneExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        craneRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        armRotate.setDirection(DcMotor.Direction.REVERSE);
+        craneExtend.setDirection(DcMotor.Direction.REVERSE);
+        craneRotate.setDirection(DcMotor.Direction.FORWARD);
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        craneExtend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        craneRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);

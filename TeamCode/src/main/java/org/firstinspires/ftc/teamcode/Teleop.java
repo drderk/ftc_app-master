@@ -71,12 +71,14 @@ public class Teleop extends OpMode {
     double collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
     double collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
     double collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-    double targetArmPos = 0;
-    double currentArmPos = 0;
-    double targetCraneRotatePos = 0;
-    double currentCraneRotatePos = 0;
-    double targetCraneExtendPos = 0;
-    double currentCraneExtendPos = 0;
+    double armTargetPos = 0;
+    double armCurrentPos = 0;
+    double craneRotateTargetPos = 0;
+    double craneRotateCurrentPos = 0;
+    double craneExtendTargetPos = 0;
+    double craneExtendCurrentPos = 0;
+    double craneWristTargetPos = Presets.CRANE_WRIST_STOW_POS;
+    double craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
 
 
     /*
@@ -113,28 +115,31 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         // Do up-front calculations for control loops
-        currentArmPos = robot.armRotate.getCurrentPosition();
-        armSpeed =  currentArmPos - previousArmPos;
-        previousArmPos = currentArmPos;
+        armCurrentPos = robot.armRotate.getCurrentPosition();
+        armSpeed =  armCurrentPos - previousArmPos;
+        previousArmPos = armCurrentPos;
 
-        currentCraneRotatePos = robot.craneRotate.getCurrentPosition();
-        craneRotateSpeed = currentCraneRotatePos - previousCraneRotatePos;
-        previousCraneRotatePos = currentCraneRotatePos;
+        craneExtendCurrentPos = robot.craneExtend.getCurrentPosition();
+
+        craneRotateCurrentPos = robot.craneRotate.getCurrentPosition();
+        craneRotateSpeed = craneRotateCurrentPos - previousCraneRotatePos;
+        previousCraneRotatePos = craneRotateCurrentPos;
 
         // Close the fingers if no other commands are given
         collectorFinger1Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
         collectorFinger2Pos = Presets.COLLECTOR_FINGER_GRAB_POS;
 
+        // BASE CONTROL /////////////////////////////////////////////////////
         // Run wheels in tank mode (The joystick is negative when pushed forward, so negate it)
         leftJoystick = -gamepad1.left_stick_y;
         rightJoystick = -gamepad1.right_stick_y;
 
+        // COLLECTOR CONTROL /////////////////////////////////////////////////////
         // Scoring finger position
         if (gamepad2.a) {
             collectorFinger1Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
             collectorFinger2Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
         }
-
         // Open bottom fingers and lower the tower when collecting
         if (gamepad1.right_bumper) {
             if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
@@ -142,25 +147,8 @@ public class Teleop extends OpMode {
             else if (collectorRotatePos == Presets.COLLECTOR_ROTATE_INVERTED_POS) {
                 collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
             }
-            targetArmPos = Presets.COLLECTOR_ARM_COLLECT_POS;
+            armTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
         }
-
-        // Raise the collector slightly to keep it off the floor
-        // or high to score
-        if (gamepad2.x) {
-            targetArmPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
-        }
-        else if (gamepad2.y) {
-            targetArmPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
-        }
-
-        // Manual arm movement
-        if (gamepad2.dpad_up) {
-            targetArmPos = targetArmPos + 5;
-        } else if (gamepad2.dpad_down) {
-            targetArmPos = targetArmPos - 5;
-        }
-
         // Toggle the collector rotate position
         if ((gamepad2.right_bumper)&&(collectorRotateButtonWasntAlreadyPressed)) {
             collectorRotateButtonWasntAlreadyPressed = false;
@@ -175,24 +163,76 @@ public class Teleop extends OpMode {
             collectorRotateButtonWasntAlreadyPressed = true;
         }
 
-        if(gamepad1.dpad_up){
-            targetCraneRotatePos = targetCraneRotatePos + 4;
-        } else if (gamepad1.dpad_down) {
-            targetCraneRotatePos = targetCraneRotatePos - 2;
+        // ARM CONTROL /////////////////////////////////////////////////////
+        // Raise the collector slightly to keep it off the floor
+        // or high to score
+        if (gamepad2.x) {
+            armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+        }
+        else if (gamepad2.y) {
+            armTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
+        }
+
+/*        if (gamepad2.dpad_up) {
+            armTargetPos = armTargetPos + 5;
+        } else if (gamepad2.dpad_down) {
+            armTargetPos = armTargetPos - 5;
+        }
+*/
+        // Manual arm movement
+        if ((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)){
+            armTargetPos = armTargetPos - (5.0 * gamepad2.left_stick_y);
+        }
+
+        // CLAW CONTROL /////////////////////////////////////////////////////
+        if (gamepad2.right_trigger > 0.5){
+            craneClawTargetPos = Presets.CRANE_CLAW_OPEN_POS;
+        } else {
+            craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
+        }
+        if (gamepad2.left_trigger > 0.5){
+            craneWristTargetPos -= 0.015;
+        }
+        if (gamepad2.left_bumper){
+            craneWristTargetPos += 0.015;
+        }
+
+        // CRANE CONTROL /////////////////////////////////////////////////////
+        if(gamepad2.dpad_up){
+            craneRotateTargetPos = craneRotateTargetPos + 4;
+        } else if (gamepad2.dpad_down) {
+            craneRotateTargetPos = craneRotateTargetPos - 2;
+        }
+/*        if(gamepad2.dpad_right){
+            craneExtendTargetPos = craneExtendTargetPos + 4;
+        } else if (gamepad2.dpad_left) {
+            craneExtendTargetPos = craneExtendTargetPos - 4;
+        }
+        */
+        if(gamepad2.dpad_right){
+            craneExtendMotorCmd = 0.4;
+        } else if (gamepad2.dpad_left) {
+            craneExtendMotorCmd = -0.4;
+        }
+        else {
+            craneExtendMotorCmd = 0;
         }
 
         // Limit position and power
-        targetArmPos = Range.clip(targetArmPos, Presets.COLLECTOR_ARM_MIN_POS, Presets.COLLECTOR_ARM_MAX_POS);
-        if (targetArmPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS){
-            armMotorCmd = PinkPD.getMotorCmd(0.01, 0.01, targetArmPos - currentArmPos, armSpeed);
+        armTargetPos = Range.clip(armTargetPos, Presets.COLLECTOR_ARM_MIN_POS, Presets.COLLECTOR_ARM_MAX_POS);
+        if (armTargetPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS){
+            armMotorCmd = PinkPD.getMotorCmd(0.01, 0.01, armTargetPos - armCurrentPos, armSpeed);
         } else {
-            armMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, targetArmPos - currentArmPos, armSpeed);
+            armMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, armTargetPos - armCurrentPos, armSpeed);
         }
         armMotorCmd = Range.clip(armMotorCmd, -0.1, 0.8);
-        targetCraneRotatePos = Range.clip(targetCraneRotatePos, Presets.CRANE_ROTATE_MIN_POS, Presets.CRANE_ROTATE_MAX_POS);
-        targetCraneExtendPos = Range.clip(targetCraneExtendPos, Presets.CRANE_EXTEND_MIN_POS, Presets.CRANE_EXTEND_MAX_POS);
-        craneRotateMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, targetCraneRotatePos - currentCraneRotatePos, craneRotateSpeed);
-//        craneRotateMotorCmd = Range.clip(craneRotateMotorCmd, -0.4, 0.4);
+        craneRotateTargetPos = Range.clip(craneRotateTargetPos, Presets.CRANE_ROTATE_MIN_POS, Presets.CRANE_ROTATE_MAX_POS);
+        craneExtendTargetPos = Range.clip(craneExtendTargetPos, Presets.CRANE_EXTEND_MIN_POS, Presets.CRANE_EXTEND_MAX_POS);
+        craneRotateMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, craneRotateTargetPos - craneRotateCurrentPos, craneRotateSpeed);
+ //       craneExtendMotorCmd = PinkPD.getMotorCmd(0.02, 0, craneExtendTargetPos - craneExtendCurrentPos, 0);
+ //       craneExtendMotorCmd = Range.clip(craneExtendMotorCmd, -0.4, 0.4);
+        craneWristTargetPos = Range.clip(craneWristTargetPos, Presets.CRANE_WRIST_MIN_POS, Presets.CRANE_WRIST_MAX_POS);
+
         leftWheelsMotorCmd = leftJoystick * 1.0;
         rightWheelsMotorCmd = rightJoystick * 1.0;
 
@@ -205,32 +245,28 @@ public class Teleop extends OpMode {
         robot.collectorFinger2.setPosition(collectorFinger2Pos);
         robot.collectorRotate.setPosition(collectorRotatePos);
         robot.craneRotate.setPower(craneRotateMotorCmd);
-        robot.craneWrist.setPosition(Presets.CRANE_WRIST_STOW_POS);
-        robot.craneClaw.setPosition(Presets.CRANE_CLAW_CLOSE_POS);
+        robot.craneExtend.setPower(craneExtendMotorCmd);
+        robot.craneWrist.setPosition(craneWristTargetPos);
+        robot.craneClaw.setPosition(craneClawTargetPos);
+//        robot.flickerArm.setPosition(Presets.FLICKER_ARM_STOW_POS);
+//        robot.flickerFinger.setPosition(Presets.FLICKER_FINGER_STOW_POS);
 
-/*        if(gamepad1.dpad_up){
-            robot.craneRotate.setPower(0.4);
-        } else if (gamepad1.dpad_down){
-            robot.craneRotate.setPower(-0.4);
-        } else if (gamepad1.dpad_right){
-            robot.craneExtend.setPower(0.4);
-        }else if (gamepad1.dpad_left){
-            robot.craneExtend.setPower(-0.4);
-        } else {
-            robot.craneRotate.setPower(0);
-            robot.craneExtend.setPower(0);
-        }
-*/
+
         // Send telemetry to display on the phone
 //        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
 //        telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
 //        telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
 
-        telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
-        telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
+//        telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
+//        telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
         telemetry.addData("Arm Pos        ", robot.armRotate.getCurrentPosition());
-        telemetry.addData("Arm Speed      ", armSpeed);
-        telemetry.addData("Crane Pos      ", robot.craneRotate.getCurrentPosition());
+        telemetry.addData("Wrist Pos        ", craneWristTargetPos);
+        telemetry.addData("Claw Pos        ", craneClawTargetPos);
+//        telemetry.addData("Arm Speed      ", armSpeed);
+        telemetry.addData("Crane Rotate Pos ", craneRotateCurrentPos);
+        telemetry.addData("Crane Extend Pos ", craneExtendCurrentPos);
+        telemetry.addData("Crane Extend Target Pos ", craneExtendTargetPos);
+        telemetry.addData("Crane Extend Motor Cmd ", craneExtendMotorCmd);
 //        telemetry.addData("Red Color      ", robot.colorSensor.red());
 //        telemetry.addData("Red Color      ", robot.colorSensor.blue());
 

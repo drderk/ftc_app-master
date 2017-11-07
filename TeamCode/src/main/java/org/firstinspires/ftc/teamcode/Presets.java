@@ -29,13 +29,15 @@ public class Presets {
     static final double COLLECTOR_ROTATE_UPRIGHT_POS = -1;
     static final double COLLECTOR_ROTATE_INVERTED_POS = 1;
 
-    static final double CRANE_ROTATE_MAX_POS = 240;
+    static final double CRANE_ROTATE_MAX_POS = 265;
     static final double CRANE_ROTATE_MIN_POS = 0;
-    static final double CRANE_EXTEND_MAX_POS = 200;
+    static final double CRANE_EXTEND_MAX_POS = 1200;
     static final double CRANE_EXTEND_MIN_POS = 0;
 
-    static final double CRANE_WRIST_STOW_POS = -1;
-    static final double CRANE_CLAW_OPEN_POS = -1;
-    static final double CRANE_CLAW_CLOSE_POS = 1;
+    static final double CRANE_WRIST_STOW_POS = -0.25;
+    static final double CRANE_WRIST_MIN_POS = -0.25;
+    static final double CRANE_WRIST_MAX_POS = 0.75;
+    static final double CRANE_CLAW_OPEN_POS = -0.3;
+    static final double CRANE_CLAW_CLOSE_POS = 0.5;
 
 }
