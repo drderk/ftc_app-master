@@ -18,7 +18,7 @@ public class Presets {
     static final double FLICKER_FINGER_BACK_POS = -0.2;
 
     static final double COLLECTOR_ARM_COLLECT_POS = 30;
-    static final double COLLECTOR_ARM_LOW_SCORE_POS = 55;
+    static final double COLLECTOR_ARM_LOW_SCORE_POS = 60;
     static final double COLLECTOR_ARM_HIGH_SCORE_POS = 280;
     static final double COLLECTOR_ARM_MIN_POS = 0;
     static final double COLLECTOR_ARM_MAX_POS = 290;

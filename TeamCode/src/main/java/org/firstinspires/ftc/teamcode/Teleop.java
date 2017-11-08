@@ -134,21 +134,34 @@ public class Teleop extends OpMode {
         leftJoystick = -gamepad1.left_stick_y;
         rightJoystick = -gamepad1.right_stick_y;
 
+        if (gamepad1.left_trigger > 0.5){
+            leftWheelsMotorCmd = leftJoystick * 1.0;
+            rightWheelsMotorCmd = rightJoystick * 1.0;
+        } else {
+            leftWheelsMotorCmd = leftJoystick * 0.6;
+            rightWheelsMotorCmd = rightJoystick * 0.6;
+        }
+
         // COLLECTOR CONTROL /////////////////////////////////////////////////////
         // Scoring finger position
-        if (gamepad2.a) {
+        if (gamepad2.b) {
             collectorFinger1Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
             collectorFinger2Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
         }
         // Open bottom fingers and lower the tower when collecting
         if (gamepad1.right_bumper) {
-            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS){
                 collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
-            else if (collectorRotatePos == Presets.COLLECTOR_ROTATE_INVERTED_POS) {
+                if (gamepad1.left_bumper){
+                    collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
+                }}
+            else {
                 collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
+                    if (gamepad1.left_bumper){
+                        collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
+                    }
             }
-            armTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
-        }
+       }
         // Toggle the collector rotate position
         if ((gamepad2.right_bumper)&&(collectorRotateButtonWasntAlreadyPressed)) {
             collectorRotateButtonWasntAlreadyPressed = false;
@@ -166,22 +179,18 @@ public class Teleop extends OpMode {
         // ARM CONTROL /////////////////////////////////////////////////////
         // Raise the collector slightly to keep it off the floor
         // or high to score
-        if (gamepad2.x) {
-            armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+        if (gamepad2.a) {
+            armTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
         }
         else if (gamepad2.y) {
             armTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
+        } else if (gamepad2.x){
+            armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
         }
 
-/*        if (gamepad2.dpad_up) {
-            armTargetPos = armTargetPos + 5;
-        } else if (gamepad2.dpad_down) {
-            armTargetPos = armTargetPos - 5;
-        }
-*/
         // Manual arm movement
-        if ((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)){
-            armTargetPos = armTargetPos - (5.0 * gamepad2.left_stick_y);
+        if ((gamepad2.right_stick_y > 0.1) || (gamepad2.right_stick_y < -0.1)){
+            armTargetPos = armTargetPos - (5.0 * gamepad2.right_stick_y);
         }
 
         // CLAW CONTROL /////////////////////////////////////////////////////
@@ -190,27 +199,31 @@ public class Teleop extends OpMode {
         } else {
             craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
         }
-        if (gamepad2.left_trigger > 0.5){
+
+        if ((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)) {
+            craneWristTargetPos = craneWristTargetPos - (0.02 * gamepad2.left_stick_y);
+        }
+
+/*        if (gamepad2.left_trigger > 0.5){
             craneWristTargetPos -= 0.015;
         }
         if (gamepad2.left_bumper){
             craneWristTargetPos += 0.015;
         }
-
+*/
         // CRANE CONTROL /////////////////////////////////////////////////////
         if(gamepad2.dpad_up){
             craneRotateTargetPos = craneRotateTargetPos + 4;
         } else if (gamepad2.dpad_down) {
             craneRotateTargetPos = craneRotateTargetPos - 2;
         }
-/*        if(gamepad2.dpad_right){
-            craneExtendTargetPos = craneExtendTargetPos + 4;
-        } else if (gamepad2.dpad_left) {
-            craneExtendTargetPos = craneExtendTargetPos - 4;
-        }
-        */
+
         if(gamepad2.dpad_right){
-            craneExtendMotorCmd = 0.4;
+            if (robot.craneExtend.getCurrentPosition() < Presets.CRANE_EXTEND_MAX_POS){
+                craneExtendMotorCmd = 0.4;
+            } else {
+                craneExtendMotorCmd = 0;
+            }
         } else if (gamepad2.dpad_left) {
             craneExtendMotorCmd = -0.4;
         }
@@ -228,13 +241,10 @@ public class Teleop extends OpMode {
         armMotorCmd = Range.clip(armMotorCmd, -0.1, 0.8);
         craneRotateTargetPos = Range.clip(craneRotateTargetPos, Presets.CRANE_ROTATE_MIN_POS, Presets.CRANE_ROTATE_MAX_POS);
         craneExtendTargetPos = Range.clip(craneExtendTargetPos, Presets.CRANE_EXTEND_MIN_POS, Presets.CRANE_EXTEND_MAX_POS);
-        craneRotateMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, craneRotateTargetPos - craneRotateCurrentPos, craneRotateSpeed);
+        craneRotateMotorCmd = PinkPD.getMotorCmd(0.03, 0.02, craneRotateTargetPos - craneRotateCurrentPos, craneRotateSpeed);
  //       craneExtendMotorCmd = PinkPD.getMotorCmd(0.02, 0, craneExtendTargetPos - craneExtendCurrentPos, 0);
  //       craneExtendMotorCmd = Range.clip(craneExtendMotorCmd, -0.4, 0.4);
         craneWristTargetPos = Range.clip(craneWristTargetPos, Presets.CRANE_WRIST_MIN_POS, Presets.CRANE_WRIST_MAX_POS);
-
-        leftWheelsMotorCmd = leftJoystick * 1.0;
-        rightWheelsMotorCmd = rightJoystick * 1.0;
 
 
         // Set powers and positions
@@ -264,9 +274,11 @@ public class Teleop extends OpMode {
         telemetry.addData("Claw Pos        ", craneClawTargetPos);
 //        telemetry.addData("Arm Speed      ", armSpeed);
         telemetry.addData("Crane Rotate Pos ", craneRotateCurrentPos);
+        telemetry.addData("Crane Rotate Target Pos ", craneRotateTargetPos);
+        telemetry.addData("Crane Rotate Motor Cmd ", craneRotateMotorCmd);
         telemetry.addData("Crane Extend Pos ", craneExtendCurrentPos);
-        telemetry.addData("Crane Extend Target Pos ", craneExtendTargetPos);
-        telemetry.addData("Crane Extend Motor Cmd ", craneExtendMotorCmd);
+//        telemetry.addData("Crane Extend Target Pos ", craneExtendTargetPos);
+//        telemetry.addData("Crane Extend Motor Cmd ", craneExtendMotorCmd);
 //        telemetry.addData("Red Color      ", robot.colorSensor.red());
 //        telemetry.addData("Red Color      ", robot.colorSensor.blue());
 
