@@ -61,6 +61,7 @@ public class Teleop extends OpMode {
     Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
 
     boolean collectorRotateButtonWasntAlreadyPressed;
+    boolean craneClawOpenButtonWasntAlreadyPressed;
     double previousArmPos = 0;
     double previousCraneRotatePos = 0;
     double armSpeed = 0; // Max
@@ -148,21 +149,23 @@ public class Teleop extends OpMode {
             collectorFinger1Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
             collectorFinger2Pos = Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
         }
-        // Open bottom fingers and lower the tower when collecting
+        // Open bottom fingers
         if (gamepad1.right_bumper) {
-            armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
             if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS){
                 collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
-                if (gamepad1.left_bumper){
-                    collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
-                }}
-            else {
+            } else {
                 collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
-                    if (gamepad1.left_bumper){
-                        collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
-                    }
             }
-       }
+        }
+        // Open top fingers
+        if (gamepad1.left_bumper) {
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS){
+                collectorFinger2Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
+            } else {
+                collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
+            }
+        }
+
         // Toggle the collector rotate position
         if ((gamepad2.right_bumper)&&(collectorRotateButtonWasntAlreadyPressed)) {
             collectorRotateButtonWasntAlreadyPressed = false;
@@ -182,8 +185,7 @@ public class Teleop extends OpMode {
         // or high to score
         if (gamepad2.a) {
             armTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
-        }
-        else if (gamepad2.y) {
+        } else if (gamepad2.y) {
             armTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
         } else if (gamepad2.x){
             armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
@@ -195,23 +197,26 @@ public class Teleop extends OpMode {
         }
 
         // CLAW CONTROL /////////////////////////////////////////////////////
-        if (gamepad2.right_trigger > 0.5){
-            craneClawTargetPos = Presets.CRANE_CLAW_OPEN_POS;
-        } else {
-            craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
+        // Toggle the claw finger open/close
+        if ((gamepad2.right_trigger>0.5)&&(craneClawOpenButtonWasntAlreadyPressed)) {
+            craneClawOpenButtonWasntAlreadyPressed = false;
+            if (craneClawTargetPos == Presets.CRANE_CLAW_OPEN_POS){
+                craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
+            } else {
+                craneClawTargetPos = Presets.CRANE_CLAW_OPEN_POS;
+            }
+        }
+        if (gamepad2.right_trigger < 0.5){
+            craneClawOpenButtonWasntAlreadyPressed = true;
         }
 
         if ((gamepad2.left_stick_y > 0.1) || (gamepad2.left_stick_y < -0.1)) {
             craneWristTargetPos = craneWristTargetPos - (0.02 * gamepad2.left_stick_y);
         }
+        if (gamepad2.left_trigger > 0.5){
+            craneWristTargetPos = Presets.CRANE_WRIST_SCORE_POS;
+        }
 
-/*        if (gamepad2.left_trigger > 0.5){
-            craneWristTargetPos -= 0.015;
-        }
-        if (gamepad2.left_bumper){
-            craneWristTargetPos += 0.015;
-        }
-*/
         // CRANE CONTROL /////////////////////////////////////////////////////
         if(gamepad2.dpad_up){
             craneRotateTargetPos = craneRotateTargetPos + 4;
@@ -221,7 +226,7 @@ public class Teleop extends OpMode {
 
         if(gamepad2.dpad_right){
             if (robot.craneExtend.getCurrentPosition() < Presets.CRANE_EXTEND_MAX_POS){
-                craneExtendMotorCmd = 0.4;
+                craneExtendMotorCmd = 0.6;
             } else {
                 craneExtendMotorCmd = 0;
             }
@@ -231,7 +236,13 @@ public class Teleop extends OpMode {
         else {
             craneExtendMotorCmd = 0;
         }
-
+        if (gamepad2.left_bumper){
+            craneWristTargetPos = Presets.CRANE_WRIST_SCORE_POS;
+        }
+        if (gamepad2.left_trigger > 0.5) {
+            craneWristTargetPos = Presets.CRANE_WRIST_COLLECT_POS;
+            craneRotateTargetPos = Presets.CRANE_ROTATE_COLLECT_POS;
+        }
         // Limit position and power
         armTargetPos = Range.clip(armTargetPos, Presets.COLLECTOR_ARM_MIN_POS, Presets.COLLECTOR_ARM_MAX_POS);
         if (armTargetPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS){

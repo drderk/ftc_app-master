@@ -17,11 +17,11 @@ public class Presets {
     static final double FLICKER_FINGER_FRONT_POS = 0.2;
     static final double FLICKER_FINGER_BACK_POS = -0.2;
 
-    static final double COLLECTOR_ARM_COLLECT_POS = 30;
-    static final double COLLECTOR_ARM_LOW_SCORE_POS = 60;
+    static final double COLLECTOR_ARM_COLLECT_POS = 20;
+    static final double COLLECTOR_ARM_LOW_SCORE_POS = 50;
     static final double COLLECTOR_ARM_HIGH_SCORE_POS = 280;
     static final double COLLECTOR_ARM_MIN_POS = 0;
-    static final double COLLECTOR_ARM_MAX_POS = 290;
+    static final double COLLECTOR_ARM_MAX_POS = 300;
 
     static final double COLLECTOR_FINGER_GRAB_POS = -1;
     static final double COLLECTOR_FINGER_COLLECT_POS = 1;
@@ -31,14 +31,17 @@ public class Presets {
 
     static final double CRANE_ROTATE_MAX_POS = 265;
     static final double CRANE_ROTATE_MIN_POS = 0;
+    static final double CRANE_ROTATE_COLLECT_POS = 180;
     static final double CRANE_EXTEND_MAX_POS = 1200;
     static final double CRANE_EXTEND_MIN_POS = 0;
 
     static final double CRANE_WRIST_STOW_POS = -0.25;
     static final double CRANE_WRIST_MIN_POS = -0.25;
+    static final double CRANE_WRIST_SCORE_POS = 0.6;
+    static final double CRANE_WRIST_COLLECT_POS = 0.5;
     static final double CRANE_WRIST_MAX_POS = 0.75;
     static final double CRANE_CLAW_OPEN_POS = -0.3;
-    static final double CRANE_CLAW_CLOSE_POS = 0.5;
+    static final double CRANE_CLAW_CLOSE_POS = 0.6;
 
     static final int COLOR_NONE = 0;
     static final int COLOR_BLUE = 5;
