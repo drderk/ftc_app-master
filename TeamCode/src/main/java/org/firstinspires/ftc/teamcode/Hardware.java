@@ -8,6 +8,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
@@ -61,6 +62,7 @@ public class Hardware
 
 //    public Rev colorSensor = null;
     public ColorSensor colorSensor = null;
+    public DistanceSensor distanceSensor = null;
 
     public SensorDIO breakBeam = null;
     public SensorBNO055IMU compass = null;
@@ -90,6 +92,7 @@ public class Hardware
 
         // Sensors
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        distanceSensor = hwMap.get(DistanceSensor.class, "colorSensor");
 
         //Servos
         collectorFinger1 = hwMap.get(Servo.class, "collectorFinger1");

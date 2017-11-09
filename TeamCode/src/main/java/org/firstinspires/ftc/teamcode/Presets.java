@@ -40,4 +40,8 @@ public class Presets {
     static final double CRANE_CLAW_OPEN_POS = -0.3;
     static final double CRANE_CLAW_CLOSE_POS = 0.5;
 
+    static final int COLOR_NONE = 0;
+    static final int COLOR_BLUE = 5;
+    static final int COLOR_RED = 10;
+
 }

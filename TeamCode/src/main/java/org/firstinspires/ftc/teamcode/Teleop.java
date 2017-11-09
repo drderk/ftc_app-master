@@ -150,6 +150,7 @@ public class Teleop extends OpMode {
         }
         // Open bottom fingers and lower the tower when collecting
         if (gamepad1.right_bumper) {
+            armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
             if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS){
                 collectorFinger1Pos = Presets.COLLECTOR_FINGER_COLLECT_POS;
                 if (gamepad1.left_bumper){

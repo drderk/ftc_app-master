@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -133,8 +134,7 @@ public class Auto extends OpMode
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // INSERT ALLIANCE COLOR SELECTION AND STARTING POSITION HERE
+        
         blueAlliance = true;
         cornerStartingPos = true;
 
@@ -192,7 +192,7 @@ public class Auto extends OpMode
     {
 //        telemetry.addData("Opmode", "active");
         //telemetry.update();
-        currentBaseAngle = (int) GetHeading();  // Degrees
+        currentBaseAngle = (int) getHeading();  // Degrees
         leftWheelPos = robot.leftDrive.getCurrentPosition();
         rightWheelPos = robot.rightDrive.getCurrentPosition();
         currentBasePos = (leftWheelPos + rightWheelPos)/2.0;
@@ -229,7 +229,7 @@ public class Auto extends OpMode
                 targetBaseAngle = 0;
 
                 // Allow enough time for the arm to deploy
-                if ((runtime.milliseconds() - markedTime) > 600){
+                if ((runtime.milliseconds() - markedTime) > 600) {
                     stage = 20;
                 }
                 break;
@@ -245,10 +245,19 @@ public class Auto extends OpMode
                 targetBaseAngle = 0;
 
                 picturePos = camera.vuMark;
-// ADD LOGIC TO SCAN THE COLOR SENSOR //////////////
-                ourJewelIsTheFrontOne = true;
-                jewelFound = true;
-////////////////////////////////////////////////////
+
+                 if (getColor() == Presets.COLOR_RED) {
+                     ourJewelIsTheFrontOne = !blueAlliance;
+                     jewelFound = true;
+                 }
+                else if (getColor() == Presets.COLOR_BLUE) {
+                     ourJewelIsTheFrontOne = blueAlliance;
+                     jewelFound = true;
+                 }
+                 else {
+                     jewelFound = false;
+                 }
+
                 telemetry.addData("Glyph pos", picturePos);
                 //telemetry.addData("Jewel Color", jewelColor());
 
@@ -534,11 +543,56 @@ public class Auto extends OpMode
         telemetry.update();
     }
 
-    public double GetHeading ()
-    {
+    public double getHeading () {
         Orientation angles;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+    }
+    public int getColor(){
+
+        // Calculate Correlated Color Temperature (CCT)
+        double R = robot.colorSensor.red();
+        double G = robot.colorSensor.green();
+        double B = robot.colorSensor.blue();
+
+        int currentColor = Presets.COLOR_NONE;
+
+        // First check if the distance is less than 6cm
+        if(robot.distanceSensor.getDistance(DistanceUnit.CM) < 6.0);
+        {
+            // Calculate CCT
+            // Find out CIE tristimulus values (XYZ)
+            double X= ((-0.14282)*(R))+((1.54924)*(G))+((-0.95641)*(B));
+            double Y= ((-0.32466)*(R))+ ((1.57837)*(G)) + ((-0.73191)*(B)); //=Illuminance
+            double Z= ((-0.68202)*(R)) + ((0.77073)*(G)) + ((0.56332)*(B));
+
+            // Calculate the normalized chromaticity values
+            double x = X/(X+Y+Z);
+            double y = Y/(X+Y+Z);
+
+//            Compute the CCT value
+//           double n=(x-0.3320)/(0.1858-y);
+//            double colorCCT1=(449*(n*n*n))+(3525*(n*n))+ (6823.3*n)+5520.33;
+
+            // Consolidated Formula (CCT From RGB)
+            double n = (((0.23881)*R)+((0.25499)*G)+((-0.58291)*B))/(((0.11109)*R)+((-0.85406)*G)+((0.52289)*B));
+            double colorCCT = (449*(n*n*n))+(3525*(n*n))+(6823.3*n) + 5520.33;
+
+            // now check if the intensity is big enough
+            if(colorCCT > 7500.0)
+            {
+                // Check for Blue
+                if((B > 10.0) && (B > (R * 2.0))) // If blue is greater than 10 and at least twice as red
+                {
+                    currentColor = Presets.COLOR_BLUE;
+                } else
+                if((R > 10.0) && (R > (B * 2.0))) // If red is greater than 10 and at least twice as blue
+                {
+                    currentColor = Presets.COLOR_RED;
+                }
+            } // if intensity of any color is high enough
+        } // If sensor distance is close
+        return currentColor;
     }
 
 /*
@@ -596,6 +650,8 @@ public class Auto extends OpMode
     /*
      * Code to run ONCE after the driver hits STOP
      */
+
+
     @Override
     public void stop ()
     {
