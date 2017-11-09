@@ -246,6 +246,7 @@ public class Auto extends OpMode
 
                 picturePos = camera.vuMark;
 
+//                Scan for color
                  if (getColor() == Presets.COLOR_RED) {
                      ourJewelIsTheFrontOne = !blueAlliance;
                      jewelFound = true;
