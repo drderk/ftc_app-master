@@ -513,7 +513,7 @@ public class Auto extends OpMode
                 }
                  break;
 
-            case 90: //Drive forward to Score
+            case 90: //Drive forward to Score.
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
