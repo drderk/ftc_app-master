@@ -9,13 +9,13 @@ public class Presets {
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
 
-    static final double FLICKER_ARM_STOW_POS = -1;
-    static final double FLICKER_ARM_DEPLOY_POS = 1;
+    static final double FLICKER_ARM_STOW_POS = 0.0;
+    static final double FLICKER_ARM_DEPLOY_POS = 0.5;
 
-    static final double FLICKER_FINGER_STOW_POS = -1;
-    static final double FLICKER_FINGER_NEUTRAL_POS = 0;
-    static final double FLICKER_FINGER_FRONT_POS = 0.2;
-    static final double FLICKER_FINGER_BACK_POS = -0.2;
+    static final double FLICKER_FINGER_STOW_POS = 1.0;
+    static final double FLICKER_FINGER_NEUTRAL_POS = 0.6;
+    static final double FLICKER_FINGER_FRONT_POS = 1.0;
+    static final double FLICKER_FINGER_BACK_POS = 0.2;
 
     static final double COLLECTOR_ARM_COLLECT_POS = 20;
     static final double COLLECTOR_ARM_LOW_SCORE_POS = 50;

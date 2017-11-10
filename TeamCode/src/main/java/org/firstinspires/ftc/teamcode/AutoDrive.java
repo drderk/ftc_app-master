@@ -83,6 +83,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous (name = "Auto Drive", group = "Pushbot")
+@Disabled
 public class AutoDrive extends LinearOpMode
 {
 
@@ -137,11 +138,11 @@ public class AutoDrive extends LinearOpMode
         imu.initialize(parameters);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameter = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        VuforiaLocalizer.Parameters cameraParameter = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        parameter.vuforiaLicenseKey = "AaId2D7/////AAAAGeEOwvh4YkCKim1fP/VA8hpZk/olkYH12xynqz4wP+p4EjzCP4otFEoCxD0cztAeqHF3sVP3DJkAIOKqVX8UM6YbWpaaZPA3fK1YUfNg1Eh7A47eCRH0zO4hSJZ6fJEnw/NtT+dyv162iRX46R3xsyfB4CZdrHH2Yuxxoa9iWfaLfMdT7p7AWxUjHyujL28oC9xNcv2hJ0QDVbq3om6OzNEbAfkVbUf2q+z/VoWoH6036CL5fzB/ddo2E3Lgiv3PMoGtQyoWDtAuV6s53CAs/GuSGdv/WmltQtuxcu4w6QrdZIF2SCQ3idYKEPUuv16ranl1/Ayz5OgnYQf4HLRYLgnCRFKXEd7WZPVaLIwM9bJq"; //"ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
-        parameter.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameter);
+        cameraParameter.vuforiaLicenseKey = "AaId2D7/////AAAAGeEOwvh4YkCKim1fP/VA8hpZk/olkYH12xynqz4wP+p4EjzCP4otFEoCxD0cztAeqHF3sVP3DJkAIOKqVX8UM6YbWpaaZPA3fK1YUfNg1Eh7A47eCRH0zO4hSJZ6fJEnw/NtT+dyv162iRX46R3xsyfB4CZdrHH2Yuxxoa9iWfaLfMdT7p7AWxUjHyujL28oC9xNcv2hJ0QDVbq3om6OzNEbAfkVbUf2q+z/VoWoH6036CL5fzB/ddo2E3Lgiv3PMoGtQyoWDtAuV6s53CAs/GuSGdv/WmltQtuxcu4w6QrdZIF2SCQ3idYKEPUuv16ranl1/Ayz5OgnYQf4HLRYLgnCRFKXEd7WZPVaLIwM9bJq"; //"ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        cameraParameter.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(cameraParameter);
 
         /**
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable

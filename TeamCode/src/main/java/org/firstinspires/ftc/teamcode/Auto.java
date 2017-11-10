@@ -39,12 +39,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -61,8 +69,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous (name = "AutoTestDrive")
-@Disabled
+@Autonomous (name = "Auto")
+//@Disabled
 public class Auto extends OpMode
 {
 
@@ -90,16 +98,58 @@ public class Auto extends OpMode
     double craneExtendPos = 0;
     double collectorArmPos = 0, collectorArmPreviousPos = 0, armSpeed = 0;
     RelicRecoveryVuMark image = null;
-
-    VuMarks camera = new VuMarks();
-    RelicRecoveryVuMark picturePos;
+    int jewelColor = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
+    VuforiaLocalizer vuforia;
+    VuforiaTrackable relicTemplate;
 
     @Override
     public void init ()
     {
         boolean robotAutoConfigured = false;
+        /*
+         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
+         */
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters cameraParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        // OR...  Do Not Activate the Camera Monitor View, to save power
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        /*
+         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+         * web site at https://developer.vuforia.com/license-manager.
+         *
+         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+         * random data. As an example, here is a example of a fragment of a valid key:
+         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+         * Once you've obtained a license key, copy the string from the Vuforia web site
+         * and paste it in to your code onthe next line, between the double quotes.
+         */
+        cameraParameters.vuforiaLicenseKey = "AaId2D7/////AAAAGeEOwvh4YkCKim1fP/VA8hpZk/olkYH12xynqz4wP+p4EjzCP4otFEoCxD0cztAeqHF3sVP3DJkAIOKqVX8UM6YbWpaaZPA3fK1YUfNg1Eh7A47eCRH0zO4hSJZ6fJEnw/NtT+dyv162iRX46R3xsyfB4CZdrHH2Yuxxoa9iWfaLfMdT7p7AWxUjHyujL28oC9xNcv2hJ0QDVbq3om6OzNEbAfkVbUf2q+z/VoWoH6036CL5fzB/ddo2E3Lgiv3PMoGtQyoWDtAuV6s53CAs/GuSGdv/WmltQtuxcu4w6QrdZIF2SCQ3idYKEPUuv16ranl1/Ayz5OgnYQf4HLRYLgnCRFKXEd7WZPVaLIwM9bJq"; //"ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+
+
+        /*
+         * We also indicate which camera on the RC that we wish to use.
+         * Here we chose the back (HiRes) camera (for greater range), but
+         * for a competition robot, the front camera might be more convenient.
+         */
+        cameraParameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(cameraParameters);
+
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * in this data set: all three of the VuMarks in the game were created from this one template,
+         * but differ in their instance id information.
+         * @see VuMarkInstanceId
+         */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
          /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -140,6 +190,7 @@ public class Auto extends OpMode
 
         // Wait for the game to start (driver presses PLAY).
         telemetry.addData("Status", "Waiting for start");    //
+        relicTrackables.activate();
         telemetry.update();
     }
 
@@ -190,8 +241,6 @@ public class Auto extends OpMode
     @Override
     public void loop ()
     {
-//        telemetry.addData("Opmode", "active");
-        //telemetry.update();
         currentBaseAngle = (int) getHeading();  // Degrees
         leftWheelPos = robot.leftDrive.getCurrentPosition();
         rightWheelPos = robot.rightDrive.getCurrentPosition();
@@ -203,7 +252,7 @@ public class Auto extends OpMode
         collectorArmPos = robot.armRotate.getCurrentPosition();
         armSpeed =  collectorArmPos - collectorArmPreviousPos;
         collectorArmPreviousPos = collectorArmPos;
-        
+
         switch (stage) {
             case 0: // Initialize
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
@@ -244,14 +293,14 @@ public class Auto extends OpMode
                 targetBasePos = 0;
                 targetBaseAngle = 0;
 
-                picturePos = camera.vuMark;
-
-//                Scan for color
-                 if (getColor() == Presets.COLOR_RED) {
+                // Scan for the image and jewel color
+                image = getImage();
+                jewelColor = getColor();
+                 if (jewelColor == Presets.COLOR_RED) {
                      ourJewelIsTheFrontOne = !blueAlliance;
                      jewelFound = true;
                  }
-                else if (getColor() == Presets.COLOR_BLUE) {
+                 else if (jewelColor == Presets.COLOR_BLUE) {
                      ourJewelIsTheFrontOne = blueAlliance;
                      jewelFound = true;
                  }
@@ -259,11 +308,8 @@ public class Auto extends OpMode
                      jewelFound = false;
                  }
 
-                telemetry.addData("Glyph pos", picturePos);
-                //telemetry.addData("Jewel Color", jewelColor());
-
-                markedTime = runtime.milliseconds();
                 if (jewelFound){
+                    markedTime = runtime.milliseconds();
                     stage = 30;
                 }
                 else {
@@ -301,17 +347,11 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                targetBasePos = 0;
+                targetBaseAngle = 0;
 
                 if ((runtime.milliseconds() - markedTime) > 500) {
                     markedTime = runtime.milliseconds();
-                    if (blueAlliance) {
-                        targetBasePos = 24;
-                    }
-                    else {
-                        targetBasePos = -24;
-                    }
-                    targetBaseAngle = 0;
-
                     stage = 50;
                 }
                 break;
@@ -324,28 +364,16 @@ public class Auto extends OpMode
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
 
+                if (blueAlliance) {
+                    targetBasePos = 24;
+                }
+                else {
+                    targetBasePos = -24;
+                }
+                targetBaseAngle = 0;
+
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3))
                 {
-                    if (blueAlliance) {
-                        if (cornerStartingPos) {
-                            targetBasePos = 24;
-                            targetBaseAngle = 0;
-                        }
-                        else {
-                            targetBasePos = 24;
-                            targetBaseAngle = 90;
-                        }
-                    }
-                    else {
-                        if (cornerStartingPos) {
-                            targetBasePos = -24;
-                            targetBaseAngle = 0;
-                        }
-                        else {
-                            targetBasePos = -24;
-                            targetBaseAngle = 90;
-                        }
-                    }
                     stage = 60;
                 }
                 break;
@@ -357,49 +385,29 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                if (blueAlliance) {
+                    if (cornerStartingPos) {
+                        targetBasePos = 24;
+                        targetBaseAngle = 0;
+                    }
+                    else {
+                        targetBasePos = 24;
+                        targetBaseAngle = 90;
+                    }
+                }
+                else {
+                    if (cornerStartingPos) {
+                        targetBasePos = -24;
+                        targetBaseAngle = 0;
+                    }
+                    else {
+                        targetBasePos = -24;
+                        targetBaseAngle = 90;
+                    }
+                }
 
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.6))
                 {
-                    // Determine the distance to the bonus column on the cryptobox
-                    if (image == RelicRecoveryVuMark.LEFT) {
-                        if (blueAlliance) {
-                            columnOffset = 3;
-                        }
-                        else {
-                            columnOffset = 15;
-                        }
-                    }
-                    else if (image == RelicRecoveryVuMark.RIGHT){
-                        if (blueAlliance) {
-                            columnOffset = 15;
-                        }
-                        else {
-                            columnOffset = 3;
-                        }
-                    }
-                    else {
-                        columnOffset = 9;   // Center position by default
-                    }
-                    if (blueAlliance) {
-                        if (cornerStartingPos) {
-                            targetBasePos = 24 + columnOffset;
-                            targetBaseAngle = 0;
-                        }
-                        else {
-                            targetBasePos = 24 + columnOffset;
-                            targetBaseAngle = 90;
-                        }
-                    }
-                    else {
-                        if (cornerStartingPos) {
-                            targetBasePos = -24 + columnOffset;
-                            targetBaseAngle = 0;
-                        }
-                        else {
-                            targetBasePos = -24 + columnOffset;
-                            targetBaseAngle = 90;
-                        }
-                    }
                     stage = 70;
                 }
                 break;
@@ -411,30 +419,49 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                // Determine the distance to the bonus column on the cryptobox
+                if (image == RelicRecoveryVuMark.LEFT) {
+                    if (blueAlliance) {
+                        columnOffset = 3;
+                    }
+                    else {
+                        columnOffset = 15;
+                    }
+                }
+                else if (image == RelicRecoveryVuMark.RIGHT){
+                    if (blueAlliance) {
+                        columnOffset = 15;
+                    }
+                    else {
+                        columnOffset = 3;
+                    }
+                }
+                else {
+                    columnOffset = 9;   // Center position by default
+                }
+                if (blueAlliance) {
+                    if (cornerStartingPos) {
+                        targetBasePos = 24 + columnOffset;
+                        targetBaseAngle = 0;
+                    }
+                    else {
+                        targetBasePos = 24 + columnOffset;
+                        targetBaseAngle = 90;
+                    }
+                }
+                else {
+                    if (cornerStartingPos) {
+                        targetBasePos = -24 + columnOffset;
+                        targetBaseAngle = 0;
+                    }
+                    else {
+                        targetBasePos = -24 + columnOffset;
+                        targetBaseAngle = 90;
+                    }
+                }
 
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.6))
                 {
-                    // Set the angle to face the cryptobox
-                    if (blueAlliance) {
-                        if (cornerStartingPos) {
-                            targetBasePos = 24 + columnOffset;
-                            targetBaseAngle = -90;
-                        }
-                        else {
-                            targetBasePos = 24 + columnOffset;
-                            targetBaseAngle = 0;
-                        }
-                    }
-                    else {
-                        if (cornerStartingPos) {
-                            targetBasePos = -24 + columnOffset;
-                            targetBaseAngle = -90;
-                        }
-                        else {
-                            targetBasePos = -24 + columnOffset;
-                            targetBaseAngle = 180;
-                        }
-                    }
                     stage = 80;
                 }
                 break;
@@ -446,50 +473,68 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                // Set the angle to face the cryptobox
+                if (blueAlliance) {
+                    if (cornerStartingPos) {
+                        targetBasePos = 24 + columnOffset;
+                        targetBaseAngle = -90;
+                    }
+                    else {
+                        targetBasePos = 24 + columnOffset;
+                        targetBaseAngle = 0;
+                    }
+                }
+                else {
+                    if (cornerStartingPos) {
+                        targetBasePos = -24 + columnOffset;
+                        targetBaseAngle = -90;
+                    }
+                    else {
+                        targetBasePos = -24 + columnOffset;
+                        targetBaseAngle = 180;
+                    }
+                }
 
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.6))
                 {
-                    if (blueAlliance) {
-                        if (cornerStartingPos) {
-                            targetBasePos = 24 + columnOffset + 16;
-                            targetBaseAngle = -90;
-                        }
-                        else {
-                            targetBasePos = 24 + columnOffset + 16;
-                            targetBaseAngle = 0;
-                        }
-                    }
-                    else {
-                        if (cornerStartingPos) {
-                            targetBasePos = -24 + columnOffset + 16;
-                            targetBaseAngle = -90;
-                        }
-                        else {
-                            targetBasePos = -24 + columnOffset + 16;
-                            targetBaseAngle = 180;
-                        }
-                    }
-                    // Remember the baseline position for scoring so we can drive from here
-                    baseScorePos  = targetBasePos;
-                    baseScoreAngle = targetBaseAngle;
-
                     stage = 90;
                 }
                  break;
 
-            case 90: //Drive to Score
+            case 90: //Drive forward to Score
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                if (blueAlliance) {
+                    if (cornerStartingPos) {
+                        targetBasePos = 24 + columnOffset + 16;
+                        targetBaseAngle = -90;
+                    }
+                    else {
+                        targetBasePos = 24 + columnOffset + 16;
+                        targetBaseAngle = 0;
+                    }
+                }
+                else {
+                    if (cornerStartingPos) {
+                        targetBasePos = -24 + columnOffset + 16;
+                        targetBaseAngle = -90;
+                    }
+                    else {
+                        targetBasePos = -24 + columnOffset + 16;
+                        targetBaseAngle = 180;
+                    }
+                }
+                // Remember the baseline position for scoring so we can drive from here
+                baseScorePos  = targetBasePos;
+                baseScoreAngle = targetBaseAngle;
 
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.6))
                 {
                     markedTime = runtime.milliseconds();
-                    targetBasePos = baseScorePos;
-                    targetBaseAngle = baseScoreAngle;
                     stage = 100;
                 }
                 break;
@@ -501,13 +546,13 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_SCORE_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                targetBasePos = baseScorePos;
+                targetBaseAngle = baseScoreAngle;
 
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.6);
 
                 if ((runtime.milliseconds() - markedTime) > 200) {
                     markedTime = runtime.milliseconds();
-                    targetBasePos = baseScorePos - 8;
-                    targetBaseAngle = baseScoreAngle;
                     stage = 110;
                 }
                 break;
@@ -519,7 +564,9 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_SCORE_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
-                
+                targetBasePos = baseScorePos - 8;
+                targetBaseAngle = baseScoreAngle;
+
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.6);
 
                 break;
@@ -540,7 +587,18 @@ public class Auto extends OpMode
         robot.craneRotate.setPower(PinkPD.getMotorCmd(0.01, 0.0, Presets.CRANE_ROTATE_MIN_POS - craneRotatePos, 0.0));
         robot.craneExtend.setPower(PinkPD.getMotorCmd(0.01, 0.0, Presets.CRANE_EXTEND_MIN_POS - craneExtendPos, 0.0));
 
-        telemetry.addData("Stage ", stage);
+/*        if (image != RelicRecoveryVuMark.UNKNOWN)
+        {
+            telemetry.addData("Image ", image);
+        }
+        else
+        {
+            telemetry.addData("Image ", "No picture!");
+        }
+*/
+        telemetry.addData("Stage  ", stage);
+        telemetry.addData("Image  ", image);
+        telemetry.addData("Color  ", jewelColor);
         telemetry.update();
     }
 
@@ -549,6 +607,50 @@ public class Auto extends OpMode
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
+    public RelicRecoveryVuMark getImage ()
+    {
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN)
+        {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+            telemetry.addData("VuMark", "%s visible", vuMark);
+
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+            telemetry.addData("Pose", format(pose));
+
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
+            if (pose != null)
+            {
+                VectorF trans = pose.getTranslation();
+                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                double tX = trans.get(0);
+                double tY = trans.get(1);
+                double tZ = trans.get(2);
+
+                // Extract the rotational components of the target relative to the robot
+                double rX = rot.firstAngle;
+                double rY = rot.secondAngle;
+                double rZ = rot.thirdAngle;
+            }
+            return vuMark;
+        }
+        return vuMark;
+    }
+
+    private String format (OpenGLMatrix transformationMatrix)
+    {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+
     public int getColor(){
 
         // Calculate Correlated Color Temperature (CCT)

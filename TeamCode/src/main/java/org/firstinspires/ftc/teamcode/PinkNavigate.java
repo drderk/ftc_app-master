@@ -26,22 +26,21 @@ public class PinkNavigate
         double angleOffset;
         double linearError = targetPosInches - currentPosInches;
         double angularError = targetAngleDeg - currentAngleDeg;
-        double motorCmd = PinkPD.getMotorCmd(0.1, 0.001, linearError, linearSpeedCounts);
+        double motorCmd = PinkPD.getMotorCmd(0.05, 0.2, linearError, linearSpeedInches);
 
-        // Determine the baseline motor speed command
-        motorCmd = Range.clip(motorCmd, -0.5, 0.5);
+        // Determine the baseline motor speed command, but limit it to leave room for the turn offset
+        motorCmd = Range.clip(motorCmd, -0.6, 0.6);
 
         // Determine and add the angle offset
-        angleOffset = PinkPD.getMotorCmd(0.01, 0.001, angularError, 0);
+        angleOffset = PinkPD.getMotorCmd(0.05, 0.001, angularError, 0);
         leftMotorCmd = motorCmd - angleOffset;
         rightMotorCmd = motorCmd + angleOffset;
         leftMotorCmd = Range.clip(leftMotorCmd, -1.0, 1.0);
         rightMotorCmd = Range.clip(rightMotorCmd, -1.0, 1.0);
 
-        // Scale the motor commands back to account for the MC windup problem
-        // (if the motor cant keep up with the command, error builds up)
-        leftMotorCmd *= maxPower;
-        rightMotorCmd *= maxPower;
+        // Limit the max motor command for gentle motion
+        leftMotorCmd = Range.clip(leftMotorCmd, -maxPower, maxPower );
+        rightMotorCmd = Range.clip(rightMotorCmd, -maxPower, maxPower );
 
         // If navigated to position
         if ((Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD))

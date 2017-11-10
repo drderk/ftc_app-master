@@ -81,6 +81,7 @@ import java.util.Locale;
  */
 
 @Autonomous (name = "Pushbot: Auto Drive By Gyro", group = "Pushbot")
+@Disabled
 public class AutoGyroDrive extends LinearOpMode
 {
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
