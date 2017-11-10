@@ -12,16 +12,17 @@ public class Presets {
     static final double FLICKER_ARM_STOW_POS = 0.0;
     static final double FLICKER_ARM_DEPLOY_POS = 0.5;
 
-    static final double FLICKER_FINGER_STOW_POS = 1.0;
+    static final double FLICKER_FINGER_STOW_POS = 0.1;
     static final double FLICKER_FINGER_NEUTRAL_POS = 0.6;
     static final double FLICKER_FINGER_FRONT_POS = 1.0;
-    static final double FLICKER_FINGER_BACK_POS = 0.2;
+    static final double FLICKER_FINGER_BACK_POS = 0.1;
 
     static final double COLLECTOR_ARM_COLLECT_POS = 20;
     static final double COLLECTOR_ARM_LOW_SCORE_POS = 60;
     static final double COLLECTOR_ARM_HIGH_SCORE_POS = 280;
     static final double COLLECTOR_ARM_MIN_POS = 0;
     static final double COLLECTOR_ARM_MAX_POS = 300;
+    static final double COLLECTOR_ARM_TRAVEL_POS = 100;
 
     static final double COLLECTOR_FINGER_GRAB_POS = -1;
     static final double COLLECTOR_FINGER_COLLECT_POS = 0.6;
@@ -40,6 +41,8 @@ public class Presets {
     static final double CRANE_WRIST_SCORE_POS = 0.6;
     static final double CRANE_WRIST_COLLECT_POS = 0.6;
     static final double CRANE_WRIST_MAX_POS = 0.75;
+    static final double CRANE_WRIST_LATCH_POS = 0.1;
+
     static final double CRANE_CLAW_OPEN_POS = -0.3;
     static final double CRANE_CLAW_CLOSE_POS = 0.6;
 

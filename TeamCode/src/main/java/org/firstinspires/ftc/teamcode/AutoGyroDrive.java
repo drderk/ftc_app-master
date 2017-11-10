@@ -81,15 +81,13 @@ import java.util.Locale;
  */
 
 @Autonomous (name = "Pushbot: Auto Drive By Gyro", group = "Pushbot")
-@Disabled
 public class AutoGyroDrive extends LinearOpMode
 {
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
     //ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double COUNTS_PER_INCH = 49.8;
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double DRIVE_SPEED = 0.7;     // Nominal speed for better accuracy.
@@ -162,11 +160,11 @@ public class AutoGyroDrive extends LinearOpMode
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
         gyroDrive(DRIVE_SPEED, 48.0, 0.0);    // Drive FWD 48 inches
-        gyroTurn(TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-        gyroHold(TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
+        gyroTurn(TURN_SPEED, 90.0);         // Turn  CCW to -45 Degrees
+        gyroHold(TURN_SPEED, 90.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
         gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-        gyroTurn(TURN_SPEED, 45.0);         // Turn  CW  to  45 Degrees
-        gyroHold(TURN_SPEED, 45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
+        gyroTurn(TURN_SPEED, -90.0);         // Turn  CW  to  45 Degrees
+        gyroHold(TURN_SPEED, -90.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
         gyroTurn(TURN_SPEED, 0.0);         // Turn  CW  to   0 Degrees
         gyroHold(TURN_SPEED, 0.0, 1.0);    // Hold  0 Deg heading for a 1 second
         gyroDrive(DRIVE_SPEED, -48.0, 0.0);    // Drive REV 48 inches

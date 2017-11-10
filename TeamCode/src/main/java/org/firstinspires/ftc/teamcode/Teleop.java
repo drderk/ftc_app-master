@@ -263,7 +263,7 @@ public class Teleop extends OpMode {
         //       craneExtendMotorCmd = Range.clip(craneExtendMotorCmd, -0.4, 0.4);
         craneWristTargetPos = Range.clip(craneWristTargetPos, Presets.CRANE_WRIST_MIN_POS, Presets.CRANE_WRIST_MAX_POS);
 
-/*        if (gamepad1.x)
+        if (gamepad1.y)
         {
             flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
         }
@@ -271,17 +271,13 @@ public class Teleop extends OpMode {
         {
             flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
         }
-        else
-        {
-            flickerArmTargetPos = .5;
-        }
 
-        if (gamepad1.y)
+        if (gamepad1.b)
         {
             //flickerFingerTargetPos += 0.02;
             flickerFingerTargetPos = Presets.FLICKER_FINGER_BACK_POS;
         }
-        else if (gamepad1.b)
+        else if (gamepad1.x)
         {
             //flickerFingerTargetPos -= 0.02;
             flickerFingerTargetPos = Presets.FLICKER_FINGER_FRONT_POS;
@@ -291,7 +287,6 @@ public class Teleop extends OpMode {
            flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
         }
 
-        */
         //flickerFingerTargetPos = Range.clip(flickerFingerTargetPos, -1.0, 1.0);
         // Set powers and positions
         robot.leftDrive.setPower(leftWheelsMotorCmd);
@@ -326,7 +321,7 @@ public class Teleop extends OpMode {
         telemetry.addData("Flicker Arm Target Pos ", flickerArmTargetPos);
         telemetry.addData("gamepad2.dpad_down", gamepad2.dpad_down);
 //        telemetry.addData("Crane Extend Target Pos ", craneExtendTargetPos);
-//        telemetry.addData("Crane Extend Motor Cmd ", craneExtendMotorCmd);
+//        telemetry.addData("Crane Extnd Motor Cmd ", craneExtendMotorCmd);
 //        telemetry.addData("Red Color      ", robot.colorSensor.red());
 //        telemetry.addData("Red Color      ", robot.colorSensor.blue());
 
