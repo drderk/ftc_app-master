@@ -94,6 +94,9 @@ public class Teleop extends OpMode {
          */
         robot.init(hardwareMap);
 
+        robot.flickerArm.setPosition(Presets.FLICKER_ARM_STOW_POS);
+        robot.flickerFinger.setPosition(Presets.FLICKER_FINGER_STOW_POS);
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
     }
@@ -263,7 +266,7 @@ public class Teleop extends OpMode {
         //       craneExtendMotorCmd = Range.clip(craneExtendMotorCmd, -0.4, 0.4);
         craneWristTargetPos = Range.clip(craneWristTargetPos, Presets.CRANE_WRIST_MIN_POS, Presets.CRANE_WRIST_MAX_POS);
 
-        if (gamepad1.y)
+/*        if (gamepad1.y)
         {
             flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
         }
@@ -286,7 +289,7 @@ public class Teleop extends OpMode {
         {
            flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
         }
-
+*/
         //flickerFingerTargetPos = Range.clip(flickerFingerTargetPos, -1.0, 1.0);
         // Set powers and positions
         robot.leftDrive.setPower(leftWheelsMotorCmd);
@@ -299,8 +302,6 @@ public class Teleop extends OpMode {
         robot.craneExtend.setPower(craneExtendMotorCmd);
         robot.craneWrist.setPosition(craneWristTargetPos);
         robot.craneClaw.setPosition(craneClawTargetPos);
-        robot.flickerArm.setPosition(flickerArmTargetPos);
-        robot.flickerFinger.setPosition(flickerFingerTargetPos);
 
         // Send telemetry to display on the phone
 //        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
