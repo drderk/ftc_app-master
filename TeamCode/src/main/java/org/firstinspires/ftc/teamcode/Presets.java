@@ -4,7 +4,8 @@ package org.firstinspires.ftc.teamcode;
  * Created by Pappy on 11/4/2017.
  */
 
-public class Presets {
+public class Presets
+{
     static final double COUNTS_PER_INCH = 49.5;  // Base travel.
     static final double POSITION_THRESHOLD = 10.0;   // Counts
     static final double ANGLE_THRESHOLD = 5.0;     // Degrees
@@ -49,5 +50,4 @@ public class Presets {
     static final int COLOR_NONE = 0;
     static final int COLOR_BLUE = 5;
     static final int COLOR_RED = 10;
-
 }

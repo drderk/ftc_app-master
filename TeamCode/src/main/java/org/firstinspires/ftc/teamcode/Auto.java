@@ -32,30 +32,23 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import static android.os.SystemClock.sleep;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -78,40 +71,36 @@ public class Auto extends OpMode
 {
 
     /* Declare OpMode members. */
-    Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
-    BNO055IMU imu;
-    double currentBaseAngle;
-    int stage = 0;
-    double leftWheelMotorCmd, rightWheelMotorCmd, armMotorCmd;
-    double collectorArmTargetPos;
-    double flickerArmTargetPos, flickerFingerTargetPos;
-    double collectorFinger1TargetPos, collectorFinger2TargetPos, collectorRotateTargetPos;
-    double targetBasePos, targetBaseAngle;
-    double baseScorePos, baseScoreAngle;
-    boolean jewelFound = false;
-    boolean blueAlliance;        // Selected alliance color
-    boolean cornerStartingPos;   // Corner or middle starting position
-    double markedTime;
-    boolean ourJewelIsTheFrontOne;
-    double leftWheelPos = 0, rightWheelPos = 0;
-    double currentBasePos, previousBasePos;
-    double linearBaseSpeed = 0;
-    double columnOffset = 0;
-    double craneRotatePos = 0;
-    double craneExtendPos = 0;
-    double collectorArmPos = 0, collectorArmPreviousPos = 0, armSpeed = 0;
-    double angularSpeed;
+    private Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
+    private BNO055IMU imu;
+    private double currentBaseAngle;
+    private int stage = 0;
+    private double leftWheelMotorCmd, rightWheelMotorCmd, armMotorCmd;
+    private double collectorArmTargetPos;
+    private double flickerArmTargetPos, flickerFingerTargetPos;
+    private double collectorFinger1TargetPos, collectorFinger2TargetPos, collectorRotateTargetPos;
+    private double targetBasePos, targetBaseAngle;
+    private double baseScorePos, baseScoreAngle;
+    private boolean jewelFound = false;
+    private boolean blueAlliance;        // Selected alliance color
+    private boolean cornerStartingPos;   // Corner or middle starting position
+    private double markedTime; // Represents a set point in time
+    private boolean ourJewelIsTheFrontOne;
+    private double leftWheelPos = 0, rightWheelPos = 0;
+    private double currentBasePos, previousBasePos;
+    private double linearBaseSpeed = 0;
+    private double columnOffset = 0;
+    //private double craneRotatePos = 0;
+    //private double craneExtendPos = 0;
+    private double collectorArmPos = 0, collectorArmPreviousPos = 0, armSpeed = 0;
+    //private double angularSpeed = 0;
 
-    {
-        angularSpeed = 0;
-    }
-
-    RelicRecoveryVuMark image = null;
+    private RelicRecoveryVuMark image = null;
     int jewelColor = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
-    VuforiaLocalizer vuforia;
-    VuforiaTrackable relicTemplate;
+    private VuforiaLocalizer vuforia;
+    private VuforiaTrackable relicTemplate;
 
     @Override
     public void init ()
@@ -150,7 +139,7 @@ public class Auto extends OpMode
         cameraParameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(cameraParameters);
 
-        /**
+        /*
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
@@ -193,7 +182,7 @@ public class Auto extends OpMode
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
+
         blueAlliance = true;
         cornerStartingPos = true;
 
@@ -209,27 +198,35 @@ public class Auto extends OpMode
     @Override
     public void init_loop ()
     {
-        if (gamepad1.x){
+        if (gamepad1.x)
+        {
             blueAlliance = true;
         }
-        else if (gamepad1.b){
+        else if (gamepad1.b)
+        {
             blueAlliance = false;
         }
-        if (gamepad1.y){
+        if (gamepad1.y)
+        {
             cornerStartingPos = true;
         }
-        else if (gamepad1.a){
+        else if (gamepad1.a)
+        {
             cornerStartingPos = false;
         }
-        if (blueAlliance){
+        if (blueAlliance)
+        {
             telemetry.addData("Alliance Color", "BLUE");
-        } else
+        }
+        else
         {
             telemetry.addData("Alliance Color", "RED");
         }
-        if (cornerStartingPos){
+        if (cornerStartingPos)
+        {
             telemetry.addData("Starting Pos  ", "CORNER");
-        } else
+        }
+        else
         {
             telemetry.addData("Starting Pos  ", "MIDDLE");
         }
@@ -253,16 +250,17 @@ public class Auto extends OpMode
 //        currentBaseAngle = getHeading();  // Degrees
         leftWheelPos = robot.leftDrive.getCurrentPosition();
         rightWheelPos = robot.rightDrive.getCurrentPosition();
-        currentBasePos = (leftWheelPos + rightWheelPos)/2.0;
+        currentBasePos = (leftWheelPos + rightWheelPos) / 2.0;
         linearBaseSpeed = currentBasePos - previousBasePos;
         previousBasePos = currentBasePos;
 //        craneRotatePos = robot.craneRotate.getCurrentPosition();
 //        craneExtendPos = robot.craneExtend.getCurrentPosition();
         collectorArmPos = robot.armRotate.getCurrentPosition();
-        armSpeed =  collectorArmPos - collectorArmPreviousPos;
+        armSpeed = collectorArmPos - collectorArmPreviousPos;
         collectorArmPreviousPos = collectorArmPos;
 
-        switch (stage) {
+        switch (stage)
+        {
             case 0: // Initialize
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
@@ -292,7 +290,8 @@ public class Auto extends OpMode
                 targetBaseAngle = 0;
 
                 // Allow enough time for the arm to deploy
-                if ((runtime.milliseconds() - markedTime) > 1000) {
+                if ((runtime.milliseconds() - markedTime) > 1000)
+                {
                     markedTime = runtime.milliseconds();
                     stage = 20;
                 }
@@ -311,23 +310,28 @@ public class Auto extends OpMode
                 // Scan for the image and jewel color
                 image = getImage();
                 jewelColor = getColor();
-                 if (jewelColor == Presets.COLOR_RED) {
-                     ourJewelIsTheFrontOne = !blueAlliance;
-                     jewelFound = true;
-                 }
-                 else if (jewelColor == Presets.COLOR_BLUE) {
-                     ourJewelIsTheFrontOne = blueAlliance;
-                     jewelFound = true;
-                 }
-                 else {
-                     jewelFound = false;
-                 }
+                if (jewelColor == Presets.COLOR_RED)
+                {
+                    ourJewelIsTheFrontOne = !blueAlliance;
+                    jewelFound = true;
+                }
+                else if (jewelColor == Presets.COLOR_BLUE)
+                {
+                    ourJewelIsTheFrontOne = blueAlliance;
+                    jewelFound = true;
+                }
+                else
+                {
+                    jewelFound = false;
+                }
 
-                if (jewelFound && ((runtime.milliseconds() - markedTime) > 1500)){
+                if (jewelFound && ((runtime.milliseconds() - markedTime) > 1500))
+                {
                     markedTime = runtime.milliseconds();
                     stage = 30;
                 }
-                else if ((runtime.milliseconds() - markedTime) > 2500){
+                else if ((runtime.milliseconds() - markedTime) > 2500)
+                {
                     markedTime = runtime.milliseconds();
                     stage = 50;
                 }
@@ -335,10 +339,14 @@ public class Auto extends OpMode
 
             case 30: // Flick the jewel
                 flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
-                if (jewelFound){
-                    if (ourJewelIsTheFrontOne){
+                if (jewelFound)
+                {
+                    if (ourJewelIsTheFrontOne)
+                    {
                         flickerFingerTargetPos = Presets.FLICKER_FINGER_FRONT_POS;
-                    } else{
+                    }
+                    else
+                    {
                         flickerFingerTargetPos = Presets.FLICKER_FINGER_BACK_POS;
                     }
                 }
@@ -350,7 +358,8 @@ public class Auto extends OpMode
                 targetBaseAngle = 0;
 
                 // Allow just enough time to flick the ball
-                if ((runtime.milliseconds() - markedTime) > 2000){
+                if ((runtime.milliseconds() - markedTime) > 2000)
+                {
                     markedTime = runtime.milliseconds();
                     stage = 40;
                 }
@@ -366,7 +375,8 @@ public class Auto extends OpMode
                 targetBasePos = 0;
                 targetBaseAngle = 0;
 
-                if ((runtime.milliseconds() - markedTime) > 500) {
+                if ((runtime.milliseconds() - markedTime) > 500)
+                {
                     markedTime = runtime.milliseconds();
                     stage = 50;
                 }
@@ -380,16 +390,18 @@ public class Auto extends OpMode
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
 
-                if (blueAlliance) {
+                if (blueAlliance)
+                {
                     targetBasePos = 25;
                 }
-                else {
+                else
+                {
                     targetBasePos = -25;
                 }
                 targetBaseAngle = 0;
 
                 currentBaseAngle = getHeading();  // Degrees
-                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed,0.3))
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3))
                 {
                     markedTime = runtime.milliseconds();
                     stage = 60;
@@ -403,22 +415,28 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
-                if (blueAlliance) {
-                    if (cornerStartingPos) {
+                if (blueAlliance)
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = 25;
                         targetBaseAngle = 0;
                     }
-                    else {
+                    else
+                    {
                         targetBasePos = 25;
                         targetBaseAngle = -90;
                     }
                 }
-                else {
-                    if (cornerStartingPos) {
+                else
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = -25;
                         targetBaseAngle = 0;
                     }
-                    else {
+                    else
+                    {
                         targetBasePos = -25;
                         targetBaseAngle = 90;
                     }
@@ -439,41 +457,54 @@ public class Auto extends OpMode
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 // Determine the distance to the bonus column on the cryptobox
-                if (image == RelicRecoveryVuMark.LEFT) {
-                    if (blueAlliance) {
+                if (image == RelicRecoveryVuMark.LEFT)
+                {
+                    if (blueAlliance)
+                    {
                         columnOffset = 4.5;
                     }
-                    else {
+                    else
+                    {
                         columnOffset = 18.5;
                     }
                 }
-                else if (image == RelicRecoveryVuMark.RIGHT){
-                    if (blueAlliance) {
+                else if (image == RelicRecoveryVuMark.RIGHT)
+                {
+                    if (blueAlliance)
+                    {
                         columnOffset = 18.5;
                     }
-                    else {
+                    else
+                    {
                         columnOffset = 3.5;
                     }
                 }
-                else {
+                else
+                {
                     columnOffset = 12;   // Center position by default
                 }
-                if (blueAlliance) {
-                    if (cornerStartingPos) {
+                if (blueAlliance)
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = 25 + columnOffset;
                         targetBaseAngle = 0;
                     }
-                    else {
-                        targetBasePos = 24 + columnOffset + 2.5 ;
+                    else
+                    {
+                        targetBasePos = 24 + columnOffset + 2.5;
                         targetBaseAngle = -90;
                     }
                 }
-                else {
-                    if (cornerStartingPos) {
+                else
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = -25 - columnOffset;
                         targetBaseAngle = 0;
                     }
-                    else {
+                    else
+                    {
                         targetBasePos = -25 - columnOffset;
                         targetBaseAngle = 90;
                     }
@@ -494,22 +525,28 @@ public class Auto extends OpMode
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 // Set the angle to face the cryptobox
-                if (blueAlliance) {
-                    if (cornerStartingPos) {
+                if (blueAlliance)
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = 25 + columnOffset;
                         targetBaseAngle = -90;
                     }
-                    else {
-                        targetBasePos = 24 + columnOffset +1.5;
+                    else
+                    {
+                        targetBasePos = 24 + columnOffset + 1.5;
                         targetBaseAngle = 0;
                     }
                 }
-                else {
-                    if (cornerStartingPos) {
+                else
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = -25 - columnOffset;
                         targetBaseAngle = 90;
                     }
-                    else {
+                    else
+                    {
                         targetBasePos = -25 - columnOffset;
                         targetBaseAngle = 180;
                     }
@@ -519,7 +556,7 @@ public class Auto extends OpMode
                 {
                     stage = 90;
                 }
-                 break;
+                break;
 
             case 90: //Drive forward to Score
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
@@ -528,28 +565,34 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
-                if (blueAlliance) {
-                    if (cornerStartingPos) {
+                if (blueAlliance)
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = 25 + columnOffset + 10;
                         targetBaseAngle = -90;
                     }
-                    else {
+                    else
+                    {
                         targetBasePos = 24 + columnOffset + 8 + 1.5;
                         targetBaseAngle = 0;
                     }
                 }
-                else {
-                    if (cornerStartingPos) {
+                else
+                {
+                    if (cornerStartingPos)
+                    {
                         targetBasePos = -25 - columnOffset + 10;
                         targetBaseAngle = 90;
                     }
-                    else {
+                    else
+                    {
                         targetBasePos = -25 - columnOffset + 10;
                         targetBaseAngle = 180;
                     }
                 }
                 // Remember the baseline position for scoring so we can drive from here
-                baseScorePos  = targetBasePos;
+                baseScorePos = targetBasePos;
                 baseScoreAngle = targetBaseAngle;
 
                 currentBaseAngle = getHeading();  // Degrees
@@ -573,7 +616,8 @@ public class Auto extends OpMode
                 currentBaseAngle = getHeading();  // Degrees
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3);
 
-                if ((runtime.milliseconds() - markedTime) > 200) {
+                if ((runtime.milliseconds() - markedTime) > 200)
+                {
                     markedTime = runtime.milliseconds();
                     stage = 110;
                 }
@@ -597,8 +641,8 @@ public class Auto extends OpMode
         }
 
         armMotorCmd = PinkPD.getMotorCmd(0.02, 0.01, collectorArmTargetPos - collectorArmPos, armSpeed);
-        robot.armRotate.setPower(armMotorCmd);       
-               
+        robot.armRotate.setPower(armMotorCmd);
+
         robot.collectorRotate.setPosition(collectorRotateTargetPos);
         robot.collectorFinger1.setPosition(collectorFinger1TargetPos);
         robot.collectorFinger2.setPosition(collectorFinger2TargetPos);
@@ -612,8 +656,8 @@ public class Auto extends OpMode
 //        robot.craneExtend.setPower(-0.1);
 //        robot.craneExtend.setPower(PinkPD.getMotorCmd(0.01, 0.0, Presets.CRANE_EXTEND_MIN_POS - craneExtendPos, 0.0));
 
-        robot.leftDrive.setPower(PinkNavigate.getLeftCMD());
-        robot.rightDrive.setPower(PinkNavigate.getRightCMD());
+        robot.leftDrive.setPower(PinkNavigate.getLeftMotorCmd());
+        robot.rightDrive.setPower(PinkNavigate.getRightMotorCmd());
 
         telemetry.addData("Stage  ", stage);
         telemetry.addData("Image  ", image);
@@ -623,13 +667,14 @@ public class Auto extends OpMode
 
     }
 
-    public double getHeading () {
+    private double getHeading ()
+    {
         Orientation angles;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
-    public RelicRecoveryVuMark getImage ()
+    private RelicRecoveryVuMark getImage ()
     {
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN)
@@ -662,7 +707,6 @@ public class Auto extends OpMode
                 double rY = rot.secondAngle;
                 double rZ = rot.thirdAngle;
             }
-            return vuMark;
         }
         return vuMark;
     }
@@ -672,7 +716,8 @@ public class Auto extends OpMode
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
-    public int getColor(){
+    public int getColor ()
+    {
 
         // Calculate Correlated Color Temperature (CCT)
         double R = robot.colorSensor.red();
@@ -682,35 +727,35 @@ public class Auto extends OpMode
         int currentColor = Presets.COLOR_NONE;
 
         // First check if the distance is less than 6cm
-        if(robot.distanceSensor.getDistance(DistanceUnit.CM) < 6.0);
+        if (robot.distanceSensor.getDistance(DistanceUnit.CM) < 6.0)
         {
             // Calculate CCT
             // Find out CIE tristimulus values (XYZ)
-            double X= ((-0.14282)*(R))+((1.54924)*(G))+((-0.95641)*(B));
-            double Y= ((-0.32466)*(R))+ ((1.57837)*(G)) + ((-0.73191)*(B)); //=Illuminance
-            double Z= ((-0.68202)*(R)) + ((0.77073)*(G)) + ((0.56332)*(B));
+            double X = ((-0.14282) * (R)) + ((1.54924) * (G)) + ((-0.95641) * (B));
+            double Y = ((-0.32466) * (R)) + ((1.57837) * (G)) + ((-0.73191) * (B)); //=Illuminance
+            double Z = ((-0.68202) * (R)) + ((0.77073) * (G)) + ((0.56332) * (B));
 
             // Calculate the normalized chromaticity values
-            double x = X/(X+Y+Z);
-            double y = Y/(X+Y+Z);
+            double x = X / (X + Y + Z);
+            double y = Y / (X + Y + Z);
 
 //            Compute the CCT value
 //           double n=(x-0.3320)/(0.1858-y);
 //            double colorCCT1=(449*(n*n*n))+(3525*(n*n))+ (6823.3*n)+5520.33;
 
             // Consolidated Formula (CCT From RGB)
-            double n = (((0.23881)*R)+((0.25499)*G)+((-0.58291)*B))/(((0.11109)*R)+((-0.85406)*G)+((0.52289)*B));
-            double colorCCT = (449*(n*n*n))+(3525*(n*n))+(6823.3*n) + 5520.33;
+            double n = (((0.23881) * R) + ((0.25499) * G) + ((-0.58291) * B)) / (((0.11109) * R) + ((-0.85406) * G) + ((0.52289) * B));
+            double colorCCT = (449 * (n * n * n)) + (3525 * (n * n)) + (6823.3 * n) + 5520.33;
 
-            // now check if the intensity is big enough
-            if(colorCCT > 7500.0)
+            // Now check if the intensity is big enough
+            if (colorCCT > 7500.0)
             {
                 // Check for Blue
-                if((B > 10.0) && (B > (R * 1.5))) // If blue is greater than 10 and at least twice as red
+                if ((B > 10.0) && (B > (R * 1.5))) // If blue is greater than 10 and at least twice as red
                 {
                     currentColor = Presets.COLOR_BLUE;
-                } else
-                if((R > 10.0) && (R > (B * 1.5))) // If red is greater than 10 and at least twice as blue
+                }
+                else if ((R > 10.0) && (R > (B * 1.5))) // If red is greater than 10 and at least twice as blue
                 {
                     currentColor = Presets.COLOR_RED;
                 }
@@ -719,63 +764,9 @@ public class Auto extends OpMode
         return currentColor;
     }
 
-/*
-    public boolean driveToPos (double targetPos, double targetAngle, int currentAngle, double leftEnc, double rightEnc,
-                               double linearVelocity, double angularVelocity, double maxPower)
-    {
-        double targetPosCounts = targetPos * COUNTS_PER_INCH;
-        telemetry.addData("TargetPositionCounts", targetPosCounts);
-        double leftWheelPos = leftEnc;
-        telemetry.addData("LeftWheelPos", leftWheelPos);
-        double rightWheelPos = rightEnc;
-        telemetry.addData("RightWheelPos", rightWheelPos);
-        double angleErrorDegrees = targetAngle - currentAngle;
-        telemetry.addData("AngleErrorDegrees", angleErrorDegrees);
-        double currentPosCounts = (leftWheelPos + rightWheelPos) / 2.0;
-        telemetry.addData("CurrentPosCounts", currentPosCounts);
-        double angleOffset;
-        double linearError = targetPosCounts - currentPosCounts;
-        telemetry.addData("LinearError", linearError);
-        double angularError = targetAngle - currentAngle;
-        telemetry.addData("AngularError", angularError);
-        double motorCmd = PinkPD.getMotorCmd(0.1, 0.01, linearError, linearVelocity);
-
-        // Determine the baseline motor speed command
-        motorCmd = Range.clip(motorCmd, -0.5, 0.5);
-
-        // Determine and add the angle offset
-        angleOffset = PinkPD.getMotorCmd(0.02, 0.02, angularError, angularVelocity);
-        telemetry.addData("AngleOffset", angleOffset);
-        leftMotorCmd = motorCmd + angleOffset;
-        rightMotorCmd = motorCmd - angleOffset;
-        leftMotorCmd = Range.clip(leftMotorCmd, -1.0, 1.0);
-        rightMotorCmd = Range.clip(rightMotorCmd, -1.0, 1.0);
-
-        // Scale the motor commands back to account for the MC windup problem
-        // (if the motor cant keep up with the command, error builds up)
-        leftMotorCmd *= maxPower;
-        rightMotorCmd *= maxPower;
-        robot.leftDrive.setPower(leftMotorCmd);
-        robot.rightDrive.setPower(rightMotorCmd);
-        telemetry.addData("MaxPower", maxPower);
-        telemetry.addData("RightMotorCommand", rightMotorCmd);
-        telemetry.addData("LeftMotorCommand", leftMotorCmd);
-
-        if ((Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-*/
     /*
-     * Code to run ONCE after the driver hits STOP
-     */
-
-
+    * Code to run ONCE after the driver hits STOP
+    */
     @Override
     public void stop ()
     {

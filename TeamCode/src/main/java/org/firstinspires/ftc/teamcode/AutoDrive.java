@@ -36,12 +36,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -364,8 +360,8 @@ public class AutoDrive extends LinearOpMode
                 }
 
                 //set all values
-                robot.leftDrive.setPower(PinkNavigate.getLeftCMD());
-                robot.rightDrive.setPower(PinkNavigate.getRightCMD());
+                robot.leftDrive.setPower(org.firstinspires.ftc.teamcode.PinkNavigate.getLeftMotorCmd());
+                robot.rightDrive.setPower(org.firstinspires.ftc.teamcode.PinkNavigate.getRightMotorCmd());
                /* robot.collect.setPosition(collectPos);
                 robot.lift.setPower(liftPos);
                 robot.jewel.setPosition(jewelPos);

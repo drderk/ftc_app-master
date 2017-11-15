@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Hardware;
-
 public class PinkNavigate
 {
     static final double COUNTS_PER_INCH = 49.8; // Counts
@@ -18,7 +16,7 @@ public class PinkNavigate
     // Tank drive two wheels to target positions in inches.
     // Returns true when both arrive at the target.
     public static boolean driveToPos (double targetPosInches, double targetAngleDeg, double currentBasePosCounts, double currentAngleDeg,
-                               double linearSpeedCounts,  double maxPower)
+                                      double linearSpeedCounts, double maxPower)
     {
         double angleErrorDegrees = targetAngleDeg - currentAngleDeg;
         double currentPosInches = (currentBasePosCounts / COUNTS_PER_INCH);
@@ -39,8 +37,8 @@ public class PinkNavigate
         rightMotorCmd = Range.clip(rightMotorCmd, -1.0, 1.0);
 
         // Limit the max motor command for gentle motion
-        leftMotorCmd = Range.clip(leftMotorCmd, -maxPower, maxPower );
-        rightMotorCmd = Range.clip(rightMotorCmd, -maxPower, maxPower );
+        leftMotorCmd = Range.clip(leftMotorCmd, -maxPower, maxPower);
+        rightMotorCmd = Range.clip(rightMotorCmd, -maxPower, maxPower);
 
         // True if navigated to position
         return (Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD);
@@ -52,12 +50,12 @@ public class PinkNavigate
         rightMotorCmd = 0;
     }
 
-    public static double getRightCMD ()
+    public static double getRightMotorCmd ()
     {
         return rightMotorCmd;
     }
 
-    public static double getLeftCMD ()
+    public static double getLeftMotorCmd ()
     {
         return leftMotorCmd;
     }
