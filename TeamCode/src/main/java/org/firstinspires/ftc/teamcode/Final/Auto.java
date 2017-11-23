@@ -58,7 +58,6 @@ public class Auto extends OpMode {
     private Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
     private BNO055IMU imu;
     private double currentBaseAngle;
-    private int stage = 0;
     private double leftWheelMotorCmd, rightWheelMotorCmd, armMotorCmd;
     private double collectorArmTargetPos;
     private double flickerArmTargetPos, flickerFingerTargetPos;
@@ -85,6 +84,25 @@ public class Auto extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private VuforiaLocalizer vuforia;
     private VuforiaTrackable relicTemplate;
+
+    // Represents a logical step for the robot to perform
+    private enum Stage
+    {
+        INTIALIZE,
+        DEPLOY_FLICKER_ARM,
+        SCAN_SURROUNDINGS,
+        FLICK_JEWEL,
+        STOW_FLICKER_ARM,
+        DRIVE_OFF_PLATFORM,
+        DRIVE_TO_CRYPTOBOX_REFERENCE_POINT,
+        DRIVE_IN_FRONT_OF_COLUMN,
+        TURN_TO_FACE_CRYPTOBOX,
+        DRIVE_FORWARD_TO_SCORE,
+        RELEASE_CUBE,
+        BACK_UP_TO_CLEAR_CRYPTOBOX
+    }
+
+    private Stage stage = Stage.INTIALIZE;
 
     @Override
     public void init ()
@@ -245,7 +263,7 @@ public class Auto extends OpMode {
 
         switch (stage)
         {
-            case 0: // Initialize
+            case INTIALIZE:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -260,10 +278,10 @@ public class Auto extends OpMode {
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3);
 
                 markedTime = runtime.milliseconds();
-                stage = 10;
+                stage = Stage.DEPLOY_FLICKER_ARM;
                 break;
 
-            case 10: // Deploy jewel flicker arm
+            case DEPLOY_FLICKER_ARM:
                 flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -277,11 +295,11 @@ public class Auto extends OpMode {
                 if ((runtime.milliseconds() - markedTime) > 1000)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 20;
+                    stage = Stage.SCAN_SURROUNDINGS;
                 }
                 break;
 
-            case 20: // Scan surroundings for the picture position and jewel color
+            case SCAN_SURROUNDINGS:
                 flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -312,16 +330,17 @@ public class Auto extends OpMode {
                 if (jewelFound && ((runtime.milliseconds() - markedTime) > 1500))
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 30;
+                    stage = Stage.FLICK_JEWEL;
                 }
+                // Skip forward if jewel was not detected within 2500 ms
                 else if ((runtime.milliseconds() - markedTime) > 2500)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 50;
+                    stage = Stage.DRIVE_OFF_PLATFORM;
                 }
                 break;
 
-            case 30: // Flick the jewel
+            case FLICK_JEWEL:
                 flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
                 if (jewelFound)
                 {
@@ -345,11 +364,11 @@ public class Auto extends OpMode {
                 if ((runtime.milliseconds() - markedTime) > 2000)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 40;
+                    stage = Stage.STOW_FLICKER_ARM;
                 }
                 break;
 
-            case 40: // Stow flicker arm before driving
+            case STOW_FLICKER_ARM: // Stow flicker arm before driving
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -362,11 +381,11 @@ public class Auto extends OpMode {
                 if ((runtime.milliseconds() - markedTime) > 500)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 50;
+                    stage = Stage.DRIVE_OFF_PLATFORM;
                 }
                 break;
 
-            case 50: // Drive off the platform slowly to keep from twisting
+            case DRIVE_OFF_PLATFORM: // Drive off the platform slowly to keep from twisting
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -388,11 +407,11 @@ public class Auto extends OpMode {
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3))
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 60;
+                    stage = Stage.DRIVE_TO_CRYPTOBOX_REFERENCE_POINT;
                 }
                 break;
 
-            case 60: // Drive to synchronized spot near the cryptobox
+            case DRIVE_TO_CRYPTOBOX_REFERENCE_POINT:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -429,11 +448,11 @@ public class Auto extends OpMode {
                 currentBaseAngle = getHeading();  // Degrees
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3) && ((runtime.milliseconds() - markedTime) > 3000))
                 {
-                    stage = 70;
+                    stage = Stage.DRIVE_IN_FRONT_OF_COLUMN;
                 }
                 break;
 
-            case 70: //Drive in front of the correct column
+            case DRIVE_IN_FRONT_OF_COLUMN: // Drive in front of the correct column
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -496,12 +515,12 @@ public class Auto extends OpMode {
                 currentBaseAngle = getHeading();  // Degrees
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3))
                 {
-                    stage = 80;
+                    stage = Stage.TURN_TO_FACE_CRYPTOBOX;
                     markedTime = runtime.milliseconds();
                 }
                 break;
 
-            case 80: //Turn to face cryptobox
+            case TURN_TO_FACE_CRYPTOBOX:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -538,11 +557,11 @@ public class Auto extends OpMode {
                 currentBaseAngle = getHeading();  // Degrees
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3) && ((runtime.milliseconds() - markedTime) > 3000))
                 {
-                    stage = 90;
+                    stage = Stage.DRIVE_FORWARD_TO_SCORE;
                 }
                 break;
 
-            case 90: //Drive forward to Score
+            case DRIVE_FORWARD_TO_SCORE:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_GRAB_POS;
@@ -583,11 +602,11 @@ public class Auto extends OpMode {
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25))
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 100;
+                    stage = Stage.RELEASE_CUBE;
                 }
                 break;
 
-            case 100: //Release Cube
+            case RELEASE_CUBE:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_COLLECT_POS;
@@ -603,11 +622,11 @@ public class Auto extends OpMode {
                 if ((runtime.milliseconds() - markedTime) > 200)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = 110;
+                    stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX;
                 }
                 break;
 
-            case 110: //Back up a little to clear the cryptobox
+            case BACK_UP_TO_CLEAR_CRYPTOBOX:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_FINGER_COLLECT_POS;
