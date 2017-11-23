@@ -85,7 +85,8 @@ public class Auto extends OpMode {
     private VuforiaLocalizer vuforia;
     private VuforiaTrackable relicTemplate;
 
-    // Represents a logical step for the robot to perform
+    // Represents a logical step for the robot to perform.
+    // Conveniently, this shows the sequence of actions performed in auto.
     private enum Stage
     {
         INTIALIZE,
