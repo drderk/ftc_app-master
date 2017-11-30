@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -37,6 +39,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Hardware;
 
 /*
@@ -50,7 +57,7 @@ public class Teleop extends OpMode
 
     /* Declare OpMode members. */
     private Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
-
+    private BNO055IMU imu;
     private boolean collectorRotateButtonWasntAlreadyPressed;
     private boolean craneClawOpenButtonWasntAlreadyPressed;
     private double previousArmPos = 0;
@@ -73,6 +80,7 @@ public class Teleop extends OpMode
     private double craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
     private double flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
     private double flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+    private boolean telemetryActivated = false;
 
 
     /*
@@ -84,6 +92,19 @@ public class Teleop extends OpMode
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
         robot.init(hardwareMap);
 
         robot.flickerArm.setPosition(Presets.FLICKER_ARM_STOW_POS);
@@ -346,6 +367,12 @@ public class Teleop extends OpMode
         }
         flickerFingerTargetPos = Range.clip(flickerFingerTargetPos, -1.0, 1.0);
 */
+        if(gamepad1.start && !telemetryActivated){
+            telemetryActivated = true;
+        }
+        if (gamepad1.start && telemetryActivated) {
+            telemetryActivated = false;
+        }
 
         // Set powers and positions
         robot.leftDrive.setPower(leftWheelsMotorCmd);
@@ -359,23 +386,25 @@ public class Teleop extends OpMode
         robot.craneWrist.setPosition(craneWristTargetPos);
         robot.craneClaw.setPosition(craneClawTargetPos);
 
+        if(telemetryActivated) {
 //      Send telemetry to display on the phone
 //        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
 //        telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
 //        telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
 //        telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
 //        telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
-        telemetry.addData("Arm Pos        ", robot.armRotate.getCurrentPosition());
-        telemetry.addData("Wrist Pos        ", craneWristTargetPos);
-        telemetry.addData("Claw Pos        ", craneClawTargetPos);
+            telemetry.addData("Arm Pos        ", robot.armRotate.getCurrentPosition()).setRetained(false);
+            telemetry.addData("Wrist Pos        ", craneWristTargetPos).setRetained(false);
+            telemetry.addData("Claw Pos        ", craneClawTargetPos).setRetained(false);
 //      telemetry.addData("Arm Speed      ", armSpeed);
-        telemetry.addData("Crane Rotate Pos ", craneRotateCurrentPos);
-        telemetry.addData("Crane Rotate Target Pos ", craneRotateTargetPos);
-        telemetry.addData("Crane Rotate Motor Cmd ", craneRotateMotorCmd);
-        telemetry.addData("Crane Extend Pos ", craneExtendCurrentPos);
-        telemetry.addData("Flicker Finger Target Pos ", flickerFingerTargetPos);
-        telemetry.addData("Flicker Arm Target Pos ", flickerArmTargetPos);
-        telemetry.addData("gamepad2.dpad_down ", gamepad2.dpad_down);
+            telemetry.addData("Crane Rotate Pos ", craneRotateCurrentPos).setRetained(false);
+            telemetry.addData("Crane Rotate Target Pos ", craneRotateTargetPos).setRetained(false);
+            telemetry.addData("Crane Rotate Motor Cmd ", craneRotateMotorCmd).setRetained(false);
+            telemetry.addData("Crane Extend Pos ", craneExtendCurrentPos).setRetained(false);
+            telemetry.addData("Flicker Finger Target Pos ", flickerFingerTargetPos).setRetained(false);
+            telemetry.addData("Flicker Arm Target Pos ", flickerArmTargetPos).setRetained(false);
+            telemetry.addData("gamepad2.dpad_down ", gamepad2.dpad_down).setRetained(false);
+            telemetry.addData("Gyro ", getHeading()).setRetained(false);
 //        telemetry.addData("Crane Extend Target Pos ", craneExtendTargetPos);
 //        telemetry.addData("Crane Extnd Motor Cmd ", craneExtendMotorCmd);
 //        telemetry.addData("Red Color      ", robot.colorSensor.red());
@@ -383,8 +412,18 @@ public class Teleop extends OpMode
 
 //        telemetry.addData("collectorFinger1Pos      ", collectorFinger1Pos);
 //        telemetry.addData("collectorFinger2Pos      ", collectorFinger2Pos);
+        } else {
+            telemetry.addLine("Press START to show telemetry");
+            telemetry.clearAll();
+            telemetry.clear();
+        }
     }
-
+    private double getHeading ()
+    {
+        Orientation angles;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */

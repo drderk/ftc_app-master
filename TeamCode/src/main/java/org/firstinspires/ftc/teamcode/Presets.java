@@ -30,6 +30,9 @@ public class Presets
     static final double COLLECTOR_FINGER_SCORE_POS = 0.4;
     static final double COLLECTOR_ROTATE_UPRIGHT_POS = -1;
     static final double COLLECTOR_ROTATE_INVERTED_POS = 1;
+    static final double COLLECTOR_FINGER_TRAVEL       = .1;
+    static final double COLLECTOR_COLLECT             = 1;
+    static final double COLLECTOR_EJECT               = -1;
 
     static final double CRANE_ROTATE_MAX_POS = 265;
     static final double CRANE_ROTATE_MIN_POS = 0;

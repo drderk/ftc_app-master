@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.vuforia.CameraCalibration;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -80,18 +82,16 @@ public class VuMarks extends LinearOpMode
      * localization engine.
      */
     VuforiaLocalizer vuforia;
-
     @Override
     public void runOpMode ()
     {
-
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
+       // Vuforia.setInitParameters(parameters.activity, 0, "AaId2D7/////AAAAGeEOwvh4YkCKim1fP/VA8hpZk/olkYH12xynqz4wP+p4EjzCP4otFEoCxD0cztAeqHF3sVP3DJkAIOKqVX8UM6YbWpaaZPA3fK1YUfNg1Eh7A47eCRH0zO4hSJZ6fJEnw/NtT+dyv162iRX46R3xsyfB4CZdrHH2Yuxxoa9iWfaLfMdT7p7AWxUjHyujL28oC9xNcv2hJ0QDVbq3om6OzNEbAfkVbUf2q+z/VoWoH6036CL5fzB/ddo2E3Lgiv3PMoGtQyoWDtAuV6s53CAs/GuSGdv/WmltQtuxcu4w6QrdZIF2SCQ3idYKEPUuv16ranl1/Ayz5OgnYQf4HLRYLgnCRFKXEd7WZPVaLIwM9bJq"); //"ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
         // OR...  Do Not Activate the Camera Monitor View, to save power
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
@@ -115,19 +115,27 @@ public class VuMarks extends LinearOpMode
          * Here we chose the back (HiRes) camera (for greater range), but
          * for a competition robot, the front camera might be more convenient.
          */
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+
+        parameters.fillCameraMonitorViewParent = true;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+//        Vuforia.init();
+//        CameraDevice.getInstance().setFocusMode(CameraDevice.FOCUS_MODE.FOCUS_MODE_CONTINUOUSAUTO);
+//        CameraDevice.getInstance().selectVideoMode(CameraDevice.MODE.MODE_OPTIMIZE_QUALITY);
+//        CameraDevice.getInstance().start();
 
         /**
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
          * @see VuMarkInstanceId
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFrom
          */
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
@@ -136,6 +144,7 @@ public class VuMarks extends LinearOpMode
 
         while (opModeIsActive())
         {
+            //CameraDevice.getInstance().start();
 
             /**
              * See if any of the instances of {@link relicTemplate} are currently visible.
@@ -180,7 +189,9 @@ public class VuMarks extends LinearOpMode
             {
                 telemetry.addData("VuMark", "not visible");
             }
-
+            telemetry.addData("Camera Calibration", vuforia.getCameraCalibration());
+            telemetry.addData("GetFrameQueue", vuforia.getFrameQueue());
+            telemetry.addData("GetFrameCapacity", vuforia.getFrameQueueCapacity());
             telemetry.update();
         }
     }
