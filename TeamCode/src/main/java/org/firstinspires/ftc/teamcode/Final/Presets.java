@@ -50,4 +50,5 @@ public class Presets
     public static final int COLOR_NONE = 0;
     public static final int COLOR_BLUE = 5;
     public static final int COLOR_RED = 10;
-}
+
+    }
