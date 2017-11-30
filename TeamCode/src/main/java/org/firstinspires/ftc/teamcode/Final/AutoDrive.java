@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Final;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -360,8 +360,8 @@ public class AutoDrive extends LinearOpMode
                 }
 
                 //set all values
-                robot.leftDrive.setPower(org.firstinspires.ftc.teamcode.PinkNavigate.getLeftMotorCmd());
-                robot.rightDrive.setPower(org.firstinspires.ftc.teamcode.PinkNavigate.getRightMotorCmd());
+                robot.leftDrive.setPower(org.firstinspires.ftc.teamcode.Final.PinkNavigate.getLeftMotorCmd());
+                robot.rightDrive.setPower(org.firstinspires.ftc.teamcode.Final.PinkNavigate.getRightMotorCmd());
                /* robot.collect.setPosition(collectPos);
                 robot.lift.setPower(liftPos);
                 robot.jewel.setPosition(jewelPos);
