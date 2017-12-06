@@ -67,7 +67,7 @@ import org.firstinspires.ftc.teamcode.Final.Presets;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous (name = "Auto")
+@Autonomous (name = "PINK Auto")
 //@Disabled
 public class Auto extends OpMode
 {
@@ -266,20 +266,20 @@ public class Auto extends OpMode
         switch (stage)
         {
             case 0: // Initialize
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = 0;
                 targetBasePos = 0;
                 targetBaseAngle = 0;
                 light1Power = 1;
                 light2Power = 1;
                 // Set the claw here and leave it since we don't use it
-                robot.craneClaw.setPosition(org.firstinspires.ftc.teamcode.Final.Presets.CRANE_CLAW_CLOSE_POS);
-                robot.craneWrist.setPosition(org.firstinspires.ftc.teamcode.Final.Presets.CRANE_WRIST_LATCH_POS);
+                robot.craneClaw.setPosition(Presets.CRANE_CLAW_CLOSE_POS);
+                robot.craneWrist.setPosition(Presets.CRANE_WRIST_LATCH_POS);
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.2);
 
                 markedTime = runtime.milliseconds();
@@ -287,14 +287,14 @@ public class Auto extends OpMode
                 break;
 
             case 10: // Deploy jewel flicker arm
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_DEPLOY_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_NEUTRAL_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = 0;
                 targetBasePos = 0;
                 targetBaseAngle = 0;
@@ -311,14 +311,14 @@ public class Auto extends OpMode
                 break;
 
             case 20: // Scan surroundings for the picture position and jewel color
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_DEPLOY_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_NEUTRAL_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = 0;
                 targetBasePos = 0;
                 targetBaseAngle = 0;
@@ -329,12 +329,12 @@ public class Auto extends OpMode
                 // Scan for the image and jewel color
                 image = getImage();
                 jewelColor = getColor();
-                if (jewelColor == org.firstinspires.ftc.teamcode.Final.Presets.COLOR_RED)
+                if (jewelColor == Presets.COLOR_RED)
                 {
                     ourJewelIsTheFrontOne = !blueAlliance;
                     jewelFound = true;
                 }
-                else if (jewelColor == org.firstinspires.ftc.teamcode.Final.Presets.COLOR_BLUE)
+                else if (jewelColor == Presets.COLOR_BLUE)
                 {
                     ourJewelIsTheFrontOne = blueAlliance;
                     jewelFound = true;
@@ -357,25 +357,25 @@ public class Auto extends OpMode
                 break;
 
             case 30: // Flick the jewel
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_DEPLOY_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
                 if (jewelFound)
                 {
                     if (ourJewelIsTheFrontOne)
                     {
-                        flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_FRONT_POS;
+                        flickerFingerTargetPos = Presets.FLICKER_FINGER_FRONT_POS;
                     }
                     else
                     {
-                        flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_BACK_POS;
+                        flickerFingerTargetPos = Presets.FLICKER_FINGER_BACK_POS;
                     }
                 }
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_COLLECT_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
                 targetBasePos = 0;
                 targetBaseAngle = 0;
                 light1Power = 1;
@@ -391,15 +391,15 @@ public class Auto extends OpMode
                 break;
 
             case 40: // Stow flicker arm before driving
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 targetBasePos = 0;
                 targetBaseAngle = 0;
                 light1Power = 0;
@@ -413,14 +413,14 @@ public class Auto extends OpMode
                 break;
 
             case 50: // Drive off the platform slowly to keep from twisting
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
 
@@ -443,15 +443,15 @@ public class Auto extends OpMode
                 break;
 
             case 60: // Drive to synchronized spot near the cryptobox
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
 
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -489,15 +489,15 @@ public class Auto extends OpMode
                 break;
 
             case 70: //Drive in front of the correct column
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 // Determine the distance to the bonus column on the cryptobox
@@ -562,15 +562,15 @@ public class Auto extends OpMode
                 break;
 
             case 80: //Turn to face cryptobox
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 // Set the angle to face the cryptobox
@@ -608,13 +608,13 @@ public class Auto extends OpMode
                 break;
 
             case 90: //Drive forward to Score
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -656,13 +656,13 @@ public class Auto extends OpMode
                 break;
 
             case 100: //Release Cube
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_EJECT;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 targetBasePos = baseScorePos;
                 targetBaseAngle = baseScoreAngle;
                 light1Power = 0;
@@ -679,13 +679,13 @@ public class Auto extends OpMode
                 break;
 
             case 110: //Back up a little to clear the cryptobox
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_EJECT;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 targetBasePos = baseScorePos - 8;
                 targetBaseAngle = baseScoreAngle;
                 light1Power = 0;
@@ -705,13 +705,13 @@ public class Auto extends OpMode
 
                 break;
             case 120: //Turn towards the center
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -752,13 +752,13 @@ public class Auto extends OpMode
                 break;
 
             case 130: //Drive to collect cubes
-            flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-            flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-            collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
-            collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+            flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+            flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+            collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+            collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_COLLECT;
-            collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-            collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_COLLECT_POS;
+            collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+            collectorArmTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
             light1Power = 0;
             light2Power = 0;
             if (blueAlliance)
@@ -800,15 +800,15 @@ public class Auto extends OpMode
         break;
 
             case 135: //collect cubes
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                  collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_COLLECT;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_COLLECT_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -848,14 +848,14 @@ public class Auto extends OpMode
             }
             break;
             case 140: //Move cubes
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
 
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -896,15 +896,15 @@ public class Auto extends OpMode
                 break;
 
             case 150: //turn back to score cubes
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                   collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -946,14 +946,14 @@ public class Auto extends OpMode
             break;
 
             case 160: //Score Cube
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-                 collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
                 
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -994,13 +994,13 @@ public class Auto extends OpMode
             break;
 
             case 170: //Release Cube
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
 // collectorFingerTargetPos = Presets.EJECT;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -1042,13 +1042,13 @@ public class Auto extends OpMode
                 break;
 
             case 180: //back it up
-                flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
-                collectorFinger2TargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
 // collectorFingerTargetPos = Presets.EJECT;
-                collectorRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)

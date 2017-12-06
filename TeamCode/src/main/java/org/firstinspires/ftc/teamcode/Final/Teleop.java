@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.Final.Hardware;
  * The code is structured as an Iterative OpMode.
 */
 
-@TeleOp (name = "Teleop", group = "Pushbot")
+@TeleOp (name = "PINK Teleop", group = "Pushbot")
 public class Teleop extends OpMode
 {
 
@@ -64,8 +64,8 @@ public class Teleop extends OpMode
     private double leftJoystick, rightJoystick;
     private double leftWheelsMotorCmd, rightWheelsMotorCmd, armMotorCmd;
     private double craneRotateMotorCmd, craneExtendMotorCmd;
-    private double collectorFinger1Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-    private double collectorFinger2Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+    private double collectorFinger1Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_HOLD;
+    private double collectorFinger2Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_HOLD;
     private double collectorRotatePos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
     private double armTargetPos = 0;
     private double armCurrentPos = 0;
@@ -145,8 +145,8 @@ public class Teleop extends OpMode
         previousCraneRotatePos = craneRotateCurrentPos;
 
         // Close the fingers if no other commands are given
-        collectorFinger1Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
-        collectorFinger2Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_GRAB_POS;
+        collectorFinger1Pos = Presets.COLLECTOR_HOLD;
+        collectorFinger2Pos = Presets.COLLECTOR_HOLD;
 
         // BASE CONTROL /////////////////////////////////////////////////////
         // Run wheels in tank mode (The joystick is negative when pushed forward, so negate it)
@@ -168,33 +168,33 @@ public class Teleop extends OpMode
         // Scoring finger position
         if (gamepad2.b)
         {
-            collectorFinger1Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
-            collectorFinger2Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_SCORE_POS;     // Slightly open to release glyph
+            collectorFinger1Pos = Presets.COLLECTOR_EJECT;     // Slightly open to release glyph
+            collectorFinger2Pos = Presets.COLLECTOR_EJECT;     // Slightly open to release glyph
         }
 
         // Open bottom fingers
         if (gamepad1.right_bumper)
         {
-            if (collectorRotatePos == org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
             {
-                collectorFinger1Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                collectorFinger1Pos = Presets.COLLECTOR_COLLECT;
             }
             else
             {
-                collectorFinger2Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                collectorFinger2Pos = Presets.COLLECTOR_COLLECT;
             }
         }
 
         // Open top fingers
         if (gamepad1.left_bumper)
         {
-            if (collectorRotatePos == org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
             {
-                collectorFinger2Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                collectorFinger2Pos = Presets.COLLECTOR_COLLECT;
             }
             else
             {
-                collectorFinger1Pos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_FINGER_COLLECT_POS;
+                collectorFinger1Pos = Presets.COLLECTOR_COLLECT;
             }
         }
 
@@ -202,17 +202,17 @@ public class Teleop extends OpMode
         if ((gamepad2.right_bumper) && (collectorRotateButtonWasntAlreadyPressed))
         {
             collectorRotateButtonWasntAlreadyPressed = false;
-            if (armTargetPos == org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_COLLECT_POS)
+            if (armTargetPos == Presets.COLLECTOR_ARM_COLLECT_POS)
             {
-                armTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
             }
-            if (collectorRotatePos == org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
+            if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
             {
-                collectorRotatePos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_INVERTED_POS;
+                collectorRotatePos = Presets.COLLECTOR_ROTATE_INVERTED_POS;
             }
             else
             {
-                collectorRotatePos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
             }
         }
 
@@ -226,17 +226,18 @@ public class Teleop extends OpMode
         // or high to score
         if (gamepad2.a)
         {
-            armTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_COLLECT_POS;
+            armTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
         }
         else if (gamepad2.y)
         {
-            armTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
+            armTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
         }
         else if (gamepad2.x)
         {
-            armTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+            armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+        } else if (armTargetPos == Presets.COLLECTOR_ARM_COLLECT_POS){
+            armTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
         }
-
         // Manual arm movement
         if ((gamepad2.right_stick_y > 0.1) || (gamepad2.right_stick_y < -0.1))
         {
@@ -248,13 +249,13 @@ public class Teleop extends OpMode
         if ((gamepad2.right_trigger > 0.5) && (craneClawOpenButtonWasntAlreadyPressed))
         {
             craneClawOpenButtonWasntAlreadyPressed = false;
-            if (craneClawTargetPos == org.firstinspires.ftc.teamcode.Final.Presets.CRANE_CLAW_OPEN_POS)
+            if (craneClawTargetPos == Presets.CRANE_CLAW_OPEN_POS)
             {
-                craneClawTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.CRANE_CLAW_CLOSE_POS;
+                craneClawTargetPos = Presets.CRANE_CLAW_CLOSE_POS;
             }
             else
             {
-                craneClawTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.CRANE_CLAW_OPEN_POS;
+                craneClawTargetPos = Presets.CRANE_CLAW_OPEN_POS;
             }
         }
 
@@ -288,7 +289,7 @@ public class Teleop extends OpMode
         // Move the crane out
         if (gamepad2.dpad_right)
         {
-            if (robot.craneExtend.getCurrentPosition() < org.firstinspires.ftc.teamcode.Final.Presets.CRANE_EXTEND_MAX_POS)
+            if (robot.craneExtend.getCurrentPosition() < Presets.CRANE_EXTEND_MAX_POS)
             {
                 craneExtendMotorCmd = 1.0;
             }
@@ -309,19 +310,19 @@ public class Teleop extends OpMode
 
         if (gamepad2.left_bumper)
         {
-            craneWristTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.CRANE_WRIST_SCORE_POS;
+            craneWristTargetPos = Presets.CRANE_WRIST_SCORE_POS;
         }
 
         if (gamepad2.left_trigger > 0.5)
         {
-            craneWristTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.CRANE_WRIST_COLLECT_POS;
-            craneRotateTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.CRANE_ROTATE_COLLECT_POS;
-            craneClawTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.CRANE_CLAW_OPEN_POS;
+            craneWristTargetPos = Presets.CRANE_WRIST_COLLECT_POS;
+            craneRotateTargetPos = Presets.CRANE_ROTATE_COLLECT_POS;
+            craneClawTargetPos = Presets.CRANE_CLAW_OPEN_POS;
         }
 
         // Limit position and power
-        armTargetPos = Range.clip(armTargetPos, org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_MIN_POS, org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_MAX_POS);
-        if (armTargetPos <= org.firstinspires.ftc.teamcode.Final.Presets.COLLECTOR_ARM_LOW_SCORE_POS)
+        armTargetPos = Range.clip(armTargetPos, Presets.COLLECTOR_ARM_MIN_POS, Presets.COLLECTOR_ARM_MAX_POS);
+        if (armTargetPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS)
         {
             armMotorCmd = PinkPD.getMotorCmd(0.01, 0.01, armTargetPos - armCurrentPos, armSpeed);
         }
@@ -330,12 +331,12 @@ public class Teleop extends OpMode
             armMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, armTargetPos - armCurrentPos, armSpeed);
         }
         armMotorCmd = Range.clip(armMotorCmd, -0.1, 0.8);
-        craneRotateTargetPos = Range.clip(craneRotateTargetPos, org.firstinspires.ftc.teamcode.Final.Presets.CRANE_ROTATE_MIN_POS, org.firstinspires.ftc.teamcode.Final.Presets.CRANE_ROTATE_MAX_POS);
-        craneExtendTargetPos = Range.clip(craneExtendTargetPos, org.firstinspires.ftc.teamcode.Final.Presets.CRANE_EXTEND_MIN_POS, org.firstinspires.ftc.teamcode.Final.Presets.CRANE_EXTEND_MAX_POS);
+        craneRotateTargetPos = Range.clip(craneRotateTargetPos, Presets.CRANE_ROTATE_MIN_POS, Presets.CRANE_ROTATE_MAX_POS);
+        craneExtendTargetPos = Range.clip(craneExtendTargetPos, Presets.CRANE_EXTEND_MIN_POS, Presets.CRANE_EXTEND_MAX_POS);
         craneRotateMotorCmd = PinkPD.getMotorCmd(0.03, 0.02, craneRotateTargetPos - craneRotateCurrentPos, craneRotateSpeed);
         //       craneExtendMotorCmd = PinkPD.getMotorCmd(0.02, 0, craneExtendTargetPos - craneExtendCurrentPos, 0);
         //       craneExtendMotorCmd = Range.clip(craneExtendMotorCmd, -0.4, 0.4);
-        craneWristTargetPos = Range.clip(craneWristTargetPos, org.firstinspires.ftc.teamcode.Final.Presets.CRANE_WRIST_MIN_POS, Presets.CRANE_WRIST_MAX_POS);
+        craneWristTargetPos = Range.clip(craneWristTargetPos, Presets.CRANE_WRIST_MIN_POS, Presets.CRANE_WRIST_MAX_POS);
 
 /*
         // Manual flicker control for testing only

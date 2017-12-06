@@ -25,9 +25,9 @@ public class Presets
     public static final double COLLECTOR_ARM_MAX_POS = 300;
     public static final double COLLECTOR_ARM_TRAVEL_POS = 100;
 
-    public static final double COLLECTOR_FINGER_GRAB_POS = -1;
-    public static final double COLLECTOR_FINGER_COLLECT_POS = 0.6;
-    public static final double COLLECTOR_FINGER_SCORE_POS = 0.4;
+    public static final double COLLECTOR_HOLD = 0.6;
+    public static final double COLLECTOR_COLLECT = 1;
+    public static final double COLLECTOR_EJECT = 0;
     public static final double COLLECTOR_ROTATE_UPRIGHT_POS = -1;
     public static final double COLLECTOR_ROTATE_INVERTED_POS = 1;
 

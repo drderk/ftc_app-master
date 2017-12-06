@@ -54,7 +54,7 @@ import java.util.Locale;
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
-@Autonomous (name = "Compass", group = "Sensor") // Comment this out to add to the opmode list
+@Autonomous (name = "PINK Compass", group = "Sensor") // Comment this out to add to the opmode list
 @Disabled
 public class Compass extends LinearOpMode
 {
