@@ -120,11 +120,11 @@ public class Auto extends OpMode
         RELEASE_STARTING_CUBE,
         BACK_UP_TO_CLEAR_CRYPTOBOX,
         TURN_TOWARD_CENTER,
-        DRIVE_TO_COLLECT_CUBES,
-        COLLECT_CUBES,
-        MOVE_CUBES,
-        TURN_BACK_TO_SCORE_CUBES,
-        SCORE_CUBES,
+        DRIVE_TO_COLLECT_ADDITIONAL_CUBES,
+        COLLECT_ADDITIONAL_CUBES,
+        MOVE_ALL_CUBES,
+        TURN_BACK_TO_SCORE_ADDITIONAL_CUBES,
+        SCORE_ADDITIONAL_CUBES,
         RELEASE_ADDITIONAL_CUBES,
         BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN
     }
@@ -772,11 +772,11 @@ public class Auto extends OpMode
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
-                    stage = Stage.DRIVE_TO_COLLECT_CUBES;
+                    stage = Stage.DRIVE_TO_COLLECT_ADDITIONAL_CUBES;
                 }
                 break;
 
-            case DRIVE_TO_COLLECT_CUBES:
+            case DRIVE_TO_COLLECT_ADDITIONAL_CUBES:
             flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
             flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
             collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
@@ -820,11 +820,11 @@ public class Auto extends OpMode
             baseScorePos = targetBasePos;
             baseScoreAngle = targetBaseAngle;
             markedTime = runtime.milliseconds();
-            stage = Stage.COLLECT_CUBES;
+            stage = Stage.COLLECT_ADDITIONAL_CUBES;
         }
         break;
 
-            case COLLECT_CUBES: //collect cubes
+            case COLLECT_ADDITIONAL_CUBES: //collect cubes
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
@@ -869,10 +869,10 @@ public class Auto extends OpMode
                 baseScorePos = targetBasePos;
                 baseScoreAngle = targetBaseAngle;
                 markedTime = runtime.milliseconds();
-                    stage = Stage.MOVE_CUBES;
+                    stage = Stage.MOVE_ALL_CUBES;
             }
             break;
-            case MOVE_CUBES:
+            case MOVE_ALL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
@@ -916,11 +916,11 @@ public class Auto extends OpMode
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
-                    stage = Stage.TURN_BACK_TO_SCORE_CUBES;
+                    stage = Stage.TURN_BACK_TO_SCORE_ADDITIONAL_CUBES;
                 }
                 break;
 
-            case TURN_BACK_TO_SCORE_CUBES:
+            case TURN_BACK_TO_SCORE_ADDITIONAL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
@@ -966,11 +966,11 @@ public class Auto extends OpMode
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25) && ((runtime.milliseconds() - markedTime > 3000)))
             {
                 markedTime = runtime.milliseconds();
-                stage = Stage.SCORE_CUBES;
+                stage = Stage.SCORE_ADDITIONAL_CUBES;
             }
             break;
 
-            case SCORE_CUBES:
+            case SCORE_ADDITIONAL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
