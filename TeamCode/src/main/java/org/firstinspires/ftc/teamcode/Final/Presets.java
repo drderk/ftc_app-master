@@ -29,7 +29,7 @@ public class Presets
     public static final double COLLECTOR_COLLECT = 1;
     public static final double COLLECTOR_EJECT = 0;
     public static final double COLLECTOR_ROTATE_UPRIGHT_POS = -1;
-    public static final double COLLECTOR_ROTATE_INVERTED_POS = 1;
+    public static final double COLLECTOR_ROTATE_INVERTED_POS = 1;//
 
     public static final double CRANE_ROTATE_MAX_POS = 265;
     public static final double CRANE_ROTATE_MIN_POS = 0;
