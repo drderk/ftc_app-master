@@ -27,7 +27,7 @@ public class PinkNavigate
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);
 
         // Determine and add the angle offset
-        angleOffset = PinkPD.getMotorCmd(0.025, 0.001, angularError, 0);
+        angleOffset = PinkPD.getMotorCmd(0.03, 0.001, angularError, 0);
         leftMotorCmd = motorCmd - angleOffset;
         rightMotorCmd = motorCmd + angleOffset;
         leftMotorCmd = Range.clip(leftMotorCmd, -1.0, 1.0);

@@ -33,6 +33,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -78,7 +79,11 @@ public class Teleop extends OpMode
     private double flickerFingerTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_FINGER_NEUTRAL_POS;
     private double flickerArmTargetPos = org.firstinspires.ftc.teamcode.Final.Presets.FLICKER_ARM_STOW_POS;
     private boolean telemetryActivated = false;
-
+    private boolean baseHoldActivated  = false;
+    private double  targetBase         = 0;
+    private double  targetAngle        = 0;
+    private double  currentAngle      = 0;
+    private double  currentBase        = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -153,6 +158,15 @@ public class Teleop extends OpMode
         leftJoystick = -gamepad1.left_stick_y;
         rightJoystick = -gamepad1.right_stick_y;
 
+        currentAngle = getHeading();
+        currentBase   = (robot.leftDrive.getCurrentPosition() + robot.rightDrive.getCurrentPosition()) / 2;
+
+        if (gamepad1.a) {
+            baseHoldActivated = true;
+        } else {
+            baseHoldActivated = false;
+        }
+
         if (gamepad1.left_trigger > 0.5)
         {
             leftWheelsMotorCmd = leftJoystick * 1.0;
@@ -201,11 +215,10 @@ public class Teleop extends OpMode
         // Toggle the collector rotate position
         if ((gamepad2.right_bumper) && (collectorRotateButtonWasntAlreadyPressed))
         {
-            collectorRotateButtonWasntAlreadyPressed = false;
-            if (armTargetPos == Presets.COLLECTOR_ARM_COLLECT_POS)
-            {
-                armTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+            if (armCurrentPos < Presets.COLLECTOR_ARM_TRAVEL_POS){
+                armTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
             }
+            collectorRotateButtonWasntAlreadyPressed = false;
             if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
             {
                 collectorRotatePos = Presets.COLLECTOR_ROTATE_INVERTED_POS;
@@ -242,6 +255,11 @@ public class Teleop extends OpMode
         if ((gamepad2.right_stick_y > 0.1) || (gamepad2.right_stick_y < -0.1))
         {
             armTargetPos = armTargetPos - (5.0 * gamepad2.right_stick_y);
+        }
+
+        if (gamepad2.start) {
+            robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         // CLAW CONTROL /////////////////////////////////////////////////////
@@ -321,7 +339,6 @@ public class Teleop extends OpMode
         }
 
         // Limit position and power
-        armTargetPos = Range.clip(armTargetPos, Presets.COLLECTOR_ARM_MIN_POS, Presets.COLLECTOR_ARM_MAX_POS);
         if (armTargetPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS)
         {
             armMotorCmd = PinkPD.getMotorCmd(0.01, 0.01, armTargetPos - armCurrentPos, armSpeed);
@@ -365,16 +382,21 @@ public class Teleop extends OpMode
         }
         flickerFingerTargetPos = Range.clip(flickerFingerTargetPos, -1.0, 1.0);
 */
-        if(gamepad1.start && !telemetryActivated){
+        if (gamepad1.start){
             telemetryActivated = true;
         }
-        if (gamepad1.start && telemetryActivated) {
+        else {
             telemetryActivated = false;
         }
 
         // Set powers and positions
-        robot.leftDrive.setPower(leftWheelsMotorCmd);
-        robot.rightDrive.setPower(rightWheelsMotorCmd);
+        if(baseHoldActivated) {
+            robot.leftDrive.setPower(0);
+            robot.rightDrive.setPower(0);
+        } else {
+            robot.leftDrive.setPower(leftWheelsMotorCmd);
+            robot.rightDrive.setPower(rightWheelsMotorCmd);
+        }
         robot.armRotate.setPower(armMotorCmd);
         robot.collectorFinger1.setPosition(collectorFinger1Pos);
         robot.collectorFinger2.setPosition(collectorFinger2Pos);

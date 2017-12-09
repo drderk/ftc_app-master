@@ -126,7 +126,9 @@ public class Auto extends OpMode
         TURN_BACK_TO_SCORE_ADDITIONAL_CUBES,
         SCORE_ADDITIONAL_CUBES,
         RELEASE_ADDITIONAL_CUBES,
-        BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN
+        BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN,
+        BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2,
+        RESET
     }
 
     private Stage stage = Stage.INITIALIZE;
@@ -507,7 +509,7 @@ public class Auto extends OpMode
                 }
 
                 currentBaseAngle = getHeading();  // Degrees
-                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3) && ((runtime.milliseconds() - markedTime) > 3000))
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3))
                 {
                     stage = Stage.DRIVE_IN_FRONT_OF_COLUMN;
                 }
@@ -550,7 +552,7 @@ public class Auto extends OpMode
                 }
                 else
                 {
-                    columnOffset = 11;   // Center position by default
+                    columnOffset = 12;   // Center position by default
                 }
                 if (blueAlliance)
                 {
@@ -626,7 +628,7 @@ public class Auto extends OpMode
                     }
                 }
                 currentBaseAngle = getHeading();  // Degrees
-                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3) && ((runtime.milliseconds() - markedTime) > 3000))
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25) && ((runtime.milliseconds() - markedTime) > 3000))
                 {
                     stage = Stage.DRIVE_FORWARD_TO_SCORE;
                 }
@@ -646,12 +648,12 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = 25 + columnOffset + 10;
+                        targetBasePos = 25 + columnOffset + 7;
                         targetBaseAngle = 90;
                     }
                     else
                     {
-                        targetBasePos = 24 + columnOffset + 8 + 1.5;
+                        targetBasePos = 24 + columnOffset + 7 + 1.5;
                         targetBaseAngle = 0;
                     }
                 }
@@ -659,12 +661,12 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = -25 - columnOffset + 10;
+                        targetBasePos = -25 - columnOffset + 7;
                         targetBaseAngle = -90;
                     }
                     else
                     {
-                        targetBasePos = -25 - columnOffset + 10;
+                        targetBasePos = -25 - columnOffset + 7;
                         targetBaseAngle = 180;
                     }
                 }
@@ -711,7 +713,7 @@ public class Auto extends OpMode
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
-                targetBasePos = baseScorePos - 8;
+                targetBasePos = baseScorePos - 10;
                 targetBaseAngle = baseScoreAngle;
                 light1Power = 0;
                 light2Power = 0;
@@ -744,7 +746,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = -90;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -757,7 +759,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = 90;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -767,7 +769,7 @@ public class Auto extends OpMode
                 }
 
                 currentBaseAngle = getHeading();  // Degrees
-                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25) && (runtime.milliseconds() - markedTime) > 2000)
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25) && (runtime.milliseconds() - markedTime) > 3000)
                 {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
@@ -790,12 +792,12 @@ public class Auto extends OpMode
             {
                 if (cornerStartingPos)
                 {
-                    targetBasePos = baseScorePos + 20;
-                    targetBaseAngle = -90;
+                    targetBasePos = baseScorePos + 25;
+                    targetBaseAngle = -95;
                 }
                 else
                 {
-                    targetBasePos = baseScorePos + 20 ;
+                    targetBasePos = baseScorePos + 25 ;
                     targetBaseAngle = 135;
                 }
             }
@@ -803,19 +805,19 @@ public class Auto extends OpMode
             {
                 if (cornerStartingPos)
                 {
-                    targetBasePos = baseScorePos +20;
-                    targetBaseAngle = 90;
+                    targetBasePos = baseScorePos +25;
+                    targetBaseAngle = 95;
                 }
                 else
                 {
-                    targetBasePos = baseScorePos +20;
+                    targetBasePos = baseScorePos +25;
                     targetBaseAngle = -135;
                 }
             }
             // Remember the baseline position for scoring so we can drive from here
 
             currentBaseAngle = getHeading();  // Degrees
-            if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25))
+            if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.5))
         {
             baseScorePos = targetBasePos;
             baseScoreAngle = targetBaseAngle;
@@ -841,7 +843,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = -90;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -854,7 +856,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = 90;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -869,14 +871,14 @@ public class Auto extends OpMode
                 baseScorePos = targetBasePos;
                 baseScoreAngle = targetBaseAngle;
                 markedTime = runtime.milliseconds();
-                    stage = Stage.MOVE_ALL_CUBES;
+                    stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2;
             }
             break;
             case MOVE_ALL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -887,12 +889,12 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos -8;
+                        targetBasePos = baseScorePos -15;
                         targetBaseAngle = -90;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 8;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle =135;
                     }
                 }
@@ -900,12 +902,12 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 8;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle = 90;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 8;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle = -135;
                     }
                 }
@@ -923,13 +925,13 @@ public class Auto extends OpMode
             case TURN_BACK_TO_SCORE_ADDITIONAL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                   collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -937,7 +939,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = 90;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -950,7 +952,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = -90;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -978,19 +980,19 @@ public class Auto extends OpMode
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
                 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos +25; // go to line 77 for a fun surprise
-                        targetBaseAngle = 90;
+                        targetBasePos = baseScorePos + 14; // go to line 77 for a fun surprise
+                        targetBaseAngle = 95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos + 25;
+                        targetBasePos = baseScorePos + 14;
                         targetBaseAngle = 0;
                     }
                 }
@@ -998,18 +1000,18 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos + 25;
-                        targetBaseAngle = -90;
+                        targetBasePos = baseScorePos + 14;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos + 25;
+                        targetBasePos = baseScorePos + 14;
                         targetBaseAngle = 180;
                     }
                 }
 
                 currentBaseAngle = getHeading();  // Degrees
-                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25))
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.35))
             {
                 baseScorePos = targetBasePos;
                 baseScoreAngle = targetBaseAngle;
@@ -1025,7 +1027,7 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
 // collectorFingerTargetPos = Presets.EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -1033,7 +1035,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = 90;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -1046,7 +1048,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = -90;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -1073,19 +1075,19 @@ public class Auto extends OpMode
                 collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
 // collectorFingerTargetPos = Presets.EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 10;
-                        targetBaseAngle = 90;
+                        targetBasePos = baseScorePos - 3;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 10;
+                        targetBasePos = baseScorePos - 3;
                         targetBaseAngle = 0;
                     }
                 }
@@ -1093,20 +1095,88 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 10;
-                        targetBaseAngle = -90;
+                        targetBasePos = baseScorePos - 3;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 10;
+                        targetBasePos = baseScorePos - 3;
                         targetBaseAngle = 180;
                     }
                 }
 
                 currentBaseAngle = getHeading();  // Degrees
-                PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25 );
-
+               if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25 )){
+                   baseScorePos = targetBasePos;
+                   baseScoreAngle = targetBaseAngle;
+                   stage = Stage.RESET;
+                } else {
+                   stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN;
+            }
             break;
+
+            case BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2:
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+// collectorFingerTargetPos = Presets.EJECT;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
+                light1Power = 0;
+                light2Power = 0;
+                if (blueAlliance)
+                {
+                    if (cornerStartingPos)
+                    {
+                        targetBasePos = baseScorePos - 25;
+                        targetBaseAngle = -95;
+                    }
+                    else
+                    {
+                        targetBasePos = baseScorePos - 25;
+                        targetBaseAngle = 135;
+                    }
+                }
+                else
+                {
+                    if (cornerStartingPos)
+                    {
+                        targetBasePos = baseScorePos - 25;
+                        targetBaseAngle = 95;
+                    }
+                    else
+                    {
+                        targetBasePos = baseScorePos - 25;
+                        targetBaseAngle = -135;
+                    }
+                }
+
+                currentBaseAngle = getHeading();  // Degrees
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25 )){
+                    baseScorePos = targetBasePos;
+                    baseScoreAngle = targetBaseAngle;
+                    stage = Stage.RESET;
+                } else {
+                    stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2;
+                }
+                break;
+
+            case RESET:
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
+                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
+                collectorFinger1TargetPos = 0.5;
+                collectorFinger2TargetPos = 0.5;
+// collectorFingerTargetPos = Presets.EJECT;
+                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
+                collectorArmTargetPos = -1;
+                light1Power = 0;
+                light2Power = 0;
+
+                currentBaseAngle = getHeading();  // Degrees
+                targetBaseAngle = baseScoreAngle;
+                PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25 );
+                break;
         }
 
         armMotorCmd = PinkPD.getMotorCmd(0.02, 0.01, collectorArmTargetPos - collectorArmPos, armSpeed);
@@ -1131,6 +1201,7 @@ public class Auto extends OpMode
         robot.leftDrive.setPower(PinkNavigate.getLeftMotorCmd());
         robot.rightDrive.setPower(PinkNavigate.getRightMotorCmd());
 
+        telemetry.addLine("WE WILL BUILD A WALL!!!");
         telemetry.addData("Stage  ", stage);
         telemetry.addData("Image  ", image);
         telemetry.addData("Color  ", jewelColor);

@@ -31,15 +31,15 @@ public class Presets
     public static final double COLLECTOR_ROTATE_UPRIGHT_POS = -1;
     public static final double COLLECTOR_ROTATE_INVERTED_POS = 1;//
 
-    public static final double CRANE_ROTATE_MAX_POS = 265;
+    public static final double CRANE_ROTATE_MAX_POS = 350;
     public static final double CRANE_ROTATE_MIN_POS = 0;
-    public static final double CRANE_ROTATE_COLLECT_POS = 175;
+    public static final double CRANE_ROTATE_COLLECT_POS = 150;
     public static final double CRANE_EXTEND_MAX_POS = 1400;
     public static final double CRANE_EXTEND_MIN_POS = 0;
 
     public static final double CRANE_WRIST_STOW_POS = -0.25;
     public static final double CRANE_WRIST_MIN_POS = -0.25;
-    public static final double CRANE_WRIST_SCORE_POS = 0.6;
+    public static final double CRANE_WRIST_SCORE_POS = 0.65;
     public static final double CRANE_WRIST_COLLECT_POS = 0.6;
     public static final double CRANE_WRIST_MAX_POS = 0.75;
     public static final double CRANE_WRIST_LATCH_POS = 0.1;
