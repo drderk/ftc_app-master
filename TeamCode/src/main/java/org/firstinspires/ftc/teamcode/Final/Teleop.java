@@ -161,11 +161,6 @@ public class Teleop extends OpMode
         currentAngle = getHeading();
         currentBase   = (robot.leftDrive.getCurrentPosition() + robot.rightDrive.getCurrentPosition()) / 2;
 
-        if (gamepad1.a) {
-            baseHoldActivated = true;
-        } else {
-            baseHoldActivated = false;
-        }
 
         if (gamepad1.left_trigger > 0.5)
         {
@@ -176,6 +171,11 @@ public class Teleop extends OpMode
         {
             leftWheelsMotorCmd = leftJoystick * 0.6;
             rightWheelsMotorCmd = rightJoystick * 0.6;
+        }
+
+        if (gamepad1.a) {
+            leftWheelsMotorCmd = -.2;
+            rightWheelsMotorCmd = -.2;
         }
 
         // COLLECTOR CONTROL /////////////////////////////////////////////////////

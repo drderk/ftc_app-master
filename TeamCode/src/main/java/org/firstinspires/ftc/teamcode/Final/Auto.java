@@ -297,7 +297,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = 0;
                 targetBasePos = 0;
@@ -342,7 +341,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -398,7 +396,6 @@ public class Auto extends OpMode
                 }
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -421,8 +418,7 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -432,7 +428,7 @@ public class Auto extends OpMode
                 light1Power = 0;
                 light2Power = 0;
 
-                if ((runtime.milliseconds() - markedTime) > 500)
+                if ((runtime.milliseconds() - markedTime) > 500 )
                 {
                     markedTime = runtime.milliseconds();
                     stage = Stage.DRIVE_OFF_PLATFORM;
@@ -444,7 +440,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -474,7 +469,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -520,7 +514,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -536,7 +529,7 @@ public class Auto extends OpMode
                     }
                     else
                     {
-                        columnOffset = 18.5;
+                        columnOffset = 24.5;
                     }
                 }
                 else if (image == RelicRecoveryVuMark.RIGHT)
@@ -547,12 +540,20 @@ public class Auto extends OpMode
                     }
                     else
                     {
-                        columnOffset = 3.5;
+                        columnOffset = 12.5;
                     }
                 }
+//                center
                 else
                 {
-                    columnOffset = 12;   // Center position by default
+                    if (blueAlliance)
+                    {
+                        columnOffset = 18.5;
+                    }
+                    else
+                    {
+                        columnOffset = 18.5;
+                    }
                 }
                 if (blueAlliance)
                 {
@@ -571,12 +572,12 @@ public class Auto extends OpMode
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = -25 - columnOffset;
+                        targetBasePos = -24 - columnOffset ;
                         targetBaseAngle = 0;
                     }
                     else
                     {
-                        targetBasePos = -25 - columnOffset;
+                        targetBasePos = -24 - columnOffset;
                         targetBaseAngle = 90;
                     }
                 }
@@ -592,8 +593,7 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -619,7 +619,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = -25 - columnOffset;
-                        targetBaseAngle = -90;
+                        targetBaseAngle = 87;
                     }
                     else
                     {
@@ -639,7 +639,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 light1Power = 0;
@@ -662,7 +661,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = -25 - columnOffset + 7;
-                        targetBaseAngle = -90;
+                        targetBaseAngle = 90;
                     }
                     else
                     {
@@ -687,7 +686,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
                 collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 targetBasePos = baseScorePos;
@@ -698,7 +696,7 @@ public class Auto extends OpMode
                 currentBaseAngle = getHeading();  // Degrees
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3);
 
-                if ((runtime.milliseconds() - markedTime) > 200)
+                if ((runtime.milliseconds() - markedTime) > 1000)
                 {
                     markedTime = runtime.milliseconds();
                     stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX;
@@ -710,7 +708,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
                 collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 targetBasePos = baseScorePos - 10;
@@ -720,7 +717,7 @@ public class Auto extends OpMode
 
                 currentBaseAngle = getHeading();  // Degrees
 
-                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3)){
+                if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25)){
                     baseScorePos = targetBasePos;
                     baseScoreAngle= targetBaseAngle;
                     markedTime = runtime.milliseconds();
@@ -736,7 +733,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
                 collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 light1Power = 0;
@@ -759,7 +755,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = 95;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -783,7 +779,6 @@ public class Auto extends OpMode
             flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
             collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
             collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_COLLECT;
             collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
             collectorArmTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
             light1Power = 0;
@@ -806,7 +801,7 @@ public class Auto extends OpMode
                 if (cornerStartingPos)
                 {
                     targetBasePos = baseScorePos +25;
-                    targetBaseAngle = 95;
+                    targetBaseAngle = -95;
                 }
                 else
                 {
@@ -830,9 +825,7 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_COLLECT;
- //
+                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
@@ -856,7 +849,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = 95;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -871,7 +864,7 @@ public class Auto extends OpMode
                 baseScorePos = targetBasePos;
                 baseScoreAngle = targetBaseAngle;
                 markedTime = runtime.milliseconds();
-                    stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2;
+                    stage = Stage.MOVE_ALL_CUBES;
             }
             break;
             case MOVE_ALL_CUBES:
@@ -879,7 +872,6 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
                 collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -903,7 +895,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos - 15;
-                        targetBaseAngle = 90;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
@@ -926,9 +918,7 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                   collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
- //
+                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
@@ -952,7 +942,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = -95;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -976,8 +966,7 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-// collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
                 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
@@ -1001,7 +990,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos + 14;
-                        targetBaseAngle = -95;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -1012,12 +1001,12 @@ public class Auto extends OpMode
 
                 currentBaseAngle = getHeading();  // Degrees
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.35))
-            {
-                baseScorePos = targetBasePos;
-                baseScoreAngle = targetBaseAngle;
-                markedTime = runtime.milliseconds();
-                stage = Stage.RELEASE_ADDITIONAL_CUBES;
-            }
+                {
+                    baseScorePos = targetBasePos;
+                    baseScoreAngle = targetBaseAngle;
+                    markedTime = runtime.milliseconds();
+                    stage = Stage.RELEASE_ADDITIONAL_CUBES;
+                }
             break;
 
             case RELEASE_ADDITIONAL_CUBES:
@@ -1048,7 +1037,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos;
-                        targetBaseAngle = -95;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -1096,7 +1085,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos - 3;
-                        targetBaseAngle = -95;
+                        targetBaseAngle = 95;
                     }
                     else
                     {
@@ -1143,7 +1132,7 @@ public class Auto extends OpMode
                     if (cornerStartingPos)
                     {
                         targetBasePos = baseScorePos - 25;
-                        targetBaseAngle = 95;
+                        targetBaseAngle = -95;
                     }
                     else
                     {
