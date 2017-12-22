@@ -1172,8 +1172,8 @@ public class Auto extends OpMode
         robot.armRotate.setPower(armMotorCmd);
 
         robot.collectorRotate.setPosition(collectorRotateTargetPos);
-        robot.collectorFinger1.setPosition(collectorFinger1TargetPos);
-        robot.collectorFinger2.setPosition(collectorFinger2TargetPos);
+        robot.collectorFinger1.setPower(collectorFinger1TargetPos);
+        robot.collectorFinger2.setPower(collectorFinger2TargetPos);
         //robot.collectorFinger.setPosition(collectorFingerTargetPos);
         robot.flickerArm.setPosition(flickerArmTargetPos);
         robot.flickerFinger.setPosition(flickerFingerTargetPos);

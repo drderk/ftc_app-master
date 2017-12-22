@@ -41,11 +41,10 @@ public class Hardware
     public DcMotor rightDrive = null;
     public DcMotor light1 = null;
     public DcMotor light2 = null;
+    public DcMotor collectorFinger1 = null;
+    public DcMotor collectorFinger2 = null;
 
     public Servo collectorRotate  = null;
-    public Servo collectorFinger1 = null;
-    public Servo collectorFinger2 = null;
-    public Servo collectorFinger  = null;
     public Servo craneWrist = null;
     public Servo craneClaw = null;
     public Servo flickerArm = null;
@@ -82,15 +81,14 @@ public class Hardware
         armRotate = hwMap.get(DcMotor.class, "armRotate");
         light1 = hwMap.get(DcMotor.class, "light1");
         light2 = hwMap.get(DcMotor.class, "light2");
+        collectorFinger1 = hwMap.get(DcMotor.class, "collectorFinger1");
+        collectorFinger2 = hwMap.get(DcMotor.class, "collectorFinger2");
 
         // Sensors
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         distanceSensor = hwMap.get(DistanceSensor.class, "colorSensor");
 
         //Servos
-        collectorFinger1 = hwMap.get(Servo.class, "collectorFinger1");
-        collectorFinger2 = hwMap.get(Servo.class, "collectorFinger2");
-//        collectorFinger  = hwMap.get(Servo.class, "collectorFinger"); //This is for the new collector
         collectorRotate = hwMap.get(Servo.class, "collectorRotate");
         craneWrist = hwMap.get(Servo.class, "craneWrist");
         craneClaw = hwMap.get(Servo.class, "craneClaw");
@@ -105,6 +103,8 @@ public class Hardware
         craneRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         light1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         light2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        collectorFinger1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        collectorFinger2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -113,6 +113,9 @@ public class Hardware
         craneRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         light1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         light2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        collectorFinger1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        collectorFinger2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
 
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -120,12 +123,16 @@ public class Hardware
         armRotate.setDirection(DcMotor.Direction.REVERSE);
         craneExtend.setDirection(DcMotor.Direction.REVERSE);
         craneRotate.setDirection(DcMotor.Direction.FORWARD);
+        collectorFinger1.setDirection(DcMotor.Direction.FORWARD);
+        collectorFinger2.setDirection(DcMotor.Direction.REVERSE);
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         craneExtend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         craneRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        collectorFinger1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        collectorFinger2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);

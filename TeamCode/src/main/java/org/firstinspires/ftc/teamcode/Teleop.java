@@ -395,8 +395,8 @@ public class Teleop extends OpMode
             robot.rightDrive.setPower(rightWheelsMotorCmd);
         }
         robot.armRotate.setPower(armMotorCmd);
-        robot.collectorFinger1.setPosition(collectorFinger1Pos);
-        robot.collectorFinger2.setPosition(collectorFinger2Pos);
+        robot.collectorFinger1.setPower(collectorFinger1Pos);
+        robot.collectorFinger2.setPower(collectorFinger2Pos);
         robot.collectorRotate.setPosition(collectorRotatePos);
         robot.craneRotate.setPower(craneRotateMotorCmd);
         robot.craneExtend.setPower(craneExtendMotorCmd);
