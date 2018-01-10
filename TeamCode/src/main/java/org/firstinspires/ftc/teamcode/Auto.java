@@ -77,7 +77,7 @@ public class Auto extends OpMode
     private double leftWheelMotorCmd, rightWheelMotorCmd, armMotorCmd;
     private double collectorArmTargetPos;
     private double flickerArmTargetPos, flickerFingerTargetPos;
-    private double collectorFinger1TargetPos, collectorFinger2TargetPos, collectorFingerTargetPos, collectorRotateTargetPos;
+    private double collectorFinger1TargetPos, collectorFinger2TargetPos, collectorFinger3TargetPos, collectorFinger4TargetPos, collectorRotateTargetPos;
     private double targetBasePos, targetBaseAngle;
     private double baseScorePos, baseScoreAngle;
     private boolean jewelFound = false;
@@ -297,6 +297,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = 0;
                 targetBasePos = 0;
@@ -316,7 +318,11 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.COLLECTOR_FINGER_TRAVEL;
  //
  
@@ -340,7 +346,9 @@ public class Auto extends OpMode
                 flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -396,6 +404,8 @@ public class Auto extends OpMode
                 }
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -419,6 +429,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -440,6 +452,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -469,6 +483,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  //
 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -514,6 +530,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -594,6 +612,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  //
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
@@ -639,6 +659,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 light1Power = 0;
@@ -684,8 +706,10 @@ public class Auto extends OpMode
             case RELEASE_STARTING_CUBE:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 targetBasePos = baseScorePos;
@@ -706,8 +730,10 @@ public class Auto extends OpMode
             case BACK_UP_TO_CLEAR_CRYPTOBOX:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 targetBasePos = baseScorePos - 10;
@@ -731,8 +757,10 @@ public class Auto extends OpMode
             case TURN_TOWARD_CENTER:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
                 light1Power = 0;
@@ -824,8 +852,10 @@ public class Auto extends OpMode
             case COLLECT_ADDITIONAL_CUBES: //collect cubes
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_COLLECT_POS;
@@ -870,8 +900,10 @@ public class Auto extends OpMode
             case MOVE_ALL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -917,8 +949,10 @@ public class Auto extends OpMode
             case TURN_BACK_TO_SCORE_ADDITIONAL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
  
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
@@ -967,6 +1001,8 @@ public class Auto extends OpMode
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
@@ -1012,8 +1048,10 @@ public class Auto extends OpMode
             case RELEASE_ADDITIONAL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
@@ -1060,8 +1098,10 @@ public class Auto extends OpMode
             case BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_EJECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_EJECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_HIGH_SCORE_POS;
@@ -1107,8 +1147,10 @@ public class Auto extends OpMode
             case BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
-                collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
+collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
 // collectorFingerTargetPos = Presets.EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -1172,8 +1214,11 @@ public class Auto extends OpMode
         robot.armRotate.setPower(armMotorCmd);
 
         robot.collectorRotate.setPosition(collectorRotateTargetPos);
-        robot.collectorFinger1.setPower(collectorFinger1TargetPos);
-        robot.collectorFinger2.setPower(collectorFinger2TargetPos);
+        robot.collectorFinger1.setPosition(collectorFinger1TargetPos);
+        robot.collectorFinger2.setPosition(collectorFinger2TargetPos);
+        robot.collectorFinger3.setPosition(collectorFinger3TargetPos);
+        robot.collectorFinger4.setPosition(collectorFinger4TargetPos);
+
         //robot.collectorFinger.setPosition(collectorFingerTargetPos);
         robot.flickerArm.setPosition(flickerArmTargetPos);
         robot.flickerFinger.setPosition(flickerFingerTargetPos);

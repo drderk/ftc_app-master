@@ -64,6 +64,8 @@ public class Teleop extends OpMode
     private double craneRotateMotorCmd, craneExtendMotorCmd;
     private double collectorFinger1Pos = Presets.COLLECTOR_HOLD;
     private double collectorFinger2Pos = Presets.COLLECTOR_HOLD;
+    private double collectorFinger3Pos = Presets.COLLECTOR_HOLD;
+    private double collectorFinger4Pos = Presets.COLLECTOR_HOLD;
     private double collectorRotatePos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
     private double armTargetPos = 0;
     private double armCurrentPos = 0;
@@ -149,6 +151,8 @@ public class Teleop extends OpMode
         // Close the fingers if no other commands are given
         collectorFinger1Pos = Presets.COLLECTOR_HOLD;
         collectorFinger2Pos = Presets.COLLECTOR_HOLD;
+        collectorFinger3Pos = Presets.COLLECTOR_HOLD;
+        collectorFinger4Pos = Presets.COLLECTOR_HOLD;
 
         // BASE CONTROL /////////////////////////////////////////////////////
         // Run wheels in tank mode (The joystick is negative when pushed forward, so negate it)
@@ -181,6 +185,8 @@ public class Teleop extends OpMode
         {
             collectorFinger1Pos = Presets.COLLECTOR_EJECT;     // Slightly open to release glyph
             collectorFinger2Pos = Presets.COLLECTOR_EJECT;     // Slightly open to release glyph
+            collectorFinger3Pos = Presets.COLLECTOR_EJECT;     // Slightly open to release glyph
+            collectorFinger4Pos = Presets.COLLECTOR_EJECT;     // Slightly open to release glyph
         }
 
         // Open bottom fingers
@@ -189,10 +195,12 @@ public class Teleop extends OpMode
             if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
             {
                 collectorFinger1Pos = Presets.COLLECTOR_COLLECT;
+                collectorFinger2Pos = Presets.COLLECTOR_COLLECT;
             }
             else
             {
-                collectorFinger2Pos = Presets.COLLECTOR_COLLECT;
+                collectorFinger3Pos = Presets.COLLECTOR_COLLECT;
+                collectorFinger4Pos = Presets.COLLECTOR_COLLECT;
             }
         }
 
@@ -201,11 +209,13 @@ public class Teleop extends OpMode
         {
             if (collectorRotatePos == Presets.COLLECTOR_ROTATE_UPRIGHT_POS)
             {
-                collectorFinger2Pos = Presets.COLLECTOR_COLLECT;
+                collectorFinger3Pos = Presets.COLLECTOR_COLLECT;
+                collectorFinger4Pos = Presets.COLLECTOR_COLLECT;
             }
             else
             {
                 collectorFinger1Pos = Presets.COLLECTOR_COLLECT;
+                collectorFinger2Pos = Presets.COLLECTOR_COLLECT;
             }
         }
 
@@ -395,8 +405,10 @@ public class Teleop extends OpMode
             robot.rightDrive.setPower(rightWheelsMotorCmd);
         }
         robot.armRotate.setPower(armMotorCmd);
-        robot.collectorFinger1.setPower(collectorFinger1Pos);
-        robot.collectorFinger2.setPower(collectorFinger2Pos);
+        robot.collectorFinger1.setPosition(collectorFinger1Pos);
+        robot.collectorFinger2.setPosition(collectorFinger2Pos);
+        robot.collectorFinger3.setPosition(collectorFinger3Pos);
+        robot.collectorFinger4.setPosition(collectorFinger4Pos);
         robot.collectorRotate.setPosition(collectorRotatePos);
         robot.craneRotate.setPower(craneRotateMotorCmd);
         robot.craneExtend.setPower(craneExtendMotorCmd);
