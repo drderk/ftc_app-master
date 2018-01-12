@@ -1,93 +1,72 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.hardware.Sensor;
-
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cDevice;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
-import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This is NOT an opmode.
- * This class is used to define all the specific hardware for a single robot.
- */
-public class Hardware
-{
-    //Motors
 
-    public DcMotor craneExtend = null;
-    public DcMotor craneRotate = null;
-    public DcMotor armRotate = null;
-    public DcMotor leftDrive = null;
-    public DcMotor rightDrive = null;
-    public DcMotor light1 = null;
-    public DcMotor light2 = null;
-    public Servo collectorFinger1 = null;
-    public Servo collectorFinger2 = null;
-    public Servo collectorFinger3 = null;
-    public Servo collectorFinger4 = null;
-    public Servo collectorRotate  = null;
-    public Servo craneWrist = null;
-    public Servo craneClaw = null;
-    public Servo flickerArm = null;
-    public Servo flickerFinger = null;
+public class Hardware {
 
-    //    public Rev colorSensor = null;
-    public ColorSensor colorSensor = null;
-    public DistanceSensor distanceSensor = null;
+    //-----------------------------------------Motors-----------------------------------------//
+    public DcMotor craneExtend  = null;
+    public DcMotor craneRotate  = null;
+    public DcMotor armRotate    = null;
+    public DcMotor leftDrive    = null;
+    public DcMotor rightDrive   = null;
+    public DcMotor light1       = null;
+    public DcMotor light2       = null;
 
-    /* local OpMode members. */
+    //-----------------------------------------Servos-----------------------------------------//
+    public Servo collectorFinger1   = null;
+    public Servo collectorFinger2   = null;
+    public Servo collectorFinger3   = null;
+    public Servo collectorFinger4   = null;
+    public Servo collectorRotate    = null;
+    public Servo craneWrist         = null;
+    public Servo craneClaw          = null;
+    public Servo flickerArm         = null;
+    public Servo flickerFinger      = null;
+
+    //-----------------------------------------Sensors----------------------------------------//
+    public ColorSensor    colorSensor       = null;
+    public DistanceSensor distanceSensor    = null;
+
+    //----------------------------------Local OpMode Members----------------------------------//
     HardwareMap hwMap = null;
-    private ElapsedTime period = new ElapsedTime();
 
-    /* Constructor */
-    public Hardware ()
-    {
+    //---------------------Initialization of Standard Hardware Interfaces---------------------//
+    public void init (HardwareMap ahwMap) {
 
-    }
-
-    /* Initialize standard Hardware interfaces */
-    public void init (HardwareMap ahwMap)
-    {
-        // Save reference to Hardware map
+        //--------------------Saving the Reference to the Hardware Map--------------------//
         hwMap = ahwMap;
 
-        //  Motors
-        leftDrive = hwMap.get(DcMotor.class, "leftDrive");
-        rightDrive = hwMap.get(DcMotor.class, "rightDrive");
+        //-------------------------------------Motors-------------------------------------//
+        leftDrive   = hwMap.get(DcMotor.class, "leftDrive");
+        rightDrive  = hwMap.get(DcMotor.class, "rightDrive");
         craneExtend = hwMap.get(DcMotor.class, "craneExtend");
         craneRotate = hwMap.get(DcMotor.class, "craneRotate");
-        armRotate = hwMap.get(DcMotor.class, "armRotate");
-        light1 = hwMap.get(DcMotor.class, "light1");
-        light2 = hwMap.get(DcMotor.class, "light2");
-        collectorFinger1 = hwMap.get(Servo.class, "collectorFinger1");
-        collectorFinger2 = hwMap.get(Servo.class, "collectorFinger2");
-        collectorFinger3 = hwMap.get(Servo.class, "collectorFinger3");
-        collectorFinger4 = hwMap.get(Servo.class, "collectorFinger4");
+        armRotate   = hwMap.get(DcMotor.class, "armRotate");
+        light1      = hwMap.get(DcMotor.class, "light1");
+        light2      = hwMap.get(DcMotor.class, "light2");
 
-        // Sensors
-        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
-        distanceSensor = hwMap.get(DistanceSensor.class, "colorSensor");
+        //-------------------------------------Servos-------------------------------------//
+        collectorFinger1    = hwMap.get(Servo.class, "collectorFinger1");
+        collectorFinger2    = hwMap.get(Servo.class, "collectorFinger2");
+        collectorFinger3    = hwMap.get(Servo.class, "collectorFinger3");
+        collectorFinger4    = hwMap.get(Servo.class, "collectorFinger4");
+        collectorRotate     = hwMap.get(Servo.class, "collectorRotate");
+        craneWrist          = hwMap.get(Servo.class, "craneWrist");
+        craneClaw           = hwMap.get(Servo.class, "craneClaw");
+        flickerArm          = hwMap.get(Servo.class, "flickerArm");
+        flickerFinger       = hwMap.get(Servo.class, "flickerFinger");
 
-        //Servos
-        collectorRotate = hwMap.get(Servo.class, "collectorRotate");
-        craneWrist = hwMap.get(Servo.class, "craneWrist");
-        craneClaw = hwMap.get(Servo.class, "craneClaw");
-        flickerArm = hwMap.get(Servo.class, "flickerArm");
-        flickerFinger = hwMap.get(Servo.class, "flickerFinger");
+        //-------------------------------------Sensors------------------------------------//
+        colorSensor     = hwMap.get(ColorSensor.class, "colorSensor");
+        distanceSensor  = hwMap.get(DistanceSensor.class, "colorSensor");
 
-        // *** Motor Configuration
+        //-------------------------------Motor Configuration------------------------------//
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,31 +95,8 @@ public class Hardware
         craneExtend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         craneRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         armRotate.setPower(0);
     }
-//
-//    /***
-//     * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
-//     * periodic tick.  This is used to compensate for varying processing times for each cycle.
-//     * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
-//     *
-//     * @param periodMs  Length of wait cycle in mSec.
-//     * @throws InterruptedException
-//     */
-//    public void waitForTick (long periodMs) throws InterruptedException
-//    {
-//
-//        long remaining = periodMs - (long) period.milliseconds();
-//
-//        // sleep for the remaining portion of the regular cycle period.
-//        if (remaining > 0)
-//            Thread.sleep(remaining);
-//
-//        // Reset the cycle clock for the next pass.
-//        period.reset();
-//    }
 }
-
