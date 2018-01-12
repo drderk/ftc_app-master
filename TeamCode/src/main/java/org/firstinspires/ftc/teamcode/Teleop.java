@@ -163,7 +163,7 @@ public class Teleop extends OpMode
         currentBase   = (robot.leftDrive.getCurrentPosition() + robot.rightDrive.getCurrentPosition()) / 2;
 
 
-        if (gamepad1.left_stick_button || gamepad1.right_stick_button)
+        if (gamepad1.left_trigger > 0.2)
         {
             leftWheelsMotorCmd = leftJoystick * 1.0;
             rightWheelsMotorCmd = rightJoystick * 1.0;
@@ -175,8 +175,8 @@ public class Teleop extends OpMode
         }
 
         if (gamepad1.a) {
-            leftWheelsMotorCmd = -.25;
-            rightWheelsMotorCmd = -.25;
+            leftWheelsMotorCmd = -.3;
+            rightWheelsMotorCmd = -.3;
         }
 
         // COLLECTOR CONTROL /////////////////////////////////////////////////////
@@ -415,6 +415,7 @@ public class Teleop extends OpMode
         robot.craneWrist.setPosition(craneWristTargetPos);
         robot.craneClaw.setPosition(craneClawTargetPos);
 
+        telemetry.addLine("DO YOU KNOW DA WAY");
         if(telemetryActivated) {
 //      Send telemetry to display on the phone
 //        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
@@ -446,6 +447,7 @@ public class Teleop extends OpMode
             telemetry.clearAll();
             telemetry.clear();
         }
+        telemetry.update();
     }
     private double getHeading ()
     {

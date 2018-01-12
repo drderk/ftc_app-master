@@ -66,7 +66,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous (name = "PINK Auto")
-//@Disabled
 public class Auto extends OpMode
 {
 
@@ -74,7 +73,7 @@ public class Auto extends OpMode
     private Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
     private BNO055IMU imu;
     private double currentBaseAngle;
-    private double leftWheelMotorCmd, rightWheelMotorCmd, armMotorCmd;
+    private double armMotorCmd;
     private double collectorArmTargetPos;
     private double flickerArmTargetPos, flickerFingerTargetPos;
     private double collectorFinger1TargetPos, collectorFinger2TargetPos, collectorFinger3TargetPos, collectorFinger4TargetPos, collectorRotateTargetPos;
@@ -86,7 +85,7 @@ public class Auto extends OpMode
     private double markedTime; // Represents a set point in time
     private boolean ourJewelIsTheFrontOne;
     private double leftWheelPos = 0, rightWheelPos = 0;
-    private double currentBasePos, previousBasePos;
+    private double previousBasePos;
     private double linearBaseSpeed = 0;
     private double columnOffset = 0;
     private double light1Power  = 0;
@@ -136,7 +135,6 @@ public class Auto extends OpMode
     @Override
     public void init ()
     {
-        boolean robotAutoConfigured = false;
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
@@ -281,7 +279,7 @@ public class Auto extends OpMode
 //        currentBaseAngle = getHeading();  // Degrees
         leftWheelPos = robot.leftDrive.getCurrentPosition();
         rightWheelPos = robot.rightDrive.getCurrentPosition();
-        currentBasePos = (leftWheelPos + rightWheelPos) / 2.0;
+        double currentBasePos = (leftWheelPos + rightWheelPos) / 2.0;
         linearBaseSpeed = currentBasePos - previousBasePos;
         previousBasePos = currentBasePos;
 //        craneRotatePos = robot.craneRotate.getCurrentPosition();
@@ -558,7 +556,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     }
                     else
                     {
-                        columnOffset = 12.5;
+                        columnOffset = 12;
                     }
                 }
 //                center
@@ -566,11 +564,11 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                 {
                     if (blueAlliance)
                     {
-                        columnOffset = 18.5;
+                        columnOffset = 12.5;
                     }
                     else
                     {
-                        columnOffset = 18.5;
+                        columnOffset = 12.5;
                     }
                 }
                 if (blueAlliance)
@@ -904,10 +902,10 @@ collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
             case MOVE_ALL_CUBES:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_COLLECT;
 
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -946,7 +944,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
-                    stage = Stage.TURN_BACK_TO_SCORE_ADDITIONAL_CUBES;
+                    stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2;
                 }
                 break;
 
@@ -1151,10 +1149,10 @@ collectorFinger3TargetPos = Presets.COLLECTOR_EJECT;
             case BACK_UP_TO_CLEAR_CRYPTOBOX_AGAIN2:
                 flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
-collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
-                  collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
+                collectorFinger1TargetPos = Presets.COLLECTOR_COLLECT;
+                  collectorFinger2TargetPos = Presets.COLLECTOR_COLLECT;
+collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
+                  collectorFinger4TargetPos = Presets.COLLECTOR_COLLECT;
 // collectorFingerTargetPos = Presets.EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
                 collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
@@ -1164,12 +1162,12 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 25;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle = -95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 25;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle = 135;
                     }
                 }
@@ -1177,12 +1175,12 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 25;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle = -95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 25;
+                        targetBasePos = baseScorePos - 15;
                         targetBaseAngle = -135;
                     }
                 }

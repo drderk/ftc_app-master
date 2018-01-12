@@ -12,9 +12,9 @@ public class Presets {
     public static final double FLICKER_FINGER_BACK_POS      = 0.1;
 
     //----------------------------------------Collector---------------------------------------//
-    public static final double COLLECTOR_HOLD                   = 0.6;
+    public static final double COLLECTOR_HOLD                   = 0.65;
     public static final double COLLECTOR_COLLECT                = .8;
-    public static final double COLLECTOR_EJECT                  = .2;
+    public static final double COLLECTOR_EJECT                  = .25;
     public static final double COLLECTOR_ROTATE_UPRIGHT_POS     = -1;
     public static final double COLLECTOR_ROTATE_INVERTED_POS    = 1;
 
