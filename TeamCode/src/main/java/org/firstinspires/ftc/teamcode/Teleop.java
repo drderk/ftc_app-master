@@ -83,6 +83,8 @@ public class Teleop extends OpMode
     private double  targetAngle        = 0;
     private double  currentAngle      = 0;
     private double  currentBase        = 0;
+    private double  armMax              =0.15;
+    private double  armAngle            = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -141,6 +143,9 @@ public class Teleop extends OpMode
         armCurrentPos = robot.armRotate.getCurrentPosition();
         armSpeed = armCurrentPos - previousArmPos;
         previousArmPos = armCurrentPos;
+        armAngle = armCurrentPos * 0.12;
+        armAngle = armAngle * (Math.PI / 180.0);
+
 
         craneExtendCurrentPos = robot.craneExtend.getCurrentPosition();
 
@@ -240,6 +245,16 @@ public class Teleop extends OpMode
         {
             collectorRotateButtonWasntAlreadyPressed = true;
         }
+
+      /*  //max power adjust
+        if(gamepad1.dpad_up){
+            armMax += 0.01;
+        }
+        else if (gamepad1.dpad_down){
+            armMax -= 0.01;
+        }*/
+      armMax = 0.15;
+//              (0.35 * (Math.sin(armAngle)));
 
         // ARM CONTROL /////////////////////////////////////////////////////
         // Raise the collector slightly to keep it off the floor
@@ -348,13 +363,17 @@ public class Teleop extends OpMode
         // Limit position and power
         if (armTargetPos <= Presets.COLLECTOR_ARM_LOW_SCORE_POS)
         {
-            armMotorCmd = PinkPD.getMotorCmd(0.01, 0.01, armTargetPos - armCurrentPos, armSpeed);
+            armMotorCmd = PinkPD.getMotorCmd(0.004, 0.002, armTargetPos - armCurrentPos, armSpeed);
+            armMotorCmd = Range.clip(armMotorCmd, -0.05, 1);
+            armMotorCmd *= .6;
         }
         else
         {
-            armMotorCmd = PinkPD.getMotorCmd(0.02, 0.02, armTargetPos - armCurrentPos, armSpeed);
+            armMotorCmd = PinkPD.getMotorCmd(0.004, 0.002, armTargetPos - armCurrentPos, armSpeed);
+            armMotorCmd = Range.clip(armMotorCmd, -0.05, 1);
+            armMotorCmd *= .6;
         }
-        armMotorCmd = Range.clip(armMotorCmd, -0.1, 0.8);
+
         craneRotateTargetPos = Range.clip(craneRotateTargetPos, Presets.CRANE_ROTATE_MIN_POS, Presets.CRANE_ROTATE_MAX_POS);
         craneExtendTargetPos = Range.clip(craneExtendTargetPos, Presets.CRANE_EXTEND_MIN_POS, Presets.CRANE_EXTEND_MAX_POS);
         craneRotateMotorCmd = PinkPD.getMotorCmd(0.03, 0.02, craneRotateTargetPos - craneRotateCurrentPos, craneRotateSpeed);
@@ -375,7 +394,7 @@ public class Teleop extends OpMode
 
         if (gamepad1.b)
         {
-            //flickerFingerTargetPos += 0.02;
+            //flickergergerTargetPos += 0.02;
             flickerFingerTargetPos = Presets.FLICKER_FINGER_BACK_POS;
         }
         else if (gamepad1.x)
@@ -416,14 +435,18 @@ public class Teleop extends OpMode
         robot.craneClaw.setPosition(craneClawTargetPos);
 
         telemetry.addLine("DO YOU KNOW DA WAY");
-        if(telemetryActivated) {
+//        if(telemetryActivated) {
 //      Send telemetry to display on the phone
 //        telemetry.addData("leftWheelsMotorCmd ", "%.2f", leftWheelsMotorCmd);
 //        telemetry.addData("rightWheelsMotorCmd", "%.2f", rightWheelsMotorCmd);
 //        telemetry.addData("armMotorCmd        ", "%.2f", armMotorCmd);
 //        telemetry.addData("Left Wheel Pos ", robot.leftDrive.getCurrentPosition());
 //        telemetry.addData("Right Wheel Pos", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Arm Pos sin       ", Math.sin(armAngle));
+        telemetry.addData("Arm Power       ", armMotorCmd);
             telemetry.addData("Arm Pos        ", robot.armRotate.getCurrentPosition()).setRetained(false);
+        telemetry.addData("Arm Speed        ", armSpeed);
+        telemetry.addData("Arm Max       ", armMax);
             telemetry.addData("Wrist Pos        ", craneWristTargetPos).setRetained(false);
             telemetry.addData("Claw Pos        ", craneClawTargetPos).setRetained(false);
 //      telemetry.addData("Arm Speed      ", armSpeed);
@@ -442,11 +465,11 @@ public class Teleop extends OpMode
 
 //        telemetry.addData("collectorFinger1Pos      ", collectorFinger1Pos);
 //        telemetry.addData("collectorFinger2Pos      ", collectorFinger2Pos);
-        } else {
-            telemetry.addLine("Press START to show telemetry");
-            telemetry.clearAll();
-            telemetry.clear();
-        }
+//        } else {
+//            telemetry.addLine("Press START to show telemetry");
+//            telemetry.clearAll();
+//            telemetry.clear();
+//        }
         telemetry.update();
     }
     private double getHeading ()

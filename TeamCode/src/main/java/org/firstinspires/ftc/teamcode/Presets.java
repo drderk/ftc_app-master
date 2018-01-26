@@ -19,10 +19,10 @@ public class Presets {
     public static final double COLLECTOR_ROTATE_INVERTED_POS    = 1;
 
     //-------------------------------------------Arm------------------------------------------//
-    public static final double COLLECTOR_ARM_COLLECT_POS    = 20;
-    public static final double COLLECTOR_ARM_LOW_SCORE_POS  = 60;
-    public static final double COLLECTOR_ARM_HIGH_SCORE_POS = 280;
-    public static final double COLLECTOR_ARM_TRAVEL_POS     = 100;
+    public static final double COLLECTOR_ARM_COLLECT_POS    = 70;
+    public static final double COLLECTOR_ARM_LOW_SCORE_POS  = 316;
+    public static final double COLLECTOR_ARM_HIGH_SCORE_POS = 1230;
+    public static final double COLLECTOR_ARM_TRAVEL_POS     = 500;
 
     //------------------------------------------Crane-----------------------------------------//
     public static final double CRANE_ROTATE_MAX_POS     = 350;

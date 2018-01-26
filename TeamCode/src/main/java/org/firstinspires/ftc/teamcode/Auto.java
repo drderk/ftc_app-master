@@ -545,7 +545,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     }
                     else
                     {
-                        columnOffset = 24.5;
+                        columnOffset = 19.5;
                     }
                 }
                 else if (image == RelicRecoveryVuMark.RIGHT)
@@ -556,7 +556,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     }
                     else
                     {
-                        columnOffset = 12;
+                        columnOffset = 6;
                     }
                 }
 //                center
@@ -568,7 +568,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     }
                     else
                     {
-                        columnOffset = 12.5;
+                        columnOffset = 10.5;
                     }
                 }
                 if (blueAlliance)
@@ -1162,12 +1162,12 @@ collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 15;
+                        targetBasePos = baseScorePos - 13;
                         targetBaseAngle = -95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 15;
+                        targetBasePos = baseScorePos - 13;
                         targetBaseAngle = 135;
                     }
                 }
@@ -1175,12 +1175,12 @@ collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = baseScorePos - 15;
+                        targetBasePos = baseScorePos - 13;
                         targetBaseAngle = -95;
                     }
                     else
                     {
-                        targetBasePos = baseScorePos - 15;
+                        targetBasePos = baseScorePos - 13;
                         targetBaseAngle = -135;
                     }
                 }
@@ -1350,6 +1350,19 @@ collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
     @Override
     public void stop ()
     {
+        robot.armRotate.setPower(0);
+        robot.light1.setPower(0);
+        robot.light2.setPower(0);
+
+//        robot.craneClaw.setPosition(Presets.CRANE_CLAW_CLOSE_POS);
+//        robot.craneWrist.setPosition(Presets.CRANE_WRIST_LATCH_POS);
+//        robot.craneRotate.setPower(-0.1);
+//        robot.craneRotate.setPower(PinkPD.getMotorCmd(0.01, 0.0, Presets.CRANE_ROTATE_MIN_POS - craneRotatePos, 0.0));
+//        robot.craneExtend.setPower(-0.1);
+//        robot.craneExtend.setPower(PinkPD.getMotorCmd(0.01, 0.0, Presets.CRANE_EXTEND_MIN_POS - craneExtendPos, 0.0));
+
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
     }
 
 }
