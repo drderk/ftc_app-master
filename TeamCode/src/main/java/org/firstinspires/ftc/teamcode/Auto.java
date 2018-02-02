@@ -555,8 +555,10 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                         columnOffset = 18.5;
                     }
                     else
-                    {
+                    { if (cornerStartingPos){
                         columnOffset = 6;
+                    }
+                        columnOffset = 3;
                     }
                 }
 //                center
@@ -598,6 +600,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     }
                 }
                 currentBaseAngle = getHeading();  // Degrees
+
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3))
                 {
                     stage = Stage.TURN_TO_FACE_CRYPTOBOX;
@@ -646,6 +649,9 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     }
                 }
                 currentBaseAngle = getHeading();  // Degrees
+                if (targetBaseAngle == 180 && currentBaseAngle < 0){
+                    currentBaseAngle = currentBaseAngle + 360;
+                }
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25) && ((runtime.milliseconds() - markedTime) > 3000))
                 {
                     stage = Stage.DRIVE_FORWARD_TO_SCORE;
@@ -660,19 +666,19 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
 collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = 25 + columnOffset + 7;
+                        targetBasePos = 25 + columnOffset + 5;
                         targetBaseAngle = 90;
                     }
                     else
                     {
-                        targetBasePos = 24 + columnOffset + 7 + 1.5;
+                        targetBasePos = 24 + columnOffset + 5 + 1.5;
                         targetBaseAngle = 0;
                     }
                 }
@@ -680,12 +686,12 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                 {
                     if (cornerStartingPos)
                     {
-                        targetBasePos = -25 - columnOffset + 7;
+                        targetBasePos = -25 - columnOffset + 5;
                         targetBaseAngle = 90;
                     }
                     else
                     {
-                        targetBasePos = -25 - columnOffset + 7;
+                        targetBasePos = -25 - columnOffset + 3;
                         targetBaseAngle = 180;
                     }
                 }
@@ -694,6 +700,9 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                 baseScoreAngle = targetBaseAngle;
 
                 currentBaseAngle = getHeading();  // Degrees
+                if (targetBaseAngle == 180 && currentBaseAngle < 0){
+                    currentBaseAngle = currentBaseAngle + 360;
+                }
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25))
                 {
                     markedTime = runtime.milliseconds();
@@ -709,19 +718,28 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
 collectorFinger3TargetPos = Presets.COLLECTOR_EJECT;
                   collectorFinger4TargetPos = Presets.COLLECTOR_EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 targetBasePos = baseScorePos;
                 targetBaseAngle = baseScoreAngle;
                 light1Power = 0;
                 light2Power = 0;
 
                 currentBaseAngle = getHeading();  // Degrees
+                if (targetBaseAngle == 180 && currentBaseAngle < 0){
+                    currentBaseAngle = currentBaseAngle + 360;
+                    targetBasePos = targetBasePos - 5;
+                }
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.3);
 
                 if ((runtime.milliseconds() - markedTime) > 1000)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX;
+                    if (targetBaseAngle == 180){
+                        stage = Stage.RESET;
+                    }
+                    else {
+                        stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX;
+                    }
                 }
                 break;
 
@@ -733,7 +751,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_EJECT;
 collectorFinger3TargetPos = Presets.COLLECTOR_EJECT;
                   collectorFinger4TargetPos = Presets.COLLECTOR_EJECT;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 targetBasePos = baseScorePos - 10;
                 targetBaseAngle = baseScoreAngle;
                 light1Power = 0;
@@ -741,11 +759,20 @@ collectorFinger3TargetPos = Presets.COLLECTOR_EJECT;
 
                 currentBaseAngle = getHeading();  // Degrees
 
+                if (targetBaseAngle == 180  && currentBaseAngle < 0){
+                    currentBaseAngle = currentBaseAngle + 360;
+                }
+
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25)){
                     baseScorePos = targetBasePos;
                     baseScoreAngle= targetBaseAngle;
                     markedTime = runtime.milliseconds();
-                    stage = Stage.TURN_TOWARD_CENTER;
+                    if (targetBaseAngle == 0) {
+                        stage = Stage.RESET;
+                    }
+                    else {
+                        stage = Stage.TURN_TOWARD_CENTER;
+                    }
                 }
                 else {
                     stage = Stage.BACK_UP_TO_CLEAR_CRYPTOBOX;
@@ -762,7 +789,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_EJECT;
 collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                   collectorFinger4TargetPos = Presets.COLLECTOR_HOLD;
                 collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = Presets.COLLECTOR_ARM_LOW_SCORE_POS;
+                collectorArmTargetPos = Presets.COLLECTOR_ARM_TRAVEL_POS;
                 light1Power = 0;
                 light2Power = 0;
                 if (blueAlliance)
@@ -791,14 +818,18 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                         targetBaseAngle = -135;
                     }
                 }
-
                 currentBaseAngle = getHeading();  // Degrees
                 if (PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25) && (runtime.milliseconds() - markedTime) > 3000)
                 {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
-                    stage = Stage.DRIVE_TO_COLLECT_ADDITIONAL_CUBES;
+                    if (!cornerStartingPos){
+                        stage = Stage.RESET;
+                    }
+                    else {
+                        stage = Stage.DRIVE_TO_COLLECT_ADDITIONAL_CUBES;
+                    }
                 }
                 break;
 
@@ -1196,18 +1227,12 @@ collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
                 break;
 
             case RESET:
-                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
-                flickerFingerTargetPos = Presets.FLICKER_FINGER_STOW_POS;
-                collectorFinger1TargetPos = 0.5;
-                collectorFinger2TargetPos = 0.5;
-// collectorFingerTargetPos = Presets.EJECT;
-                collectorRotateTargetPos = Presets.COLLECTOR_ROTATE_UPRIGHT_POS;
-                collectorArmTargetPos = -1;
-                light1Power = 0;
-                light2Power = 0;
-
                 currentBaseAngle = getHeading();  // Degrees
                 targetBaseAngle = baseScoreAngle;
+                if (targetBaseAngle == 180 && currentBaseAngle < 0){
+                    currentBaseAngle = currentBaseAngle + 360;
+                    targetBasePos = targetBasePos - 3;
+                }
                 PinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25 );
                 break;
         }

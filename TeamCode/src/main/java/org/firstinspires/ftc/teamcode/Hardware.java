@@ -69,7 +69,7 @@ public class Hardware {
         //-------------------------------Motor Configuration------------------------------//
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         craneExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         craneRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         light1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -87,7 +87,7 @@ public class Hardware {
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         armRotate.setDirection(DcMotor.Direction.REVERSE);
         craneExtend.setDirection(DcMotor.Direction.REVERSE);
-        craneRotate.setDirection(DcMotor.Direction.FORWARD);
+        craneRotate.setDirection(DcMotor.Direction.REVERSE);
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
