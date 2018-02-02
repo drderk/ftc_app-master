@@ -50,27 +50,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-/**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- * <p>
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- * <p>
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- * <p>
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+/*
+ * This OpMode uses the Hardware class to define its hardware.
+ * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
 @Autonomous (name = "PINK Auto")
 public class Auto extends OpMode
 {
-
-    /* Declare OpMode members. */
-    private Hardware robot = new Hardware(); // use the class created to define a Pushbot's hardware
+    private Hardware robot = new Hardware();
     private BNO055IMU imu;
     private double currentBaseAngle;
     private double armMotorCmd;
@@ -177,10 +165,7 @@ public class Auto extends OpMode
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-         /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
+        
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information
@@ -1284,19 +1269,13 @@ collectorFinger3TargetPos = Presets.COLLECTOR_COLLECT;
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN)
         {
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.addData("VuMark", "%s visible", vuMark); // Display visible template
 
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
+            // Navigational pose, unlikely to need for game
             OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
             telemetry.addData("Pose", format(pose));
 
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
+            // Pose broken into components
             if (pose != null)
             {
                 VectorF trans = pose.getTranslation();
