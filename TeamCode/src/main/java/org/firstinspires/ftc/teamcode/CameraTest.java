@@ -55,8 +55,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous (name = "PINK Auto")
-public class Auto extends OpMode
+@Autonomous (name = "PINK Camera Test")
+public class CameraTest extends OpMode
 {
     private Hardware robot = new Hardware();
     private BNO055IMU imu;
@@ -327,7 +327,7 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                 break;
 
             case SCAN_SURROUNDINGS:
-                flickerArmTargetPos = Presets.FLICKER_ARM_DEPLOY_POS;
+                flickerArmTargetPos = Presets.FLICKER_ARM_STOW_POS;
                 flickerFingerTargetPos = Presets.FLICKER_FINGER_NEUTRAL_POS;
                 collectorFinger1TargetPos = Presets.COLLECTOR_HOLD;
                 collectorFinger2TargetPos = Presets.COLLECTOR_HOLD;
@@ -361,15 +361,15 @@ collectorFinger3TargetPos = Presets.COLLECTOR_HOLD;
                     jewelFound = false;
                 }
 
-                if (jewelFound && ((runtime.milliseconds() - markedTime) > 1500))
+                if (jewelFound && ((runtime.milliseconds() - markedTime) > 50000))
                 {
                     markedTime = runtime.milliseconds();
-                    stage = Stage.FLICK_JEWEL;
+                    stage = Stage.SCAN_SURROUNDINGS;
                 }
-                else if ((runtime.milliseconds() - markedTime) > 2500)
+                else if ((runtime.milliseconds() - markedTime) > 50000)
                 {
                     markedTime = runtime.milliseconds();
-                    stage = Stage.DRIVE_OFF_PLATFORM;
+                    stage = Stage.SCAN_SURROUNDINGS;
                 }
                 break;
 
